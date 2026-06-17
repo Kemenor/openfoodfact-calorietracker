@@ -6,11 +6,13 @@ recipe sharing, ZIP backup/restore.
 
 ## Status (2026-06-17)
 
-Phases **0, 1, 2, 4 done**; **6 core done**. Working app: 47 tests pass, debug APK
-builds. **Not yet run on a real device/emulator** — verified via `flutter analyze`,
-unit/widget tests, and `flutter build apk`. Remaining: **Phase 3 (Health Connect)**
-needs device verification; **Phase 5 (offline packs)** optional/later. UI polish and a
-first on-device smoke test are the natural next steps.
+Phases **0, 1, 2, 4 done**; **6 core done**. 52 tests pass, debug + release APK build.
+**Verified on a real device** (id ch.knabberfuchs.app, Android 16): launching, USDA
+produce search, logging, and **barcode scanning all work**. USDA bundle cleaned to
+whole foods (5,655) and search improved (synonyms/ranking). Remaining: **Phase 3
+(Health Connect)** needs device verification; **Phase 5** optional; **Phase 7 (photo/OCR
+meal tracking)** later; plus near-term enhancements below (min/max targets, track-by-day
+switch, units).
 
 ## Decisions (from planning)
 
@@ -117,6 +119,28 @@ Strategy:
   a day" sheet (pick day + portion count, log repeatedly across days). Builds on the
   Phase 2 recipe model: a portion = a density-scaled snapshot entry. Possible polish
   later: a one-shot "split into N, assign each to a day" wizard.
+- **Phase 7 — Track a meal by photo (OCR):** snap one or two screenshots of a recipe's
+  ingredient list (e.g. from the Sidekick app), run on-device OCR
+  (`google_mlkit_text_recognition`, free/offline — sibling of the barcode ML Kit we
+  already use), parse each line into name + quantity + unit, match each to a food
+  (reusing the search layer + synonyms), let the user confirm/adjust, then build a
+  recipe or log the meal directly. Depends on unit handling (below). All on-device, no
+  server.
+
+## Near-term enhancements (from on-device testing, 2026-06-17)
+
+- ✅ **Search quality** — synonyms (bell pepper→peppers sweet, rocket→arugula…),
+  token-AND matching, simpler/raw entries ranked first. Fixed bell pepper / cherry
+  tomato / potato-variety findings. (Done.)
+- **Calorie target → min + max** (both optional): support a *minimum* too (some people
+  struggle to eat enough). Day readout becomes under-min / in-range / over-max. Needs a
+  targets-table migration (kcalMin/kcalMax replacing single kcal) + summary + UI changes.
+- **Track-by-meal vs track-by-day switch** (Settings): in by-day mode the add flow should
+  *not* require choosing a meal — log straight to the day; day view is the flat list.
+  Unify with the existing meal/flat display toggle into one "tracking mode" setting.
+- **Units** (g / ml / tsp / tbsp / piece / clove): recipes & OCR lists use non-gram
+  units; add unit entry + conversion to grams (density/serving-weight tables) so users
+  don't convert in their heads. Prerequisite for richer Phase 7 parsing.
 
 ## Prerequisites / open dev details
 - ✅ Toolchain ready: Flutter 3.44.2 / Dart 3.12.2 / JDK 21 / Android SDK 35+36 in the
