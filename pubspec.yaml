@@ -46,6 +46,8 @@ dependencies:
   intl: ^0.20.2
   path: ^1.9.1
   collection: ^1.19.1
+  file_selector: ^1.1.0
+  path_provider: ^2.1.6
 
 dev_dependencies:
   flutter_test:

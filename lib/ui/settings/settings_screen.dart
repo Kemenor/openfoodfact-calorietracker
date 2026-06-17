@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart' show Value;
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,11 +68,17 @@ class SettingsScreen extends ConsumerWidget {
                 subtitle: Text('Coming soon'),
                 enabled: false,
               ),
-              const ListTile(
-                leading: Icon(Icons.backup_outlined),
-                title: Text('Backup & restore'),
-                subtitle: Text('Coming soon'),
-                enabled: false,
+              ListTile(
+                leading: const Icon(Icons.upload_outlined),
+                title: const Text('Export backup'),
+                subtitle: const Text('Share a .zip (JSON + CSV)'),
+                onTap: () => _exportBackup(context, ref),
+              ),
+              ListTile(
+                leading: const Icon(Icons.download_outlined),
+                title: const Text('Import backup'),
+                subtitle: const Text('Restore from a .zip (replaces all data)'),
+                onTap: () => _importBackup(context, ref),
               ),
               const AboutListTile(
                 icon: Icon(Icons.info_outline),
@@ -87,6 +94,51 @@ class SettingsScreen extends ConsumerWidget {
         },
       ),
     );
+  }
+}
+
+Future<void> _exportBackup(BuildContext context, WidgetRef ref) async {
+  final messenger = ScaffoldMessenger.of(context);
+  try {
+    await ref.read(backupServiceProvider).shareBackup();
+  } catch (e) {
+    messenger.showSnackBar(SnackBar(content: Text('Export failed: $e')));
+  }
+}
+
+Future<void> _importBackup(BuildContext context, WidgetRef ref) async {
+  final messenger = ScaffoldMessenger.of(context);
+  final file = await openFile(
+    acceptedTypeGroups: [
+      const XTypeGroup(label: 'Backup', extensions: ['zip']),
+    ],
+  );
+  if (file == null || !context.mounted) return;
+
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: const Text('Replace all data?'),
+      content: const Text(
+          'Importing will replace your current entries, custom foods, '
+          'recipes, targets, and settings with the backup contents.'),
+      actions: [
+        TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel')),
+        FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Import')),
+      ],
+    ),
+  );
+  if (confirmed != true) return;
+
+  try {
+    await ref.read(backupServiceProvider).restoreFromZip(file.path);
+    messenger.showSnackBar(const SnackBar(content: Text('Backup restored.')));
+  } catch (e) {
+    messenger.showSnackBar(SnackBar(content: Text('Import failed: $e')));
   }
 }
 

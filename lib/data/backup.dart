@@ -1,0 +1,239 @@
+import 'package:drift/drift.dart';
+
+import '../core/format.dart';
+import '../domain/enums.dart';
+import '../domain/nutrition.dart';
+import 'db/database.dart';
+
+/// Backup schema version, carried in the manifest so future versions can
+/// migrate an older export on import.
+const backupSchemaVersion = 1;
+
+int _ms(DateTime d) => d.millisecondsSinceEpoch;
+DateTime _dt(Object? v) =>
+    DateTime.fromMillisecondsSinceEpoch((v as num?)?.toInt() ?? 0);
+double? _d(Object? v) => v == null ? null : (v as num).toDouble();
+
+// ---------------- Export ----------------
+
+/// Serialize all user data to a JSON-friendly map. Cached OFF/USDA foods are
+/// omitted (re-fetchable / re-seeded); entries carry their own nutrition
+/// snapshot, so nothing is lost.
+Future<Map<String, dynamic>> buildBackupMap(
+  AppDatabase db, {
+  required DateTime exportedAt,
+}) async {
+  final entries = await db.allEntries();
+  final customFoods = await db.allCustomFoods();
+  final recipes = await db.allRecipes();
+  final targets = await db.allTargets();
+  final settings = await db.allSettings();
+
+  final recipeItems = <Map<String, dynamic>>[];
+  for (final r in recipes) {
+    for (final it in await db.itemsForRecipe(r.id)) {
+      recipeItems.add({
+        'id': it.id,
+        'recipeId': it.recipeId,
+        'sName': it.sName,
+        'grams': it.grams,
+        'sKcal100': it.sKcal100,
+        'sProtein100': it.sProtein100,
+        'sCarb100': it.sCarb100,
+        'sFat100': it.sFat100,
+        'sMicrosJson': it.sMicrosJson,
+        'sortIndex': it.sortIndex,
+      });
+    }
+  }
+
+  return {
+    'schemaVersion': backupSchemaVersion,
+    'exportedAt': _ms(exportedAt),
+    'entries': [
+      for (final e in entries)
+        {
+          'id': e.id,
+          'day': e.day,
+          'mealType': e.mealType.index,
+          'grams': e.grams,
+          'sName': e.sName,
+          'sKcal100': e.sKcal100,
+          'sProtein100': e.sProtein100,
+          'sCarb100': e.sCarb100,
+          'sFat100': e.sFat100,
+          'sMicrosJson': e.sMicrosJson,
+          'sortIndex': e.sortIndex,
+          'createdAt': _ms(e.createdAt),
+        }
+    ],
+    'customFoods': [
+      for (final f in customFoods)
+        {
+          'id': f.id,
+          'name': f.name,
+          'brand': f.brand,
+          'servingG': f.servingG,
+          'servingLabel': f.servingLabel,
+          'kcal100': f.kcal100,
+          'protein100': f.protein100,
+          'carb100': f.carb100,
+          'fat100': f.fat100,
+          'fiber100': f.fiber100,
+          'sugar100': f.sugar100,
+          'satFat100': f.satFat100,
+          'sodiumMg100': f.sodiumMg100,
+          'saltG100': f.saltG100,
+          'microsJson': f.microsJson,
+          'isFavorite': f.isFavorite,
+        }
+    ],
+    'recipes': [
+      for (final r in recipes)
+        {
+          'id': r.id,
+          'name': r.name,
+          'servings': r.servings,
+          'note': r.note,
+        }
+    ],
+    'recipeItems': recipeItems,
+    'targets': [
+      for (final t in targets)
+        {
+          'weekday': t.weekday,
+          'kcal': t.kcal,
+          'protein': t.protein,
+          'carb': t.carb,
+          'fat': t.fat,
+        }
+    ],
+    'settings': {for (final s in settings) s.key: s.value},
+  };
+}
+
+/// Human/spreadsheet-friendly CSV of every logged entry.
+String buildEntriesCsv(List<Entry> entries) {
+  String esc(String s) => s.contains(RegExp(r'[",\n]'))
+      ? '"${s.replaceAll('"', '""')}"'
+      : s;
+  final rows = <String>['day,meal,food,grams,kcal,protein_g,carb_g,fat_g'];
+  for (final e in entries) {
+    final n = Nutrition.fromPer100g(
+      kcal100: e.sKcal100,
+      protein100: e.sProtein100,
+      carb100: e.sCarb100,
+      fat100: e.sFat100,
+      grams: e.grams,
+    );
+    rows.add([
+      e.day,
+      e.mealType.label,
+      esc(e.sName),
+      gramsStr(e.grams),
+      kcalStr(n.kcal),
+      macroStr(n.protein),
+      macroStr(n.carb),
+      macroStr(n.fat),
+    ].join(','));
+  }
+  return rows.join('\n');
+}
+
+// ---------------- Import ----------------
+
+/// Replace all user data with the contents of a backup map. Cached OFF/USDA
+/// foods are left untouched; restored entries have their food link cleared
+/// (snapshots preserve nutrition), avoiding dangling references.
+Future<void> restoreBackupMap(AppDatabase db, Map<String, dynamic> map) async {
+  await db.transaction(() async {
+    await db.delete(db.entries).go();
+    await db.delete(db.recipeItems).go();
+    await db.delete(db.recipes).go();
+    await (db.delete(db.foods)
+          ..where((f) => f.source.equalsValue(FoodSource.custom)))
+        .go();
+    await db.delete(db.settings).go();
+
+    for (final f in (map['customFoods'] as List? ?? const [])) {
+      await db.into(db.foods).insert(FoodsCompanion(
+            id: Value((f['id'] as num).toInt()),
+            source: const Value(FoodSource.custom),
+            name: Value(f['name'] as String),
+            brand: Value(f['brand'] as String?),
+            servingG: Value(_d(f['servingG'])),
+            servingLabel: Value(f['servingLabel'] as String?),
+            kcal100: Value(_d(f['kcal100']) ?? 0),
+            protein100: Value(_d(f['protein100'])),
+            carb100: Value(_d(f['carb100'])),
+            fat100: Value(_d(f['fat100'])),
+            fiber100: Value(_d(f['fiber100'])),
+            sugar100: Value(_d(f['sugar100'])),
+            satFat100: Value(_d(f['satFat100'])),
+            sodiumMg100: Value(_d(f['sodiumMg100'])),
+            saltG100: Value(_d(f['saltG100'])),
+            microsJson: Value(f['microsJson'] as String?),
+            isFavorite: Value((f['isFavorite'] as bool?) ?? false),
+          ));
+    }
+
+    for (final r in (map['recipes'] as List? ?? const [])) {
+      await db.into(db.recipes).insert(RecipesCompanion(
+            id: Value((r['id'] as num).toInt()),
+            name: Value(r['name'] as String),
+            servings: Value(_d(r['servings']) ?? 1),
+            note: Value(r['note'] as String?),
+          ));
+    }
+
+    for (final it in (map['recipeItems'] as List? ?? const [])) {
+      await db.into(db.recipeItems).insert(RecipeItemsCompanion(
+            id: Value((it['id'] as num).toInt()),
+            recipeId: Value((it['recipeId'] as num).toInt()),
+            sName: Value(it['sName'] as String),
+            grams: Value(_d(it['grams']) ?? 0),
+            sKcal100: Value(_d(it['sKcal100']) ?? 0),
+            sProtein100: Value(_d(it['sProtein100'])),
+            sCarb100: Value(_d(it['sCarb100'])),
+            sFat100: Value(_d(it['sFat100'])),
+            sMicrosJson: Value(it['sMicrosJson'] as String?),
+            sortIndex: Value((it['sortIndex'] as num?)?.toInt() ?? 0),
+          ));
+    }
+
+    for (final e in (map['entries'] as List? ?? const [])) {
+      await db.into(db.entries).insert(EntriesCompanion(
+            id: Value((e['id'] as num).toInt()),
+            day: Value(e['day'] as String),
+            mealType: Value(MealType.values[(e['mealType'] as num).toInt()]),
+            grams: Value(_d(e['grams']) ?? 0),
+            sName: Value(e['sName'] as String),
+            sKcal100: Value(_d(e['sKcal100']) ?? 0),
+            sProtein100: Value(_d(e['sProtein100'])),
+            sCarb100: Value(_d(e['sCarb100'])),
+            sFat100: Value(_d(e['sFat100'])),
+            sMicrosJson: Value(e['sMicrosJson'] as String?),
+            sortIndex: Value((e['sortIndex'] as num?)?.toInt() ?? 0),
+            createdAt: Value(_dt(e['createdAt'])),
+          ));
+    }
+
+    for (final t in (map['targets'] as List? ?? const [])) {
+      await db.into(db.targets).insertOnConflictUpdate(TargetsCompanion(
+            weekday: Value((t['weekday'] as num).toInt()),
+            kcal: Value(_d(t['kcal'])),
+            protein: Value(_d(t['protein'])),
+            carb: Value(_d(t['carb'])),
+            fat: Value(_d(t['fat'])),
+          ));
+    }
+
+    final settings = (map['settings'] as Map?) ?? const {};
+    for (final entry in settings.entries) {
+      await db.into(db.settings).insert(SettingsCompanion.insert(
+            key: entry.key.toString(),
+            value: Value(entry.value as String?),
+          ));
+    }
+  });
+}

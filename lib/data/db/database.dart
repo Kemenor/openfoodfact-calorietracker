@@ -83,6 +83,10 @@ class AppDatabase extends _$AppDatabase {
       (update(foods)..where((f) => f.id.equals(foodId)))
           .write(FoodsCompanion(isFavorite: Value(value)));
 
+  Future<List<Food>> allCustomFoods() =>
+      (select(foods)..where((f) => f.source.equalsValue(FoodSource.custom)))
+          .get();
+
   // ---------------- Diary entries ----------------
 
   /// Live stream of all entries for a day (caller groups by meal).
@@ -96,6 +100,9 @@ class AppDatabase extends _$AppDatabase {
           ]))
         .watch();
   }
+
+  Future<List<Entry>> allEntries() =>
+      (select(entries)..orderBy([(e) => OrderingTerm.asc(e.day)])).get();
 
   Future<int> addEntry(EntriesCompanion entry) => into(entries).insert(entry);
 
@@ -158,6 +165,8 @@ class AppDatabase extends _$AppDatabase {
       (delete(recipes)..where((r) => r.id.equals(id))).go();
 
   // ---------------- Settings ----------------
+
+  Future<List<Setting>> allSettings() => select(settings).get();
 
   Future<String?> getSetting(String key) async {
     final row = await (select(settings)..where((s) => s.key.equals(key)))

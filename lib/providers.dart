@@ -5,6 +5,7 @@ import 'data/db/database.dart';
 import 'data/repositories/diary_repository.dart';
 import 'data/repositories/food_repository.dart';
 import 'data/repositories/recipe_repository.dart';
+import 'data/backup_service.dart';
 import 'data/sources/off_api.dart';
 import 'data/sources/usda_seed.dart';
 import 'domain/day_summary.dart';
@@ -38,6 +39,10 @@ final recipeRepositoryProvider = Provider<RecipeRepository>(
 
 final recipesProvider = StreamProvider<List<Recipe>>(
   (ref) => ref.watch(recipeRepositoryProvider).watchRecipes(),
+);
+
+final backupServiceProvider = Provider<BackupService>(
+  (ref) => BackupService(ref.watch(dbProvider)),
 );
 
 /// One-time startup work: import the bundled USDA produce dataset on first run.
