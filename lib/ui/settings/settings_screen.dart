@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/date_x.dart';
 import '../../data/db/database.dart';
 import '../../providers.dart';
+import 'offline_regions_screen.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -75,6 +76,16 @@ class SettingsScreen extends ConsumerWidget {
                 value: fixedMeals,
                 onChanged: (v) =>
                     db.setSetting('groupByMeal', v ? 'true' : 'false'),
+              ),
+              const Divider(),
+              const _SectionHeader('Food data'),
+              ListTile(
+                leading: const Icon(Icons.public),
+                title: const Text('Offline regions'),
+                subtitle: const Text(
+                    'Download country product databases for offline search'),
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const OfflineRegionsScreen())),
               ),
               const Divider(),
               const _SectionHeader('Integrations'),

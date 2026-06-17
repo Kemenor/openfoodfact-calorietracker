@@ -25,8 +25,11 @@ class AddFoodScreen extends ConsumerWidget {
   });
 
   Future<void> _pick(BuildContext context, WidgetRef ref, Food food) async {
+    // Search hits from region packs are synthetic (id 0) — persist before logging.
+    final persisted = await ref.read(foodRepositoryProvider).ensurePersisted(food);
+    if (!context.mounted) return;
     final added = await showLogFoodSheet(context, ref,
-        food: food, day: day, meal: meal, resolveGroup: resolveGroup);
+        food: persisted, day: day, meal: meal, resolveGroup: resolveGroup);
     if (added == true && context.mounted) Navigator.of(context).pop();
   }
 

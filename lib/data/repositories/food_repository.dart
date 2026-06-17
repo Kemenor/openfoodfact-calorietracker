@@ -2,18 +2,65 @@ import 'package:drift/drift.dart';
 
 import '../../domain/enums.dart';
 import '../db/database.dart';
+import '../offline/region_pack_store.dart';
 import '../sources/off_api.dart';
 
 /// Food lookup across the layered sources:
-/// local cache (incl. bundled USDA produce) -> Open Food Facts live.
+/// local catalog (custom / USDA / scan-cache) + offline region packs -> OFF live.
 class FoodRepository {
   final AppDatabase db;
   final OffApi off;
+  final RegionPackStore packs;
 
-  FoodRepository(this.db, this.off);
+  FoodRepository(this.db, this.off, this.packs);
 
-  /// Instant, network-free search over the local catalog (search-as-you-type).
-  Future<List<Food>> searchLocal(String query) => db.searchFoodsLocal(query);
+  /// Instant, network-free search over the local catalog + downloaded region
+  /// packs, deduped by barcode (local cached rows win over pack rows).
+  Future<List<Food>> searchLocal(String query) async {
+    final local = await db.searchFoodsLocal(query);
+    final fromPacks = packs.search(query);
+    final seen = <String>{};
+    final merged = <Food>[];
+    for (final f in [...local, ...fromPacks]) {
+      final key = f.barcode ?? 'id:${f.id}:${f.name}';
+      if (seen.add(key)) merged.add(f);
+    }
+    merged.sort((a, b) {
+      if (a.isFavorite != b.isFavorite) return a.isFavorite ? -1 : 1;
+      if (a.usageCount != b.usageCount) {
+        return b.usageCount.compareTo(a.usageCount);
+      }
+      return a.name.length.compareTo(b.name.length);
+    });
+    return merged.take(50).toList();
+  }
+
+  /// Persist a food if it's a synthetic search/pack hit (id 0), returning the
+  /// stored row. A no-op for foods already in the catalog.
+  Future<Food> ensurePersisted(Food food) async {
+    if (food.id != 0) return food;
+    final id = await db.upsertFood(FoodsCompanion.insert(
+      source: food.source,
+      externalId: Value(food.externalId),
+      barcode: Value(food.barcode),
+      name: food.name,
+      brand: Value(food.brand),
+      locale: Value(food.locale),
+      servingG: Value(food.servingG),
+      servingLabel: Value(food.servingLabel),
+      kcal100: food.kcal100,
+      protein100: Value(food.protein100),
+      carb100: Value(food.carb100),
+      fat100: Value(food.fat100),
+      fiber100: Value(food.fiber100),
+      sugar100: Value(food.sugar100),
+      satFat100: Value(food.satFat100),
+      sodiumMg100: Value(food.sodiumMg100),
+      saltG100: Value(food.saltG100),
+      microsJson: Value(food.microsJson),
+    ));
+    return (await db.foodById(id))!;
+  }
 
   /// Online OFF search (debounced by caller). Caches every result locally and
   /// returns the freshly cached rows.
@@ -36,6 +83,8 @@ class FoodRepository {
   Future<Food?> lookupBarcode(String barcode) async {
     final cached = await db.foodByExternal(FoodSource.openFoodFacts, barcode);
     if (cached != null) return cached;
+    final fromPack = packs.lookupBarcode(barcode);
+    if (fromPack != null) return ensurePersisted(fromPack);
     final remote = await off.productByBarcode(barcode);
     if (remote == null) return null;
     final id = await db.upsertFood(remote);

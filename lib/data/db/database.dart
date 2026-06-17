@@ -8,14 +8,17 @@ import 'tables.dart';
 part 'database.g.dart';
 
 @DriftDatabase(
-  tables: [Foods, Entries, EntryGroups, Targets, Recipes, RecipeItems, Settings],
+  tables: [
+    Foods, Entries, EntryGroups, Targets, Recipes, RecipeItems, Settings,
+    InstalledPacks,
+  ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
       : super(executor ?? driftDatabase(name: 'calorie_tracker'));
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -41,6 +44,10 @@ class AppDatabase extends _$AppDatabase {
             // Ad-hoc meal groups for track-by-day mode.
             await m.createTable(entryGroups);
             await m.addColumn(entries, entries.groupId);
+          }
+          if (from < 4) {
+            // Installed offline region packs.
+            await m.createTable(installedPacks);
           }
         },
         beforeOpen: (details) async {
@@ -227,6 +234,21 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> deleteRecipe(int id) =>
       (delete(recipes)..where((r) => r.id.equals(id))).go();
+
+  // ---------------- Installed offline packs ----------------
+
+  Stream<List<InstalledPack>> watchInstalledPacks() =>
+      (select(installedPacks)..orderBy([(p) => OrderingTerm.asc(p.name)]))
+          .watch();
+
+  Future<List<InstalledPack>> installedPacksList() =>
+      select(installedPacks).get();
+
+  Future<void> upsertInstalledPack(InstalledPacksCompanion pack) =>
+      into(installedPacks).insertOnConflictUpdate(pack);
+
+  Future<void> deleteInstalledPack(String code) =>
+      (delete(installedPacks)..where((p) => p.code.equals(code))).go();
 
   // ---------------- Settings ----------------
 

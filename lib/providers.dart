@@ -7,9 +7,12 @@ import 'data/repositories/diary_repository.dart';
 import 'data/repositories/food_repository.dart';
 import 'data/repositories/recipe_repository.dart';
 import 'data/backup_service.dart';
+import 'data/offline/offline_pack_service.dart';
+import 'data/offline/region_pack_store.dart';
 import 'data/sources/off_api.dart';
 import 'data/sources/usda_seed.dart';
 import 'domain/day_summary.dart';
+import 'domain/offline_manifest.dart';
 
 // ---------------- Infrastructure ----------------
 
@@ -25,8 +28,28 @@ final offApiProvider = Provider<OffApi>((ref) {
   return off;
 });
 
+final regionPackStoreProvider = Provider<RegionPackStore>((ref) {
+  final store = RegionPackStore();
+  ref.onDispose(store.dispose);
+  return store;
+});
+
+final offlinePackServiceProvider = Provider<OfflinePackService>(
+  (ref) => OfflinePackService(
+      ref.watch(dbProvider), ref.watch(regionPackStoreProvider)),
+);
+
+final installedPacksProvider = StreamProvider<List<InstalledPack>>(
+  (ref) => ref.watch(dbProvider).watchInstalledPacks(),
+);
+
+final offlineManifestProvider = FutureProvider<OfflineManifest>(
+  (ref) => ref.watch(offlinePackServiceProvider).fetchManifest(),
+);
+
 final foodRepositoryProvider = Provider<FoodRepository>(
-  (ref) => FoodRepository(ref.watch(dbProvider), ref.watch(offApiProvider)),
+  (ref) => FoodRepository(ref.watch(dbProvider), ref.watch(offApiProvider),
+      ref.watch(regionPackStoreProvider)),
 );
 
 final diaryRepositoryProvider = Provider<DiaryRepository>(
@@ -46,9 +69,11 @@ final backupServiceProvider = Provider<BackupService>(
   (ref) => BackupService(ref.watch(dbProvider)),
 );
 
-/// One-time startup work: import the bundled USDA produce dataset on first run.
+/// One-time startup work: import the bundled USDA produce dataset on first run
+/// and open any installed offline region packs.
 final appStartupProvider = FutureProvider<void>((ref) async {
   await seedUsdaIfNeeded(ref.watch(dbProvider));
+  await ref.read(offlinePackServiceProvider).syncStore();
 });
 
 // ---------------- Track-by-day groups ----------------

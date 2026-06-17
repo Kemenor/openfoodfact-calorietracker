@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:calorie_tracker/data/backup.dart';
 import 'package:calorie_tracker/data/db/database.dart';
+import 'package:calorie_tracker/data/offline/region_pack_store.dart';
 import 'package:calorie_tracker/data/repositories/food_repository.dart';
 import 'package:calorie_tracker/data/sources/off_api.dart';
 import 'package:calorie_tracker/domain/enums.dart';
@@ -10,7 +11,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Future<void> _seed(AppDatabase db) async {
-  final repo = FoodRepository(db, OffApi());
+  final repo = FoodRepository(db, OffApi(), RegionPackStore());
   final apple = await repo.createCustomFood(name: 'Apple', kcal100: 52);
   await db.addEntry(EntriesCompanion.insert(
     day: '2026-06-17',

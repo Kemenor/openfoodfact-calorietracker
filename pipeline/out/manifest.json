@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "updatedAt": "2026-06-17T21:10:34.355532+00:00",
+  "baseUrl": "https://huggingface.co/datasets/Knabberfuchs/offline-packs/resolve/main",
+  "attribution": "Product data from Open Food Facts (https://openfoodfacts.org), ODbL.",
+  "regions": [
+    {
+      "code": "ch",
+      "name": "Switzerland",
+      "country_tag": "en:switzerland",
+      "version": "20260617",
+      "products": 86026,
+      "file": "packs/ch/20260617/region_ch.sqlite.gz",
+      "size": 6083384,
+      "sha256": "f5abd20bce65d7a0d11c3166c5ba93b4dc013e30fed458a603aa50e180aeda80",
+      "deltas": []
+    },
+    {
+      "code": "de",
+      "name": "Germany",
+      "country_tag": "en:germany",
+      "version": "20260617",
+      "products": 231156,
+      "file": "packs/de/20260617/region_de.sqlite.gz",
+      "size": 17782027,
+      "sha256": "3e4051af19eb8a9ecbd0a76031c7499d464458d3be09dfb83eee339fdc308f10",
+      "deltas": []
+    },
+    {
+      "code": "at",
+      "name": "Austria",
+      "country_tag": "en:austria",
+      "version": "20260617",
+      "products": 18136,
+      "file": "packs/at/20260617/region_at.sqlite.gz",
+      "size": 1379011,
+      "sha256": "f098fa47d905ec7c6f39a6e0c8b5bebc47f03d7754ea752697d79fe73d24475b",
+      "deltas": []
+    },
+    {
+      "code": "fr",
+      "name": "France",
+      "country_tag": "en:france",
+      "version": "20260617",
+      "products": 875216,
+      "file": "packs/fr/20260617/region_fr.sqlite.gz",
+      "size": 60468089,
+      "sha256": "327d98b8980f1390755a5412e5b992730019dd7cd1e6d4ecfa2b374d17673e58",
+      "deltas": []
+    }
+  ]
+}

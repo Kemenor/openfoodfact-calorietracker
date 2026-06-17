@@ -128,6 +128,19 @@ class RecipeItems extends Table {
   IntColumn get sortIndex => integer().withDefault(const Constant(0))();
 }
 
+/// A downloaded offline OFF region pack (the .sqlite file lives on disk).
+class InstalledPacks extends Table {
+  TextColumn get code => text()(); // country code, e.g. 'ch'
+  TextColumn get name => text()();
+  TextColumn get version => text()();
+  IntColumn get products => integer()();
+  IntColumn get sizeBytes => integer()();
+  DateTimeColumn get installedAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {code};
+}
+
 /// Simple key/value store for app preferences.
 class Settings extends Table {
   TextColumn get key => text()();

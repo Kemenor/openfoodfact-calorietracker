@@ -3935,6 +3935,420 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
   }
 }
 
+class $InstalledPacksTable extends InstalledPacks
+    with TableInfo<$InstalledPacksTable, InstalledPack> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InstalledPacksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _codeMeta = const VerificationMeta('code');
+  @override
+  late final GeneratedColumn<String> code = GeneratedColumn<String>(
+    'code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<String> version = GeneratedColumn<String>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _productsMeta = const VerificationMeta(
+    'products',
+  );
+  @override
+  late final GeneratedColumn<int> products = GeneratedColumn<int>(
+    'products',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sizeBytesMeta = const VerificationMeta(
+    'sizeBytes',
+  );
+  @override
+  late final GeneratedColumn<int> sizeBytes = GeneratedColumn<int>(
+    'size_bytes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _installedAtMeta = const VerificationMeta(
+    'installedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> installedAt = GeneratedColumn<DateTime>(
+    'installed_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    code,
+    name,
+    version,
+    products,
+    sizeBytes,
+    installedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'installed_packs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InstalledPack> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('code')) {
+      context.handle(
+        _codeMeta,
+        code.isAcceptableOrUnknown(data['code']!, _codeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_codeMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_versionMeta);
+    }
+    if (data.containsKey('products')) {
+      context.handle(
+        _productsMeta,
+        products.isAcceptableOrUnknown(data['products']!, _productsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_productsMeta);
+    }
+    if (data.containsKey('size_bytes')) {
+      context.handle(
+        _sizeBytesMeta,
+        sizeBytes.isAcceptableOrUnknown(data['size_bytes']!, _sizeBytesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sizeBytesMeta);
+    }
+    if (data.containsKey('installed_at')) {
+      context.handle(
+        _installedAtMeta,
+        installedAt.isAcceptableOrUnknown(
+          data['installed_at']!,
+          _installedAtMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {code};
+  @override
+  InstalledPack map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InstalledPack(
+      code: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}code'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}version'],
+      )!,
+      products: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}products'],
+      )!,
+      sizeBytes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}size_bytes'],
+      )!,
+      installedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}installed_at'],
+      )!,
+    );
+  }
+
+  @override
+  $InstalledPacksTable createAlias(String alias) {
+    return $InstalledPacksTable(attachedDatabase, alias);
+  }
+}
+
+class InstalledPack extends DataClass implements Insertable<InstalledPack> {
+  final String code;
+  final String name;
+  final String version;
+  final int products;
+  final int sizeBytes;
+  final DateTime installedAt;
+  const InstalledPack({
+    required this.code,
+    required this.name,
+    required this.version,
+    required this.products,
+    required this.sizeBytes,
+    required this.installedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['code'] = Variable<String>(code);
+    map['name'] = Variable<String>(name);
+    map['version'] = Variable<String>(version);
+    map['products'] = Variable<int>(products);
+    map['size_bytes'] = Variable<int>(sizeBytes);
+    map['installed_at'] = Variable<DateTime>(installedAt);
+    return map;
+  }
+
+  InstalledPacksCompanion toCompanion(bool nullToAbsent) {
+    return InstalledPacksCompanion(
+      code: Value(code),
+      name: Value(name),
+      version: Value(version),
+      products: Value(products),
+      sizeBytes: Value(sizeBytes),
+      installedAt: Value(installedAt),
+    );
+  }
+
+  factory InstalledPack.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InstalledPack(
+      code: serializer.fromJson<String>(json['code']),
+      name: serializer.fromJson<String>(json['name']),
+      version: serializer.fromJson<String>(json['version']),
+      products: serializer.fromJson<int>(json['products']),
+      sizeBytes: serializer.fromJson<int>(json['sizeBytes']),
+      installedAt: serializer.fromJson<DateTime>(json['installedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'code': serializer.toJson<String>(code),
+      'name': serializer.toJson<String>(name),
+      'version': serializer.toJson<String>(version),
+      'products': serializer.toJson<int>(products),
+      'sizeBytes': serializer.toJson<int>(sizeBytes),
+      'installedAt': serializer.toJson<DateTime>(installedAt),
+    };
+  }
+
+  InstalledPack copyWith({
+    String? code,
+    String? name,
+    String? version,
+    int? products,
+    int? sizeBytes,
+    DateTime? installedAt,
+  }) => InstalledPack(
+    code: code ?? this.code,
+    name: name ?? this.name,
+    version: version ?? this.version,
+    products: products ?? this.products,
+    sizeBytes: sizeBytes ?? this.sizeBytes,
+    installedAt: installedAt ?? this.installedAt,
+  );
+  InstalledPack copyWithCompanion(InstalledPacksCompanion data) {
+    return InstalledPack(
+      code: data.code.present ? data.code.value : this.code,
+      name: data.name.present ? data.name.value : this.name,
+      version: data.version.present ? data.version.value : this.version,
+      products: data.products.present ? data.products.value : this.products,
+      sizeBytes: data.sizeBytes.present ? data.sizeBytes.value : this.sizeBytes,
+      installedAt: data.installedAt.present
+          ? data.installedAt.value
+          : this.installedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstalledPack(')
+          ..write('code: $code, ')
+          ..write('name: $name, ')
+          ..write('version: $version, ')
+          ..write('products: $products, ')
+          ..write('sizeBytes: $sizeBytes, ')
+          ..write('installedAt: $installedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(code, name, version, products, sizeBytes, installedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InstalledPack &&
+          other.code == this.code &&
+          other.name == this.name &&
+          other.version == this.version &&
+          other.products == this.products &&
+          other.sizeBytes == this.sizeBytes &&
+          other.installedAt == this.installedAt);
+}
+
+class InstalledPacksCompanion extends UpdateCompanion<InstalledPack> {
+  final Value<String> code;
+  final Value<String> name;
+  final Value<String> version;
+  final Value<int> products;
+  final Value<int> sizeBytes;
+  final Value<DateTime> installedAt;
+  final Value<int> rowid;
+  const InstalledPacksCompanion({
+    this.code = const Value.absent(),
+    this.name = const Value.absent(),
+    this.version = const Value.absent(),
+    this.products = const Value.absent(),
+    this.sizeBytes = const Value.absent(),
+    this.installedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  InstalledPacksCompanion.insert({
+    required String code,
+    required String name,
+    required String version,
+    required int products,
+    required int sizeBytes,
+    this.installedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : code = Value(code),
+       name = Value(name),
+       version = Value(version),
+       products = Value(products),
+       sizeBytes = Value(sizeBytes);
+  static Insertable<InstalledPack> custom({
+    Expression<String>? code,
+    Expression<String>? name,
+    Expression<String>? version,
+    Expression<int>? products,
+    Expression<int>? sizeBytes,
+    Expression<DateTime>? installedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (code != null) 'code': code,
+      if (name != null) 'name': name,
+      if (version != null) 'version': version,
+      if (products != null) 'products': products,
+      if (sizeBytes != null) 'size_bytes': sizeBytes,
+      if (installedAt != null) 'installed_at': installedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  InstalledPacksCompanion copyWith({
+    Value<String>? code,
+    Value<String>? name,
+    Value<String>? version,
+    Value<int>? products,
+    Value<int>? sizeBytes,
+    Value<DateTime>? installedAt,
+    Value<int>? rowid,
+  }) {
+    return InstalledPacksCompanion(
+      code: code ?? this.code,
+      name: name ?? this.name,
+      version: version ?? this.version,
+      products: products ?? this.products,
+      sizeBytes: sizeBytes ?? this.sizeBytes,
+      installedAt: installedAt ?? this.installedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (code.present) {
+      map['code'] = Variable<String>(code.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<String>(version.value);
+    }
+    if (products.present) {
+      map['products'] = Variable<int>(products.value);
+    }
+    if (sizeBytes.present) {
+      map['size_bytes'] = Variable<int>(sizeBytes.value);
+    }
+    if (installedAt.present) {
+      map['installed_at'] = Variable<DateTime>(installedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstalledPacksCompanion(')
+          ..write('code: $code, ')
+          ..write('name: $name, ')
+          ..write('version: $version, ')
+          ..write('products: $products, ')
+          ..write('sizeBytes: $sizeBytes, ')
+          ..write('installedAt: $installedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -3945,6 +4359,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $RecipesTable recipes = $RecipesTable(this);
   late final $RecipeItemsTable recipeItems = $RecipeItemsTable(this);
   late final $SettingsTable settings = $SettingsTable(this);
+  late final $InstalledPacksTable installedPacks = $InstalledPacksTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3957,6 +4372,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     recipes,
     recipeItems,
     settings,
+    installedPacks,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -6521,6 +6937,229 @@ typedef $$SettingsTableProcessedTableManager =
       Setting,
       PrefetchHooks Function()
     >;
+typedef $$InstalledPacksTableCreateCompanionBuilder =
+    InstalledPacksCompanion Function({
+      required String code,
+      required String name,
+      required String version,
+      required int products,
+      required int sizeBytes,
+      Value<DateTime> installedAt,
+      Value<int> rowid,
+    });
+typedef $$InstalledPacksTableUpdateCompanionBuilder =
+    InstalledPacksCompanion Function({
+      Value<String> code,
+      Value<String> name,
+      Value<String> version,
+      Value<int> products,
+      Value<int> sizeBytes,
+      Value<DateTime> installedAt,
+      Value<int> rowid,
+    });
+
+class $$InstalledPacksTableFilterComposer
+    extends Composer<_$AppDatabase, $InstalledPacksTable> {
+  $$InstalledPacksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get code => $composableBuilder(
+    column: $table.code,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get products => $composableBuilder(
+    column: $table.products,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sizeBytes => $composableBuilder(
+    column: $table.sizeBytes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get installedAt => $composableBuilder(
+    column: $table.installedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$InstalledPacksTableOrderingComposer
+    extends Composer<_$AppDatabase, $InstalledPacksTable> {
+  $$InstalledPacksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get code => $composableBuilder(
+    column: $table.code,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get products => $composableBuilder(
+    column: $table.products,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sizeBytes => $composableBuilder(
+    column: $table.sizeBytes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get installedAt => $composableBuilder(
+    column: $table.installedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$InstalledPacksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $InstalledPacksTable> {
+  $$InstalledPacksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get code =>
+      $composableBuilder(column: $table.code, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<int> get products =>
+      $composableBuilder(column: $table.products, builder: (column) => column);
+
+  GeneratedColumn<int> get sizeBytes =>
+      $composableBuilder(column: $table.sizeBytes, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get installedAt => $composableBuilder(
+    column: $table.installedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$InstalledPacksTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $InstalledPacksTable,
+          InstalledPack,
+          $$InstalledPacksTableFilterComposer,
+          $$InstalledPacksTableOrderingComposer,
+          $$InstalledPacksTableAnnotationComposer,
+          $$InstalledPacksTableCreateCompanionBuilder,
+          $$InstalledPacksTableUpdateCompanionBuilder,
+          (
+            InstalledPack,
+            BaseReferences<_$AppDatabase, $InstalledPacksTable, InstalledPack>,
+          ),
+          InstalledPack,
+          PrefetchHooks Function()
+        > {
+  $$InstalledPacksTableTableManager(
+    _$AppDatabase db,
+    $InstalledPacksTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InstalledPacksTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$InstalledPacksTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$InstalledPacksTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> code = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> version = const Value.absent(),
+                Value<int> products = const Value.absent(),
+                Value<int> sizeBytes = const Value.absent(),
+                Value<DateTime> installedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => InstalledPacksCompanion(
+                code: code,
+                name: name,
+                version: version,
+                products: products,
+                sizeBytes: sizeBytes,
+                installedAt: installedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String code,
+                required String name,
+                required String version,
+                required int products,
+                required int sizeBytes,
+                Value<DateTime> installedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => InstalledPacksCompanion.insert(
+                code: code,
+                name: name,
+                version: version,
+                products: products,
+                sizeBytes: sizeBytes,
+                installedAt: installedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$InstalledPacksTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $InstalledPacksTable,
+      InstalledPack,
+      $$InstalledPacksTableFilterComposer,
+      $$InstalledPacksTableOrderingComposer,
+      $$InstalledPacksTableAnnotationComposer,
+      $$InstalledPacksTableCreateCompanionBuilder,
+      $$InstalledPacksTableUpdateCompanionBuilder,
+      (
+        InstalledPack,
+        BaseReferences<_$AppDatabase, $InstalledPacksTable, InstalledPack>,
+      ),
+      InstalledPack,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -6539,4 +7178,6 @@ class $AppDatabaseManager {
       $$RecipeItemsTableTableManager(_db, _db.recipeItems);
   $$SettingsTableTableManager get settings =>
       $$SettingsTableTableManager(_db, _db.settings);
+  $$InstalledPacksTableTableManager get installedPacks =>
+      $$InstalledPacksTableTableManager(_db, _db.installedPacks);
 }
