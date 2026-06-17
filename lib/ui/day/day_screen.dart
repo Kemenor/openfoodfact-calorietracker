@@ -85,19 +85,6 @@ class _DayBody extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: 96),
       children: [
         _SummaryCard(summary: summary),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: SegmentedButton<bool>(
-            segments: const [
-              ButtonSegment(value: true, label: Text('Meals'), icon: Icon(Icons.restaurant)),
-              ButtonSegment(value: false, label: Text('List'), icon: Icon(Icons.list)),
-            ],
-            selected: {groupByMeal},
-            onSelectionChanged: (s) => ref
-                .read(dbProvider)
-                .setSetting('groupByMeal', s.first ? 'true' : 'false'),
-          ),
-        ),
         if (summary.entries.isEmpty)
           const Padding(
             padding: EdgeInsets.all(48),
