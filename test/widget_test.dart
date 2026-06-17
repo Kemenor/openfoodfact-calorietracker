@@ -17,7 +17,7 @@ void main() {
           appStartupProvider.overrideWith((ref) async {}),
           daySummaryProvider.overrideWith(
             (ref) => Stream.value(
-              DaySummary(day: DayKey.today(), entries: const [], kcalTarget: null),
+              DaySummary(day: DayKey.today(), entries: const []),
             ),
           ),
           groupByMealProvider.overrideWith((ref) => Stream.value(true)),

@@ -36,25 +36,49 @@ class MealGroup {
   bool get isEmpty => items.isEmpty;
 }
 
+/// Where the day's total sits relative to its (optional) calorie bounds.
+enum TargetStatus { none, under, inRange, over }
+
+/// A resolved calorie target: either bound may be null (optional).
+class CalorieTarget {
+  final double? min;
+  final double? max;
+  const CalorieTarget(this.min, this.max);
+  bool get isEmpty => min == null && max == null;
+}
+
 /// Everything the day screen needs: flat list, meal groups, totals, target.
 class DaySummary {
   final String day;
   final List<EntryView> entries;
-  final double? kcalTarget;
+  final double? kcalMin;
+  final double? kcalMax;
 
   DaySummary({
     required this.day,
     required this.entries,
-    required this.kcalTarget,
+    this.kcalMin,
+    this.kcalMax,
   });
 
   Nutrition get total => Nutrition.sum(entries.map((e) => e.nutrition));
 
-  /// kcal left before hitting the target (negative = over). Null when no target.
-  double? get remaining =>
-      kcalTarget == null ? null : kcalTarget! - total.kcal;
+  bool get hasTarget => kcalMin != null || kcalMax != null;
 
-  bool get isOver => remaining != null && remaining! < 0;
+  /// kcal left before hitting the max (negative = over). Null when no max.
+  double? get remainingToMax =>
+      kcalMax == null ? null : kcalMax! - total.kcal;
+
+  /// kcal still needed to reach the min (positive = short). Null when no min.
+  double? get shortOfMin => kcalMin == null ? null : kcalMin! - total.kcal;
+
+  TargetStatus get status {
+    final t = total.kcal;
+    if (kcalMax != null && t > kcalMax!) return TargetStatus.over;
+    if (kcalMin != null && t < kcalMin!) return TargetStatus.under;
+    if (hasTarget) return TargetStatus.inRange;
+    return TargetStatus.none;
+  }
 
   /// All meals in display order (includes empty meals for the grouped view).
   List<MealGroup> get meals => MealType.values
@@ -62,13 +86,17 @@ class DaySummary {
       .toList();
 }
 
-/// Resolve the kcal target for a weekday: the weekday's own value if set,
-/// otherwise the app-wide default.
-double? resolveKcalTarget(
+/// Resolve the calorie bounds for a weekday: the weekday's own values if set,
+/// otherwise the app-wide defaults.
+CalorieTarget resolveTarget(
   List<Target> targets,
-  double? defaultKcal,
+  double? defaultMin,
+  double? defaultMax,
   int weekdayIndex,
 ) {
   final t = targets.firstWhereOrNull((t) => t.weekday == weekdayIndex);
-  return t?.kcal ?? defaultKcal;
+  return CalorieTarget(
+    t?.kcalMin ?? defaultMin,
+    t?.kcalMax ?? defaultMax,
+  );
 }

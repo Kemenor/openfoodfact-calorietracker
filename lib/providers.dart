@@ -52,10 +52,17 @@ final appStartupProvider = FutureProvider<void>((ref) async {
 
 // ---------------- Settings ----------------
 
-final defaultTargetProvider = StreamProvider<double?>((ref) {
+final defaultMinProvider = StreamProvider<double?>((ref) {
   return ref
       .watch(dbProvider)
-      .watchSetting('defaultKcalTarget')
+      .watchSetting('defaultKcalMin')
+      .map((v) => v == null ? null : double.tryParse(v));
+});
+
+final defaultMaxProvider = StreamProvider<double?>((ref) {
+  return ref
+      .watch(dbProvider)
+      .watchSetting('defaultKcalMax')
       .map((v) => v == null ? null : double.tryParse(v));
 });
 
@@ -89,15 +96,17 @@ final daySummaryProvider = StreamProvider<DaySummary>((ref) {
   final db = ref.watch(dbProvider);
   final day = ref.watch(selectedDayProvider);
   final targets = ref.watch(targetsProvider).asData?.value ?? const [];
-  final defaultTarget = ref.watch(defaultTargetProvider).asData?.value;
-  final kcalTarget =
-      resolveKcalTarget(targets, defaultTarget, DayKey.weekdayIndex(day));
+  final defaultMin = ref.watch(defaultMinProvider).asData?.value;
+  final defaultMax = ref.watch(defaultMaxProvider).asData?.value;
+  final target =
+      resolveTarget(targets, defaultMin, defaultMax, DayKey.weekdayIndex(day));
 
   return db.watchDay(day).map(
         (entries) => DaySummary(
           day: day,
           entries: entries.map(EntryView.new).toList(),
-          kcalTarget: kcalTarget,
+          kcalMin: target.min,
+          kcalMax: target.max,
         ),
       );
 });

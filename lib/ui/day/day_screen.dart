@@ -125,6 +125,14 @@ class _DayBody extends ConsumerWidget {
   }
 }
 
+String _rangeLabel(DaySummary s) {
+  final mn = s.kcalMin, mx = s.kcalMax;
+  if (mn != null && mx != null) return 'Target ${kcalStr(mn)}–${kcalStr(mx)} kcal';
+  if (mx != null) return 'Target ${kcalStr(mx)} kcal';
+  if (mn != null) return 'Minimum ${kcalStr(mn)} kcal';
+  return '';
+}
+
 class _SummaryCard extends StatelessWidget {
   final DaySummary summary;
   const _SummaryCard({required this.summary});
@@ -133,8 +141,21 @@ class _SummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final total = summary.total;
-    final target = summary.kcalTarget;
-    final remaining = summary.remaining;
+    final status = summary.status;
+    final color = switch (status) {
+      TargetStatus.over => theme.colorScheme.error,
+      TargetStatus.under => theme.colorScheme.tertiary,
+      TargetStatus.inRange => theme.colorScheme.primary,
+      TargetStatus.none => theme.colorScheme.onSurfaceVariant,
+    };
+    final statusText = switch (status) {
+      TargetStatus.over => '${kcalStr(-summary.remainingToMax!)} over',
+      TargetStatus.under => '${kcalStr(summary.shortOfMin!)} to go',
+      TargetStatus.inRange => summary.kcalMax != null
+          ? '${kcalStr(summary.remainingToMax!)} left'
+          : 'minimum reached',
+      TargetStatus.none => '',
+    };
 
     return Card(
       margin: const EdgeInsets.fromLTRB(16, 12, 16, 4),
@@ -153,33 +174,32 @@ class _SummaryCard extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text('kcal', style: theme.textTheme.titleMedium),
                 const Spacer(),
-                if (target != null)
+                if (summary.hasTarget)
                   Text(
-                    summary.isOver
-                        ? '${kcalStr(-remaining!)} over'
-                        : '${kcalStr(remaining!)} left',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: summary.isOver
-                          ? theme.colorScheme.error
-                          : theme.colorScheme.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    statusText,
+                    style: theme.textTheme.titleMedium
+                        ?.copyWith(color: color, fontWeight: FontWeight.w600),
                   ),
               ],
             ),
-            if (target != null) ...[
+            if (summary.kcalMax != null) ...[
               const SizedBox(height: 8),
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: LinearProgressIndicator(
-                  value: target == 0 ? 0 : (total.kcal / target).clamp(0.0, 1.0),
+                  value: summary.kcalMax == 0
+                      ? 0
+                      : (total.kcal / summary.kcalMax!).clamp(0.0, 1.0),
                   minHeight: 8,
-                  color: summary.isOver ? theme.colorScheme.error : null,
+                  color: status == TargetStatus.over
+                      ? theme.colorScheme.error
+                      : null,
                 ),
               ),
+            ],
+            if (summary.hasTarget) ...[
               const SizedBox(height: 4),
-              Text('Target ${kcalStr(target)} kcal',
-                  style: theme.textTheme.bodySmall),
+              Text(_rangeLabel(summary), style: theme.textTheme.bodySmall),
             ],
             const SizedBox(height: 12),
             _MacroRow(total: total),

@@ -15,7 +15,8 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final db = ref.watch(dbProvider);
     final targetsAsync = ref.watch(targetsProvider);
-    final defaultTarget = ref.watch(defaultTargetProvider).asData?.value;
+    final defaultMin = ref.watch(defaultMinProvider).asData?.value;
+    final defaultMax = ref.watch(defaultMaxProvider).asData?.value;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
@@ -23,42 +24,44 @@ class SettingsScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (targets) {
-          double? kcalFor(int wd) =>
-              targets.firstWhere((t) => t.weekday == wd).kcal;
+          Target rowFor(int wd) => targets.firstWhere((t) => t.weekday == wd);
           return ListView(
             children: [
               const _SectionHeader('Calorie targets'),
-              ListTile(
-                title: const Text('Default daily target'),
-                subtitle: const Text('Used when a weekday has no value'),
-                trailing: SizedBox(
-                  width: 110,
-                  child: _TargetField(
-                    key: const ValueKey('default-target'),
-                    initial: defaultTarget,
-                    onChanged: (v) => db.setSetting(
-                        'defaultKcalTarget', v?.toStringAsFixed(0)),
-                  ),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: Text(
+                  'Set a minimum, a maximum, or both. A minimum helps if you '
+                  'need to make sure you eat enough. Leave blank to use the default.',
                 ),
+              ),
+              _TargetRow(
+                label: 'Default',
+                keyPrefix: 'default',
+                initialMin: defaultMin,
+                initialMax: defaultMax,
+                onMin: (v) =>
+                    db.setSetting('defaultKcalMin', v?.toStringAsFixed(0)),
+                onMax: (v) =>
+                    db.setSetting('defaultKcalMax', v?.toStringAsFixed(0)),
               ),
               const Divider(),
               const Padding(
                 padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
-                child: Text('Per weekday (training days can be higher)'),
+                child: Text('Per weekday (training days can differ)'),
               ),
               for (var wd = 0; wd < 7; wd++)
-                ListTile(
-                  title: Text(kWeekdayNames[wd]),
-                  trailing: SizedBox(
-                    width: 110,
-                    child: _TargetField(
-                      key: ValueKey('target-$wd'),
-                      initial: kcalFor(wd),
-                      hint: defaultTarget?.toStringAsFixed(0),
-                      onChanged: (v) => db.setTarget(
-                          wd, TargetsCompanion(kcal: Value(v))),
-                    ),
-                  ),
+                _TargetRow(
+                  label: kWeekdayNames[wd],
+                  keyPrefix: 'wd$wd',
+                  initialMin: rowFor(wd).kcalMin,
+                  initialMax: rowFor(wd).kcalMax,
+                  hintMin: defaultMin?.toStringAsFixed(0),
+                  hintMax: defaultMax?.toStringAsFixed(0),
+                  onMin: (v) =>
+                      db.setTarget(wd, TargetsCompanion(kcalMin: Value(v))),
+                  onMax: (v) =>
+                      db.setTarget(wd, TargetsCompanion(kcalMax: Value(v))),
                 ),
               const Divider(),
               const _SectionHeader('Integrations'),
@@ -158,6 +161,63 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
+/// A weekday/default row with a Min and a Max calorie field.
+class _TargetRow extends StatelessWidget {
+  final String label;
+  final String keyPrefix;
+  final double? initialMin;
+  final double? initialMax;
+  final String? hintMin;
+  final String? hintMax;
+  final ValueChanged<double?> onMin;
+  final ValueChanged<double?> onMax;
+
+  const _TargetRow({
+    required this.label,
+    required this.keyPrefix,
+    required this.initialMin,
+    required this.initialMax,
+    required this.onMin,
+    required this.onMax,
+    this.hintMin,
+    this.hintMax,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Row(
+        children: [
+          Expanded(flex: 3, child: Text(label)),
+          Expanded(
+            flex: 2,
+            child: _TargetField(
+              key: ValueKey('$keyPrefix-min'),
+              initial: initialMin,
+              hint: hintMin ?? 'min',
+              onChanged: onMin,
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6),
+            child: Text('–'),
+          ),
+          Expanded(
+            flex: 2,
+            child: _TargetField(
+              key: ValueKey('$keyPrefix-max'),
+              initial: initialMax,
+              hint: hintMax ?? 'max',
+              onChanged: onMax,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 /// A small numeric field that reports a parsed kcal value (or null when empty).
 class _TargetField extends StatefulWidget {
   final double? initial;
@@ -194,7 +254,6 @@ class _TargetFieldState extends State<_TargetField> {
       decoration: InputDecoration(
         isDense: true,
         hintText: widget.hint ?? '—',
-        suffixText: 'kcal',
       ),
       onChanged: (v) {
         final parsed = v.trim().isEmpty ? null : double.tryParse(v.trim());

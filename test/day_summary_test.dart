@@ -33,14 +33,14 @@ void main() {
     ].map(EntryView.new).toList();
 
     test('total sums all entries', () {
-      final s = DaySummary(day: '2026-06-17', entries: entries, kcalTarget: null);
+      final s = DaySummary(day: '2026-06-17', entries: entries);
       // 200 + 50 + 300 = 550
       expect(s.total.kcal, closeTo(550, 0.001));
       expect(s.total.protein, closeTo(10, 0.001));
     });
 
     test('groups by meal in display order, includes empty meals', () {
-      final s = DaySummary(day: '2026-06-17', entries: entries, kcalTarget: null);
+      final s = DaySummary(day: '2026-06-17', entries: entries);
       final meals = s.meals;
       expect(meals.map((m) => m.meal).toList(), MealType.values);
       final breakfast = meals.firstWhere((m) => m.meal == MealType.breakfast);
@@ -50,41 +50,60 @@ void main() {
       expect(lunch.isEmpty, isTrue);
     });
 
-    test('remaining and over flags', () {
-      final under = DaySummary(day: '2026-06-17', entries: entries, kcalTarget: 600);
-      expect(under.remaining, closeTo(50, 0.001));
-      expect(under.isOver, isFalse);
+    // total is 550 kcal for the shared entries.
+    test('over max', () {
+      final s = DaySummary(day: '2026-06-17', entries: entries, kcalMax: 500);
+      expect(s.status, TargetStatus.over);
+      expect(s.remainingToMax, closeTo(-50, 0.001));
+    });
 
-      final over = DaySummary(day: '2026-06-17', entries: entries, kcalTarget: 500);
-      expect(over.remaining, closeTo(-50, 0.001));
-      expect(over.isOver, isTrue);
+    test('in range', () {
+      final s = DaySummary(
+          day: '2026-06-17', entries: entries, kcalMin: 400, kcalMax: 600);
+      expect(s.status, TargetStatus.inRange);
+      expect(s.remainingToMax, closeTo(50, 0.001));
+    });
 
-      final none = DaySummary(day: '2026-06-17', entries: entries, kcalTarget: null);
-      expect(none.remaining, isNull);
-      expect(none.isOver, isFalse);
+    test('under min', () {
+      final s = DaySummary(day: '2026-06-17', entries: entries, kcalMin: 800);
+      expect(s.status, TargetStatus.under);
+      expect(s.shortOfMin, closeTo(250, 0.001));
+    });
+
+    test('no target', () {
+      final s = DaySummary(day: '2026-06-17', entries: entries);
+      expect(s.status, TargetStatus.none);
+      expect(s.hasTarget, isFalse);
     });
   });
 
-  group('resolveKcalTarget', () {
+  group('resolveTarget', () {
     final targets = [
-      const Target(weekday: 0, kcal: 2200), // Monday: training day
-      const Target(weekday: 2), // Wednesday: no override
+      const Target(weekday: 0, kcalMin: 2400, kcalMax: 2800), // training day
+      const Target(weekday: 2), // no override
     ];
 
     test('uses weekday override when set', () {
-      expect(resolveKcalTarget(targets, 2000, 0), 2200);
+      final t = resolveTarget(targets, 1800, 2200, 0);
+      expect(t.min, 2400);
+      expect(t.max, 2800);
     });
 
-    test('falls back to default when weekday value null', () {
-      expect(resolveKcalTarget(targets, 2000, 2), 2000);
+    test('falls back to defaults when weekday values null', () {
+      final t = resolveTarget(targets, 1800, 2200, 2);
+      expect(t.min, 1800);
+      expect(t.max, 2200);
     });
 
-    test('falls back to default when weekday missing', () {
-      expect(resolveKcalTarget(targets, 1800, 5), 1800);
+    test('falls back to defaults when weekday missing', () {
+      final t = resolveTarget(targets, 1800, 2200, 5);
+      expect(t.min, 1800);
+      expect(t.max, 2200);
     });
 
-    test('null default yields null', () {
-      expect(resolveKcalTarget(targets, null, 2), isNull);
+    test('null defaults yield empty target', () {
+      final t = resolveTarget(targets, null, null, 2);
+      expect(t.isEmpty, isTrue);
     });
   });
 }

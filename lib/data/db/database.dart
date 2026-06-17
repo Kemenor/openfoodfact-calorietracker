@@ -15,7 +15,7 @@ class AppDatabase extends _$AppDatabase {
       : super(executor ?? driftDatabase(name: 'calorie_tracker'));
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -24,6 +24,18 @@ class AppDatabase extends _$AppDatabase {
           // Seed the 7 weekday target rows (all null = "use default").
           for (var wd = 0; wd < 7; wd++) {
             await into(targets).insert(TargetsCompanion.insert(weekday: Value(wd)));
+          }
+        },
+        onUpgrade: (m, from, to) async {
+          if (from < 2) {
+            // Split single calorie target into min/max; carry the old value
+            // forward as the maximum, and rename the default setting key.
+            await m.addColumn(targets, targets.kcalMin);
+            await m.addColumn(targets, targets.kcalMax);
+            await customStatement('UPDATE targets SET kcal_max = kcal');
+            await customStatement(
+                "UPDATE settings SET key = 'defaultKcalMax' "
+                "WHERE key = 'defaultKcalTarget'");
           }
         },
         beforeOpen: (details) async {
