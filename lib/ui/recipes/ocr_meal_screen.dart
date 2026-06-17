@@ -212,15 +212,33 @@ class _OcrMealScreenState extends ConsumerState<OcrMealScreen> {
     final matched = _ready.length;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Review meal'),
-        actions: [
-          IconButton(
-            tooltip: 'Add ingredient',
-            icon: const Icon(Icons.add),
-            onPressed: _addIngredient,
+      appBar: AppBar(title: const Text('Review meal')),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _addIngredient,
+        icon: const Icon(Icons.add),
+        label: const Text('Add ingredient'),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: _saveRecipe,
+                  child: const Text('Save as recipe'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: FilledButton(
+                  onPressed: _logToDay,
+                  child: const Text('Log to day'),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
       body: Column(
         children: [
@@ -252,30 +270,9 @@ class _OcrMealScreenState extends ConsumerState<OcrMealScreen> {
           const Divider(height: 1),
           Expanded(
             child: ListView.builder(
+              padding: const EdgeInsets.only(bottom: 88),
               itemCount: _items.length,
               itemBuilder: (context, i) => _row(context, i),
-            ),
-          ),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: _saveRecipe,
-                      child: const Text('Save as recipe'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: FilledButton(
-                      onPressed: _logToDay,
-                      child: const Text('Log to day'),
-                    ),
-                  ),
-                ],
-              ),
             ),
           ),
         ],
