@@ -51,6 +51,40 @@ Future<bool?> showLogFoodSheet(
   );
 }
 
+/// Amount picker reusing the same sheet UI (unit selector, quick-picks, serving,
+/// live kcal) but returning the chosen grams instead of logging — used for
+/// recipe ingredients so they match the add-food flow.
+Future<double?> showAmountSheet(
+  BuildContext context, {
+  required Food food,
+  double? initialGrams,
+  String submitLabel = 'Add',
+}) async {
+  double? result;
+  final ok = await showModalBottomSheet<bool>(
+    context: context,
+    isScrollControlled: true,
+    showDragHandle: true,
+    builder: (_) => _LogSheet(
+      title: 'Amount',
+      submitLabel: submitLabel,
+      name: food.name,
+      brand: food.brand,
+      kcal100: food.kcal100,
+      protein100: food.protein100,
+      carb100: food.carb100,
+      fat100: food.fat100,
+      servingG: food.servingG,
+      servingLabel: food.servingLabel,
+      initialGrams: initialGrams ?? food.servingG ?? 100,
+      initialMeal: MealType.snack,
+      askMeal: false,
+      onSubmit: (g, _) async => result = g,
+    ),
+  );
+  return ok == true ? result : null;
+}
+
 /// Sheet to edit an existing diary [entry] (grams + meal, or delete).
 void showEditEntrySheet(BuildContext context, WidgetRef ref, Entry entry) {
   final askMeal = _askMeal(ref);

@@ -7,8 +7,8 @@ import '../../data/db/database.dart';
 import '../../domain/nutrition.dart';
 import '../../domain/recipe_share.dart';
 import '../../providers.dart';
-import '../food/food_search_list.dart';
-import '../food/manual_food_screen.dart';
+import '../food/food_picker_screen.dart';
+import '../food/log_food_sheet.dart';
 
 /// Create a recipe: name, servings, and a list of ingredients (food + grams).
 class RecipeEditScreen extends ConsumerStatefulWidget {
@@ -33,12 +33,15 @@ class _RecipeEditScreenState extends ConsumerState<RecipeEditScreen> {
   Nutrition get _total => Nutrition.sum(_items.map((i) => i.nutrition));
 
   Future<void> _addIngredient() async {
+    // Same components as the add-food flow: shared picker (search/scan/custom)
+    // + the amount sheet (unit selector, quick-picks, serving).
     final food = await Navigator.of(context).push<Food>(
-      MaterialPageRoute(builder: (_) => const _FoodPickerScreen()),
+      MaterialPageRoute(
+          builder: (_) => const FoodPickerScreen(title: 'Add ingredient')),
     );
     if (food == null || !mounted) return;
-    final grams = await _askGrams(food.servingG ?? 100);
-    if (grams == null) return;
+    final grams = await showAmountSheet(context, food: food);
+    if (grams == null || !mounted) return;
     setState(() {
       _items.add(RecipeShareItem(
         name: food.name,
@@ -49,32 +52,6 @@ class _RecipeEditScreenState extends ConsumerState<RecipeEditScreen> {
         fat100: food.fat100,
       ));
     });
-  }
-
-  Future<double?> _askGrams(double initial) async {
-    final c = TextEditingController(text: gramsStr(initial));
-    return showDialog<double>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Amount'),
-        content: TextField(
-          controller: c,
-          autofocus: true,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
-          decoration: const InputDecoration(suffixText: 'g'),
-        ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
-          FilledButton(
-            onPressed: () => Navigator.pop(
-                ctx, double.tryParse(c.text.replaceAll(',', '.'))),
-            child: const Text('Add'),
-          ),
-        ],
-      ),
-    );
   }
 
   Future<void> _save() async {
@@ -153,27 +130,6 @@ class _RecipeEditScreenState extends ConsumerState<RecipeEditScreen> {
             label: const Text('Add ingredient'),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// Picks a single food (search or create-custom) and pops it.
-class _FoodPickerScreen extends ConsumerWidget {
-  const _FoodPickerScreen();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Add ingredient')),
-      body: FoodSearchList(
-        onPick: (food) => Navigator.of(context).pop(food),
-        onCreateCustom: () async {
-          final food = await Navigator.of(context).push<Food>(
-            MaterialPageRoute(builder: (_) => const ManualFoodScreen()),
-          );
-          if (food != null && context.mounted) Navigator.of(context).pop(food);
-        },
       ),
     );
   }
