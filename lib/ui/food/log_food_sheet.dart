@@ -19,6 +19,7 @@ Future<bool?> showLogFoodSheet(
   required Food food,
   required String day,
   required MealType meal,
+  Future<int?> Function()? resolveGroup,
 }) {
   // Read once, now — never inside the builder, which re-runs on sheet rebuilds
   // when the caller's ref may already be disposed (e.g. after delete).
@@ -41,9 +42,11 @@ Future<bool?> showLogFoodSheet(
       initialGrams: food.servingG ?? 100,
       initialMeal: meal,
       askMeal: askMeal,
-      onSubmit: (g, m) => ref
-          .read(diaryRepositoryProvider)
-          .logFood(food: food, grams: g, meal: m, day: day),
+      onSubmit: (g, m) async {
+        final groupId = resolveGroup == null ? null : await resolveGroup();
+        await ref.read(diaryRepositoryProvider).logFood(
+            food: food, grams: g, meal: m, day: day, groupId: groupId);
+      },
     ),
   );
 }
@@ -71,7 +74,10 @@ void showEditEntrySheet(BuildContext context, WidgetRef ref, Entry entry) {
       askMeal: askMeal,
       onSubmit: (g, m) =>
           ref.read(diaryRepositoryProvider).editEntry(entry, grams: g, meal: m),
-      onDelete: () => ref.read(diaryRepositoryProvider).deleteEntry(entry.id),
+      onDelete: () async {
+        await ref.read(diaryRepositoryProvider).deleteEntry(entry.id);
+        await ref.read(dbProvider).pruneEmptyGroups(entry.day);
+      },
     ),
   );
 }

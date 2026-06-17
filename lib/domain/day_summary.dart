@@ -25,6 +25,18 @@ class EntryView {
   MealType get meal => entry.mealType;
 }
 
+/// An ad-hoc day-mode group (header) with its entries and subtotal.
+class GroupView {
+  final EntryGroup group;
+  final List<EntryView> items;
+
+  GroupView(this.group, this.items);
+
+  int get id => group.id;
+  String get name => group.name;
+  Nutrition get subtotal => Nutrition.sum(items.map((e) => e.nutrition));
+}
+
 /// Entries of one meal plus their subtotal.
 class MealGroup {
   final MealType meal;

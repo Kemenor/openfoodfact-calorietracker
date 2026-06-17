@@ -1217,6 +1217,304 @@ class FoodsCompanion extends UpdateCompanion<Food> {
   }
 }
 
+class $EntryGroupsTable extends EntryGroups
+    with TableInfo<$EntryGroupsTable, EntryGroup> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $EntryGroupsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _dayMeta = const VerificationMeta('day');
+  @override
+  late final GeneratedColumn<String> day = GeneratedColumn<String>(
+    'day',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 10,
+      maxTextLength: 10,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, day, name, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'entry_groups';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<EntryGroup> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('day')) {
+      context.handle(
+        _dayMeta,
+        day.isAcceptableOrUnknown(data['day']!, _dayMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dayMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  EntryGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return EntryGroup(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      day: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}day'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $EntryGroupsTable createAlias(String alias) {
+    return $EntryGroupsTable(attachedDatabase, alias);
+  }
+}
+
+class EntryGroup extends DataClass implements Insertable<EntryGroup> {
+  final int id;
+  final String day;
+  final String name;
+  final DateTime createdAt;
+  const EntryGroup({
+    required this.id,
+    required this.day,
+    required this.name,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['day'] = Variable<String>(day);
+    map['name'] = Variable<String>(name);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  EntryGroupsCompanion toCompanion(bool nullToAbsent) {
+    return EntryGroupsCompanion(
+      id: Value(id),
+      day: Value(day),
+      name: Value(name),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory EntryGroup.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return EntryGroup(
+      id: serializer.fromJson<int>(json['id']),
+      day: serializer.fromJson<String>(json['day']),
+      name: serializer.fromJson<String>(json['name']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'day': serializer.toJson<String>(day),
+      'name': serializer.toJson<String>(name),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  EntryGroup copyWith({
+    int? id,
+    String? day,
+    String? name,
+    DateTime? createdAt,
+  }) => EntryGroup(
+    id: id ?? this.id,
+    day: day ?? this.day,
+    name: name ?? this.name,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  EntryGroup copyWithCompanion(EntryGroupsCompanion data) {
+    return EntryGroup(
+      id: data.id.present ? data.id.value : this.id,
+      day: data.day.present ? data.day.value : this.day,
+      name: data.name.present ? data.name.value : this.name,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EntryGroup(')
+          ..write('id: $id, ')
+          ..write('day: $day, ')
+          ..write('name: $name, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, day, name, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is EntryGroup &&
+          other.id == this.id &&
+          other.day == this.day &&
+          other.name == this.name &&
+          other.createdAt == this.createdAt);
+}
+
+class EntryGroupsCompanion extends UpdateCompanion<EntryGroup> {
+  final Value<int> id;
+  final Value<String> day;
+  final Value<String> name;
+  final Value<DateTime> createdAt;
+  const EntryGroupsCompanion({
+    this.id = const Value.absent(),
+    this.day = const Value.absent(),
+    this.name = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  EntryGroupsCompanion.insert({
+    this.id = const Value.absent(),
+    required String day,
+    required String name,
+    this.createdAt = const Value.absent(),
+  }) : day = Value(day),
+       name = Value(name);
+  static Insertable<EntryGroup> custom({
+    Expression<int>? id,
+    Expression<String>? day,
+    Expression<String>? name,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (day != null) 'day': day,
+      if (name != null) 'name': name,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  EntryGroupsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? day,
+    Value<String>? name,
+    Value<DateTime>? createdAt,
+  }) {
+    return EntryGroupsCompanion(
+      id: id ?? this.id,
+      day: day ?? this.day,
+      name: name ?? this.name,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (day.present) {
+      map['day'] = Variable<String>(day.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EntryGroupsCompanion(')
+          ..write('id: $id, ')
+          ..write('day: $day, ')
+          ..write('name: $name, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $EntriesTable extends Entries with TableInfo<$EntriesTable, Entry> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -1257,6 +1555,20 @@ class $EntriesTable extends Entries with TableInfo<$EntriesTable, Entry> {
         type: DriftSqlType.int,
         requiredDuringInsert: true,
       ).withConverter<MealType>($EntriesTable.$convertermealType);
+  static const VerificationMeta _groupIdMeta = const VerificationMeta(
+    'groupId',
+  );
+  @override
+  late final GeneratedColumn<int> groupId = GeneratedColumn<int>(
+    'group_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES entry_groups (id) ON DELETE CASCADE',
+    ),
+  );
   static const VerificationMeta _foodIdMeta = const VerificationMeta('foodId');
   @override
   late final GeneratedColumn<int> foodId = GeneratedColumn<int>(
@@ -1371,6 +1683,7 @@ class $EntriesTable extends Entries with TableInfo<$EntriesTable, Entry> {
     id,
     day,
     mealType,
+    groupId,
     foodId,
     grams,
     sName,
@@ -1404,6 +1717,12 @@ class $EntriesTable extends Entries with TableInfo<$EntriesTable, Entry> {
       );
     } else if (isInserting) {
       context.missing(_dayMeta);
+    }
+    if (data.containsKey('group_id')) {
+      context.handle(
+        _groupIdMeta,
+        groupId.isAcceptableOrUnknown(data['group_id']!, _groupIdMeta),
+      );
     }
     if (data.containsKey('food_id')) {
       context.handle(
@@ -1500,6 +1819,10 @@ class $EntriesTable extends Entries with TableInfo<$EntriesTable, Entry> {
           data['${effectivePrefix}meal_type'],
         )!,
       ),
+      groupId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}group_id'],
+      ),
       foodId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}food_id'],
@@ -1559,6 +1882,10 @@ class Entry extends DataClass implements Insertable<Entry> {
   final String day;
   final MealType mealType;
 
+  /// In track-by-day mode, the ad-hoc group this entry belongs to (null in
+  /// meal mode, where mealType organizes the day instead).
+  final int? groupId;
+
   /// Convenience link back to the catalog food (nullable; snapshot is the source of truth).
   final int? foodId;
   final double grams;
@@ -1574,6 +1901,7 @@ class Entry extends DataClass implements Insertable<Entry> {
     required this.id,
     required this.day,
     required this.mealType,
+    this.groupId,
     this.foodId,
     required this.grams,
     required this.sName,
@@ -1594,6 +1922,9 @@ class Entry extends DataClass implements Insertable<Entry> {
       map['meal_type'] = Variable<int>(
         $EntriesTable.$convertermealType.toSql(mealType),
       );
+    }
+    if (!nullToAbsent || groupId != null) {
+      map['group_id'] = Variable<int>(groupId);
     }
     if (!nullToAbsent || foodId != null) {
       map['food_id'] = Variable<int>(foodId);
@@ -1623,6 +1954,9 @@ class Entry extends DataClass implements Insertable<Entry> {
       id: Value(id),
       day: Value(day),
       mealType: Value(mealType),
+      groupId: groupId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(groupId),
       foodId: foodId == null && nullToAbsent
           ? const Value.absent()
           : Value(foodId),
@@ -1657,6 +1991,7 @@ class Entry extends DataClass implements Insertable<Entry> {
       mealType: $EntriesTable.$convertermealType.fromJson(
         serializer.fromJson<int>(json['mealType']),
       ),
+      groupId: serializer.fromJson<int?>(json['groupId']),
       foodId: serializer.fromJson<int?>(json['foodId']),
       grams: serializer.fromJson<double>(json['grams']),
       sName: serializer.fromJson<String>(json['sName']),
@@ -1678,6 +2013,7 @@ class Entry extends DataClass implements Insertable<Entry> {
       'mealType': serializer.toJson<int>(
         $EntriesTable.$convertermealType.toJson(mealType),
       ),
+      'groupId': serializer.toJson<int?>(groupId),
       'foodId': serializer.toJson<int?>(foodId),
       'grams': serializer.toJson<double>(grams),
       'sName': serializer.toJson<String>(sName),
@@ -1695,6 +2031,7 @@ class Entry extends DataClass implements Insertable<Entry> {
     int? id,
     String? day,
     MealType? mealType,
+    Value<int?> groupId = const Value.absent(),
     Value<int?> foodId = const Value.absent(),
     double? grams,
     String? sName,
@@ -1709,6 +2046,7 @@ class Entry extends DataClass implements Insertable<Entry> {
     id: id ?? this.id,
     day: day ?? this.day,
     mealType: mealType ?? this.mealType,
+    groupId: groupId.present ? groupId.value : this.groupId,
     foodId: foodId.present ? foodId.value : this.foodId,
     grams: grams ?? this.grams,
     sName: sName ?? this.sName,
@@ -1725,6 +2063,7 @@ class Entry extends DataClass implements Insertable<Entry> {
       id: data.id.present ? data.id.value : this.id,
       day: data.day.present ? data.day.value : this.day,
       mealType: data.mealType.present ? data.mealType.value : this.mealType,
+      groupId: data.groupId.present ? data.groupId.value : this.groupId,
       foodId: data.foodId.present ? data.foodId.value : this.foodId,
       grams: data.grams.present ? data.grams.value : this.grams,
       sName: data.sName.present ? data.sName.value : this.sName,
@@ -1748,6 +2087,7 @@ class Entry extends DataClass implements Insertable<Entry> {
           ..write('id: $id, ')
           ..write('day: $day, ')
           ..write('mealType: $mealType, ')
+          ..write('groupId: $groupId, ')
           ..write('foodId: $foodId, ')
           ..write('grams: $grams, ')
           ..write('sName: $sName, ')
@@ -1767,6 +2107,7 @@ class Entry extends DataClass implements Insertable<Entry> {
     id,
     day,
     mealType,
+    groupId,
     foodId,
     grams,
     sName,
@@ -1785,6 +2126,7 @@ class Entry extends DataClass implements Insertable<Entry> {
           other.id == this.id &&
           other.day == this.day &&
           other.mealType == this.mealType &&
+          other.groupId == this.groupId &&
           other.foodId == this.foodId &&
           other.grams == this.grams &&
           other.sName == this.sName &&
@@ -1801,6 +2143,7 @@ class EntriesCompanion extends UpdateCompanion<Entry> {
   final Value<int> id;
   final Value<String> day;
   final Value<MealType> mealType;
+  final Value<int?> groupId;
   final Value<int?> foodId;
   final Value<double> grams;
   final Value<String> sName;
@@ -1815,6 +2158,7 @@ class EntriesCompanion extends UpdateCompanion<Entry> {
     this.id = const Value.absent(),
     this.day = const Value.absent(),
     this.mealType = const Value.absent(),
+    this.groupId = const Value.absent(),
     this.foodId = const Value.absent(),
     this.grams = const Value.absent(),
     this.sName = const Value.absent(),
@@ -1830,6 +2174,7 @@ class EntriesCompanion extends UpdateCompanion<Entry> {
     this.id = const Value.absent(),
     required String day,
     required MealType mealType,
+    this.groupId = const Value.absent(),
     this.foodId = const Value.absent(),
     required double grams,
     required String sName,
@@ -1849,6 +2194,7 @@ class EntriesCompanion extends UpdateCompanion<Entry> {
     Expression<int>? id,
     Expression<String>? day,
     Expression<int>? mealType,
+    Expression<int>? groupId,
     Expression<int>? foodId,
     Expression<double>? grams,
     Expression<String>? sName,
@@ -1864,6 +2210,7 @@ class EntriesCompanion extends UpdateCompanion<Entry> {
       if (id != null) 'id': id,
       if (day != null) 'day': day,
       if (mealType != null) 'meal_type': mealType,
+      if (groupId != null) 'group_id': groupId,
       if (foodId != null) 'food_id': foodId,
       if (grams != null) 'grams': grams,
       if (sName != null) 's_name': sName,
@@ -1881,6 +2228,7 @@ class EntriesCompanion extends UpdateCompanion<Entry> {
     Value<int>? id,
     Value<String>? day,
     Value<MealType>? mealType,
+    Value<int?>? groupId,
     Value<int?>? foodId,
     Value<double>? grams,
     Value<String>? sName,
@@ -1896,6 +2244,7 @@ class EntriesCompanion extends UpdateCompanion<Entry> {
       id: id ?? this.id,
       day: day ?? this.day,
       mealType: mealType ?? this.mealType,
+      groupId: groupId ?? this.groupId,
       foodId: foodId ?? this.foodId,
       grams: grams ?? this.grams,
       sName: sName ?? this.sName,
@@ -1922,6 +2271,9 @@ class EntriesCompanion extends UpdateCompanion<Entry> {
       map['meal_type'] = Variable<int>(
         $EntriesTable.$convertermealType.toSql(mealType.value),
       );
+    }
+    if (groupId.present) {
+      map['group_id'] = Variable<int>(groupId.value);
     }
     if (foodId.present) {
       map['food_id'] = Variable<int>(foodId.value);
@@ -1962,6 +2314,7 @@ class EntriesCompanion extends UpdateCompanion<Entry> {
           ..write('id: $id, ')
           ..write('day: $day, ')
           ..write('mealType: $mealType, ')
+          ..write('groupId: $groupId, ')
           ..write('foodId: $foodId, ')
           ..write('grams: $grams, ')
           ..write('sName: $sName, ')
@@ -3586,6 +3939,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $FoodsTable foods = $FoodsTable(this);
+  late final $EntryGroupsTable entryGroups = $EntryGroupsTable(this);
   late final $EntriesTable entries = $EntriesTable(this);
   late final $TargetsTable targets = $TargetsTable(this);
   late final $RecipesTable recipes = $RecipesTable(this);
@@ -3597,6 +3951,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     foods,
+    entryGroups,
     entries,
     targets,
     recipes,
@@ -3605,6 +3960,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'entry_groups',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('entries', kind: UpdateKind.delete)],
+    ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
         'foods',
@@ -4246,11 +4608,289 @@ typedef $$FoodsTableProcessedTableManager =
       Food,
       PrefetchHooks Function({bool entriesRefs})
     >;
+typedef $$EntryGroupsTableCreateCompanionBuilder =
+    EntryGroupsCompanion Function({
+      Value<int> id,
+      required String day,
+      required String name,
+      Value<DateTime> createdAt,
+    });
+typedef $$EntryGroupsTableUpdateCompanionBuilder =
+    EntryGroupsCompanion Function({
+      Value<int> id,
+      Value<String> day,
+      Value<String> name,
+      Value<DateTime> createdAt,
+    });
+
+final class $$EntryGroupsTableReferences
+    extends BaseReferences<_$AppDatabase, $EntryGroupsTable, EntryGroup> {
+  $$EntryGroupsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$EntriesTable, List<Entry>> _entriesRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.entries,
+    aliasName: 'entry_groups__id__entries__group_id',
+  );
+
+  $$EntriesTableProcessedTableManager get entriesRefs {
+    final manager = $$EntriesTableTableManager(
+      $_db,
+      $_db.entries,
+    ).filter((f) => f.groupId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_entriesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$EntryGroupsTableFilterComposer
+    extends Composer<_$AppDatabase, $EntryGroupsTable> {
+  $$EntryGroupsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get day => $composableBuilder(
+    column: $table.day,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> entriesRefs(
+    Expression<bool> Function($$EntriesTableFilterComposer f) f,
+  ) {
+    final $$EntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.entries,
+      getReferencedColumn: (t) => t.groupId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.entries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$EntryGroupsTableOrderingComposer
+    extends Composer<_$AppDatabase, $EntryGroupsTable> {
+  $$EntryGroupsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get day => $composableBuilder(
+    column: $table.day,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$EntryGroupsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $EntryGroupsTable> {
+  $$EntryGroupsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get day =>
+      $composableBuilder(column: $table.day, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  Expression<T> entriesRefs<T extends Object>(
+    Expression<T> Function($$EntriesTableAnnotationComposer a) f,
+  ) {
+    final $$EntriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.entries,
+      getReferencedColumn: (t) => t.groupId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EntriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.entries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$EntryGroupsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $EntryGroupsTable,
+          EntryGroup,
+          $$EntryGroupsTableFilterComposer,
+          $$EntryGroupsTableOrderingComposer,
+          $$EntryGroupsTableAnnotationComposer,
+          $$EntryGroupsTableCreateCompanionBuilder,
+          $$EntryGroupsTableUpdateCompanionBuilder,
+          (EntryGroup, $$EntryGroupsTableReferences),
+          EntryGroup,
+          PrefetchHooks Function({bool entriesRefs})
+        > {
+  $$EntryGroupsTableTableManager(_$AppDatabase db, $EntryGroupsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$EntryGroupsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$EntryGroupsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$EntryGroupsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> day = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => EntryGroupsCompanion(
+                id: id,
+                day: day,
+                name: name,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String day,
+                required String name,
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => EntryGroupsCompanion.insert(
+                id: id,
+                day: day,
+                name: name,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$EntryGroupsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({entriesRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (entriesRefs) db.entries],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (entriesRefs)
+                    await $_getPrefetchedData<
+                      EntryGroup,
+                      $EntryGroupsTable,
+                      Entry
+                    >(
+                      currentTable: table,
+                      referencedTable: $$EntryGroupsTableReferences
+                          ._entriesRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$EntryGroupsTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).entriesRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.groupId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$EntryGroupsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $EntryGroupsTable,
+      EntryGroup,
+      $$EntryGroupsTableFilterComposer,
+      $$EntryGroupsTableOrderingComposer,
+      $$EntryGroupsTableAnnotationComposer,
+      $$EntryGroupsTableCreateCompanionBuilder,
+      $$EntryGroupsTableUpdateCompanionBuilder,
+      (EntryGroup, $$EntryGroupsTableReferences),
+      EntryGroup,
+      PrefetchHooks Function({bool entriesRefs})
+    >;
 typedef $$EntriesTableCreateCompanionBuilder =
     EntriesCompanion Function({
       Value<int> id,
       required String day,
       required MealType mealType,
+      Value<int?> groupId,
       Value<int?> foodId,
       required double grams,
       required String sName,
@@ -4267,6 +4907,7 @@ typedef $$EntriesTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> day,
       Value<MealType> mealType,
+      Value<int?> groupId,
       Value<int?> foodId,
       Value<double> grams,
       Value<String> sName,
@@ -4282,6 +4923,23 @@ typedef $$EntriesTableUpdateCompanionBuilder =
 final class $$EntriesTableReferences
     extends BaseReferences<_$AppDatabase, $EntriesTable, Entry> {
   $$EntriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $EntryGroupsTable _groupIdTable(_$AppDatabase db) =>
+      db.entryGroups.createAlias('entries__group_id__entry_groups__id');
+
+  $$EntryGroupsTableProcessedTableManager? get groupId {
+    final $_column = $_itemColumn<int>('group_id');
+    if ($_column == null) return null;
+    final manager = $$EntryGroupsTableTableManager(
+      $_db,
+      $_db.entryGroups,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_groupIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
 
   static $FoodsTable _foodIdTable(_$AppDatabase db) =>
       db.foods.createAlias('entries__food_id__foods__id');
@@ -4370,6 +5028,29 @@ class $$EntriesTableFilterComposer
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$EntryGroupsTableFilterComposer get groupId {
+    final $$EntryGroupsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.groupId,
+      referencedTable: $db.entryGroups,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EntryGroupsTableFilterComposer(
+            $db: $db,
+            $table: $db.entryGroups,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   $$FoodsTableFilterComposer get foodId {
     final $$FoodsTableFilterComposer composer = $composerBuilder(
@@ -4464,6 +5145,29 @@ class $$EntriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  $$EntryGroupsTableOrderingComposer get groupId {
+    final $$EntryGroupsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.groupId,
+      referencedTable: $db.entryGroups,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EntryGroupsTableOrderingComposer(
+            $db: $db,
+            $table: $db.entryGroups,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
   $$FoodsTableOrderingComposer get foodId {
     final $$FoodsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -4537,6 +5241,29 @@ class $$EntriesTableAnnotationComposer
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
+  $$EntryGroupsTableAnnotationComposer get groupId {
+    final $$EntryGroupsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.groupId,
+      referencedTable: $db.entryGroups,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EntryGroupsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.entryGroups,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
   $$FoodsTableAnnotationComposer get foodId {
     final $$FoodsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -4574,7 +5301,7 @@ class $$EntriesTableTableManager
           $$EntriesTableUpdateCompanionBuilder,
           (Entry, $$EntriesTableReferences),
           Entry,
-          PrefetchHooks Function({bool foodId})
+          PrefetchHooks Function({bool groupId, bool foodId})
         > {
   $$EntriesTableTableManager(_$AppDatabase db, $EntriesTable table)
     : super(
@@ -4592,6 +5319,7 @@ class $$EntriesTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> day = const Value.absent(),
                 Value<MealType> mealType = const Value.absent(),
+                Value<int?> groupId = const Value.absent(),
                 Value<int?> foodId = const Value.absent(),
                 Value<double> grams = const Value.absent(),
                 Value<String> sName = const Value.absent(),
@@ -4606,6 +5334,7 @@ class $$EntriesTableTableManager
                 id: id,
                 day: day,
                 mealType: mealType,
+                groupId: groupId,
                 foodId: foodId,
                 grams: grams,
                 sName: sName,
@@ -4622,6 +5351,7 @@ class $$EntriesTableTableManager
                 Value<int> id = const Value.absent(),
                 required String day,
                 required MealType mealType,
+                Value<int?> groupId = const Value.absent(),
                 Value<int?> foodId = const Value.absent(),
                 required double grams,
                 required String sName,
@@ -4636,6 +5366,7 @@ class $$EntriesTableTableManager
                 id: id,
                 day: day,
                 mealType: mealType,
+                groupId: groupId,
                 foodId: foodId,
                 grams: grams,
                 sName: sName,
@@ -4655,7 +5386,7 @@ class $$EntriesTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({foodId = false}) {
+          prefetchHooksCallback: ({groupId = false, foodId = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -4675,6 +5406,19 @@ class $$EntriesTableTableManager
                       dynamic
                     >
                   >(state) {
+                    if (groupId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.groupId,
+                                referencedTable: $$EntriesTableReferences
+                                    ._groupIdTable(db),
+                                referencedColumn: $$EntriesTableReferences
+                                    ._groupIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
                     if (foodId) {
                       state =
                           state.withJoin(
@@ -4712,7 +5456,7 @@ typedef $$EntriesTableProcessedTableManager =
       $$EntriesTableUpdateCompanionBuilder,
       (Entry, $$EntriesTableReferences),
       Entry,
-      PrefetchHooks Function({bool foodId})
+      PrefetchHooks Function({bool groupId, bool foodId})
     >;
 typedef $$TargetsTableCreateCompanionBuilder =
     TargetsCompanion Function({
@@ -5783,6 +6527,8 @@ class $AppDatabaseManager {
   $AppDatabaseManager(this._db);
   $$FoodsTableTableManager get foods =>
       $$FoodsTableTableManager(_db, _db.foods);
+  $$EntryGroupsTableTableManager get entryGroups =>
+      $$EntryGroupsTableTableManager(_db, _db.entryGroups);
   $$EntriesTableTableManager get entries =>
       $$EntriesTableTableManager(_db, _db.entries);
   $$TargetsTableTableManager get targets =>

@@ -45,6 +45,15 @@ class Foods extends Table {
       ];
 }
 
+/// An ad-hoc meal group for track-by-day mode: consecutive adds form a group
+/// (header + ingredients). Not a saved cookbook recipe. Time-based default name.
+class EntryGroups extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get day => text().withLength(min: 10, max: 10)();
+  TextColumn get name => text()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+
 /// A logged food on a given day. Carries a nutrition snapshot so editing or
 /// re-caching the source food never rewrites history.
 class Entries extends Table {
@@ -53,6 +62,12 @@ class Entries extends Table {
   /// Local calendar day as 'YYYY-MM-DD'.
   TextColumn get day => text().withLength(min: 10, max: 10)();
   IntColumn get mealType => intEnum<MealType>()();
+
+  /// In track-by-day mode, the ad-hoc group this entry belongs to (null in
+  /// meal mode, where mealType organizes the day instead).
+  IntColumn get groupId => integer()
+      .nullable()
+      .references(EntryGroups, #id, onDelete: KeyAction.cascade)();
 
   /// Convenience link back to the catalog food (nullable; snapshot is the source of truth).
   IntColumn get foodId =>

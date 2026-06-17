@@ -14,16 +14,19 @@ class DiaryRepository {
 
   Future<List<String>> recentDays() => db.daysWithEntries();
 
-  /// Log a catalog food into a day/meal at [grams].
+  /// Log a catalog food into a day at [grams]. In meal mode pass [meal]; in
+  /// track-by-day mode pass [groupId] (the ad-hoc meal group).
   Future<void> logFood({
     required Food food,
     required double grams,
     required MealType meal,
     required String day,
+    int? groupId,
   }) async {
     await db.addEntry(EntriesCompanion.insert(
       day: day,
       mealType: meal,
+      groupId: Value(groupId),
       grams: grams,
       foodId: Value(food.id),
       sName: food.name,

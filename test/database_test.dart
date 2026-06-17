@@ -90,6 +90,43 @@ void main() {
     expect(entries.first.sName, 'Egg');
   });
 
+  test('entry groups: create, watch, prune empties', () async {
+    final gid = await db.createEntryGroup('2026-06-17', 'Meal 12:00');
+    await db.addEntry(EntriesCompanion.insert(
+      day: '2026-06-17',
+      mealType: MealType.snack,
+      groupId: Value(gid),
+      grams: 100,
+      sName: 'X',
+      sKcal100: 50,
+    ));
+    expect((await db.watchGroups('2026-06-17').first).length, 1);
+
+    // prune keeps non-empty groups
+    await db.pruneEmptyGroups('2026-06-17');
+    expect((await db.watchGroups('2026-06-17').first).length, 1);
+
+    // remove the only entry -> group is empty -> prune removes it
+    final e = (await db.watchDay('2026-06-17').first).single;
+    await db.deleteEntry(e.id);
+    await db.pruneEmptyGroups('2026-06-17');
+    expect((await db.watchGroups('2026-06-17').first), isEmpty);
+  });
+
+  test('deleting a group cascades its entries', () async {
+    final gid = await db.createEntryGroup('2026-06-17', 'M');
+    await db.addEntry(EntriesCompanion.insert(
+      day: '2026-06-17',
+      mealType: MealType.snack,
+      groupId: Value(gid),
+      grams: 100,
+      sName: 'X',
+      sKcal100: 50,
+    ));
+    await db.deleteEntryGroup(gid);
+    expect(await db.watchDay('2026-06-17').first, isEmpty);
+  });
+
   test('settings round-trip', () async {
     await db.setSetting('unit', 'kcal');
     expect(await db.getSetting('unit'), 'kcal');

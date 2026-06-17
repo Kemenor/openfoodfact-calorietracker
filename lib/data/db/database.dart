@@ -8,14 +8,14 @@ import 'tables.dart';
 part 'database.g.dart';
 
 @DriftDatabase(
-  tables: [Foods, Entries, Targets, Recipes, RecipeItems, Settings],
+  tables: [Foods, Entries, EntryGroups, Targets, Recipes, RecipeItems, Settings],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
       : super(executor ?? driftDatabase(name: 'calorie_tracker'));
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -36,6 +36,11 @@ class AppDatabase extends _$AppDatabase {
             await customStatement(
                 "UPDATE settings SET key = 'defaultKcalMax' "
                 "WHERE key = 'defaultKcalTarget'");
+          }
+          if (from < 3) {
+            // Ad-hoc meal groups for track-by-day mode.
+            await m.createTable(entryGroups);
+            await m.addColumn(entries, entries.groupId);
           }
         },
         beforeOpen: (details) async {
@@ -135,6 +140,34 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> deleteEntry(int id) =>
       (delete(entries)..where((e) => e.id.equals(id))).go();
+
+  // ---------------- Entry groups (track-by-day) ----------------
+
+  Stream<List<EntryGroup>> watchGroups(String day) => (select(entryGroups)
+        ..where((g) => g.day.equals(day))
+        ..orderBy([(g) => OrderingTerm.asc(g.createdAt)]))
+      .watch();
+
+  Future<int> createEntryGroup(String day, String name) => into(entryGroups)
+      .insert(EntryGroupsCompanion.insert(day: day, name: name));
+
+  Future<EntryGroup?> entryGroupById(int id) =>
+      (select(entryGroups)..where((g) => g.id.equals(id))).getSingleOrNull();
+
+  Future<void> renameEntryGroup(int id, String name) =>
+      (update(entryGroups)..where((g) => g.id.equals(id)))
+          .write(EntryGroupsCompanion(name: Value(name)));
+
+  Future<void> deleteEntryGroup(int id) =>
+      (delete(entryGroups)..where((g) => g.id.equals(id))).go();
+
+  /// Drop groups on [day] that no longer have any entries.
+  Future<void> pruneEmptyGroups(String day) => customUpdate(
+        'DELETE FROM entry_groups WHERE day = ? AND id NOT IN '
+        '(SELECT group_id FROM entries WHERE group_id IS NOT NULL)',
+        variables: [Variable.withString(day)],
+        updates: {entryGroups},
+      );
 
   /// Distinct days that have at least one entry, newest first (for history).
   Future<List<String>> daysWithEntries({int limit = 60}) async {

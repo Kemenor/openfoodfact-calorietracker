@@ -13,11 +13,20 @@ import '../scan/scan_screen.dart';
 class AddFoodScreen extends ConsumerWidget {
   final String day;
   final MealType meal;
-  const AddFoodScreen({super.key, required this.day, required this.meal});
+
+  /// Track-by-day mode: resolves the target group at log time (null = meal mode).
+  final Future<int?> Function()? resolveGroup;
+
+  const AddFoodScreen({
+    super.key,
+    required this.day,
+    required this.meal,
+    this.resolveGroup,
+  });
 
   Future<void> _pick(BuildContext context, WidgetRef ref, Food food) async {
-    final added =
-        await showLogFoodSheet(context, ref, food: food, day: day, meal: meal);
+    final added = await showLogFoodSheet(context, ref,
+        food: food, day: day, meal: meal, resolveGroup: resolveGroup);
     if (added == true && context.mounted) Navigator.of(context).pop();
   }
 

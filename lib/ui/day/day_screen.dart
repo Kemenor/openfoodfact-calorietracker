@@ -6,23 +6,48 @@ import '../../core/format.dart';
 import '../../domain/day_summary.dart';
 import '../../domain/enums.dart';
 import '../../domain/nutrition.dart';
+import '../../domain/recipe_share.dart';
 import '../../providers.dart';
 import '../add/add_food_screen.dart';
 import '../food/log_food_sheet.dart';
 import '../recipes/recipes_screen.dart';
 import '../settings/settings_screen.dart';
 
-class DayScreen extends ConsumerWidget {
+class DayScreen extends ConsumerStatefulWidget {
   const DayScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DayScreen> createState() => _DayScreenState();
+}
+
+class _DayScreenState extends ConsumerState<DayScreen>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      ref.read(activeGroupProvider.notifier).refreshTimeout();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final day = ref.watch(selectedDayProvider);
     final summaryAsync = ref.watch(daySummaryProvider);
     final groupByMeal = ref.watch(groupByMealProvider).asData?.value ?? true;
 
-    void shiftDay(int by) =>
-        ref.read(selectedDayProvider.notifier).shift(by);
+    void shiftDay(int by) => ref.read(selectedDayProvider.notifier).shift(by);
 
     return Scaffold(
       appBar: AppBar(
@@ -60,7 +85,9 @@ class DayScreen extends ConsumerWidget {
         data: (summary) => _DayBody(summary: summary, groupByMeal: groupByMeal),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _addFood(context, day, MealType.snack),
+        onPressed: () => groupByMeal
+            ? addFoodToMeal(context, day, MealType.snack)
+            : addFoodByDay(context, ref, day),
         icon: const Icon(Icons.add),
         label: const Text('Add food'),
       ),
@@ -68,9 +95,25 @@ class DayScreen extends ConsumerWidget {
   }
 }
 
-void _addFood(BuildContext context, String day, MealType meal) {
+/// Push the add-food flow for a fixed meal (meal mode).
+void addFoodToMeal(BuildContext context, String day, MealType meal) {
   Navigator.of(context).push(
     MaterialPageRoute(builder: (_) => AddFoodScreen(day: day, meal: meal)),
+  );
+}
+
+/// Push the add-food flow for track-by-day mode; the target group (active or a
+/// new time-named one) is resolved at log time so empty groups never linger.
+void addFoodByDay(BuildContext context, WidgetRef ref, String day) {
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (_) => AddFoodScreen(
+        day: day,
+        meal: MealType.snack,
+        resolveGroup: () =>
+            ref.read(activeGroupProvider.notifier).ensureGroup(day),
+      ),
+    ),
   );
 }
 
@@ -81,36 +124,38 @@ class _DayBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final children = <Widget>[_SummaryCard(summary: summary)];
+
+    if (groupByMeal) {
+      children.addAll([
+        for (final m in summary.meals) _MealSection(group: m, day: summary.day),
+      ]);
+    } else {
+      final groups = ref.watch(dayGroupViewsProvider);
+      final ungrouped = ref.watch(ungroupedDayEntriesProvider);
+      if (groups.isEmpty && ungrouped.isEmpty) {
+        children.add(const Padding(
+          padding: EdgeInsets.all(48),
+          child: Center(
+            child: Text(
+              'Tap + to start a meal.\nEverything you add flows into it '
+              'until you tap ✓ (or 15 min pass).',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ));
+      } else {
+        children.addAll([
+          for (final g in groups) _GroupSection(group: g, day: summary.day),
+          for (final e in ungrouped) _EntryTile(view: e, day: summary.day),
+        ]);
+      }
+    }
+
     return ListView(
       padding: const EdgeInsets.only(bottom: 96),
-      children: [
-        _SummaryCard(summary: summary),
-        if (groupByMeal)
-          // Always show the four meal sections (with their + buttons) so there's
-          // somewhere to log into, even on an empty day.
-          ..._buildMeals(context)
-        else if (summary.entries.isEmpty)
-          const Padding(
-            padding: EdgeInsets.all(48),
-            child: Center(child: Text('Nothing logged yet.')),
-          )
-        else
-          ..._buildFlat(context),
-      ],
+      children: children,
     );
-  }
-
-  List<Widget> _buildMeals(BuildContext context) {
-    return [
-      for (final group in summary.meals)
-        _MealSection(group: group, day: summary.day),
-    ];
-  }
-
-  List<Widget> _buildFlat(BuildContext context) {
-    return [
-      for (final e in summary.entries) _EntryTile(view: e, day: summary.day),
-    ];
   }
 }
 
@@ -254,7 +299,7 @@ class _MealSection extends ConsumerWidget {
               IconButton(
                 visualDensity: VisualDensity.compact,
                 icon: const Icon(Icons.add, size: 20),
-                onPressed: () => _addFood(context, day, group.meal),
+                onPressed: () => addFoodToMeal(context, day, group.meal),
               ),
             ],
           ),
@@ -264,6 +309,135 @@ class _MealSection extends ConsumerWidget {
           const Divider(height: 1, indent: 16, endIndent: 16),
       ],
     );
+  }
+}
+
+/// A track-by-day ad-hoc meal group: header with rename / save-as-recipe /
+/// delete, plus the +/✓ edit-mode control.
+class _GroupSection extends ConsumerWidget {
+  final GroupView group;
+  final String day;
+  const _GroupSection({required this.group, required this.day});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final isActive = ref.watch(activeGroupProvider) == group.id;
+
+    Future<void> reopenAndAdd() async {
+      await ref.read(activeGroupProvider.notifier).reopen(group.id);
+      if (context.mounted) addFoodByDay(context, ref, day);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 4, 0),
+          child: Row(
+            children: [
+              Flexible(
+                child: GestureDetector(
+                  onTap: () => _rename(context, ref),
+                  child: Text(group.name,
+                      style: theme.textTheme.titleSmall
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text('${kcalStr(group.subtotal.kcal)} kcal',
+                  style: theme.textTheme.bodySmall),
+              const Spacer(),
+              PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert, size: 20),
+                onSelected: (v) {
+                  switch (v) {
+                    case 'rename':
+                      _rename(context, ref);
+                    case 'recipe':
+                      _saveAsRecipe(context, ref);
+                    case 'delete':
+                      _delete(ref);
+                  }
+                },
+                itemBuilder: (_) => const [
+                  PopupMenuItem(value: 'rename', child: Text('Rename')),
+                  PopupMenuItem(value: 'recipe', child: Text('Save as recipe')),
+                  PopupMenuItem(value: 'delete', child: Text('Delete meal')),
+                ],
+              ),
+              if (isActive)
+                IconButton(
+                  visualDensity: VisualDensity.compact,
+                  tooltip: 'Finish meal',
+                  icon: Icon(Icons.check, size: 22, color: theme.colorScheme.primary),
+                  onPressed: () => ref.read(activeGroupProvider.notifier).end(),
+                )
+              else
+                IconButton(
+                  visualDensity: VisualDensity.compact,
+                  tooltip: 'Add to this meal',
+                  icon: const Icon(Icons.add, size: 22),
+                  onPressed: reopenAndAdd,
+                ),
+            ],
+          ),
+        ),
+        for (final e in group.items) _EntryTile(view: e, day: day),
+        const Divider(height: 1, indent: 16, endIndent: 16),
+      ],
+    );
+  }
+
+  Future<void> _rename(BuildContext context, WidgetRef ref) async {
+    final controller = TextEditingController(text: group.name);
+    final name = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Rename meal'),
+        content: TextField(controller: controller, autofocus: true),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          FilledButton(
+              onPressed: () => Navigator.pop(ctx, controller.text.trim()),
+              child: const Text('Save')),
+        ],
+      ),
+    );
+    if (name != null && name.isNotEmpty) {
+      await ref.read(dbProvider).renameEntryGroup(group.id, name);
+    }
+  }
+
+  Future<void> _saveAsRecipe(BuildContext context, WidgetRef ref) async {
+    final messenger = ScaffoldMessenger.of(context);
+    await ref.read(recipeRepositoryProvider).create(
+          name: group.name,
+          servings: 1,
+          items: [
+            for (final e in group.items)
+              RecipeShareItem(
+                name: e.name,
+                grams: e.grams,
+                kcal100: e.entry.sKcal100,
+                protein100: e.entry.sProtein100,
+                carb100: e.entry.sCarb100,
+                fat100: e.entry.sFat100,
+              ),
+          ],
+        );
+    messenger.showSnackBar(
+        SnackBar(content: Text('Saved "${group.name}" to recipes')));
+  }
+
+  Future<void> _delete(WidgetRef ref) async {
+    if (ref.read(activeGroupProvider) == group.id) {
+      await ref.read(activeGroupProvider.notifier).end();
+    }
+    await ref.read(dbProvider).deleteEntryGroup(group.id);
   }
 }
 
@@ -283,8 +457,10 @@ class _EntryTile extends ConsumerWidget {
         color: Theme.of(context).colorScheme.errorContainer,
         child: const Icon(Icons.delete_outline),
       ),
-      onDismissed: (_) =>
-          ref.read(diaryRepositoryProvider).deleteEntry(view.id),
+      onDismissed: (_) async {
+        await ref.read(diaryRepositoryProvider).deleteEntry(view.id);
+        await ref.read(dbProvider).pruneEmptyGroups(day);
+      },
       child: ListTile(
         dense: true,
         title: Text(view.name, maxLines: 1, overflow: TextOverflow.ellipsis),

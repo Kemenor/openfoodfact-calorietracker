@@ -127,6 +127,19 @@ Strategy:
   recipe or log the meal directly. Depends on unit handling (below). All on-device, no
   server.
 
+- **Phase 8 — Auto-meal grouping (track-by-day mode):** in by-day mode, consecutive
+  adds form an ad-hoc **meal group** (header + ingredients), *not* auto-saved to the
+  cookbook. Adding the first item creates the group and enters **edit mode**; while
+  active, the group's header button is a **✓** (finish) and the bottom-right FAB adds
+  into that group. Edit mode ends on ✓ or after ~15 min inactivity (incl. app
+  backgrounded, checked on resume). A closed group's header shows a **+** to re-open it
+  (re-enter edit + add); the FAB then starts a new group. Decisions (2026-06-17):
+  **time-based default names** ("Meal 13:24", editable), each group offers
+  **"Save as recipe"** (promotes to cookbook/QR), and this **replaces** the plain flat
+  list (a single item = a one-item group). Model: `entry_groups` table (id, day, name,
+  createdAt) + `entries.groupId`; active-group id + last-activity time persisted for the
+  timeout. Schema migration v3.
+
 ## Near-term enhancements (from on-device testing, 2026-06-17)
 
 - ✅ **Search quality** — synonyms (bell pepper→peppers sweet, rocket→arugula…),
