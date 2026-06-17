@@ -10,7 +10,7 @@ flutter_*.png
 linked_*.ds
 unlinked.ds
 unlinked_spec.ds
-pubspec.lock        # app (not package) — keep ignored unless we decide otherwise
+# pubspec.lock is committed (this is an app, not a package) for reproducible builds.
 
 # IDE / tooling
 .idea/

@@ -45,6 +45,29 @@ recipe sharing, ZIP backup/restore.
 Grams are primary ("enter gramm"). When the source provides a serving size, offer
 quick-pick chips (e.g. "1 serving = 30 g") that just fill the grams field.
 
+## Rate limiting & caching (critical)
+
+API limits force search to be **local-first, network-on-pause** — never per-keystroke:
+
+- OFF product read (barcode): **15 req/min/IP** · OFF search: **10 req/min/IP**
+  (OFF explicitly: *don't use for search-as-you-type*) · USDA FDC: **~1000 req/hr**
+  with a free key (DEMO_KEY only 30/hr).
+
+Strategy:
+1. **Search-as-you-type hits the local cache only** (instant, zero network). The
+   `foods` table is the live search index.
+2. **Network search is deferred + explicit:** fire an online query only after the user
+   pauses (debounce ≥ 600 ms) *and* local results are thin, or when they tap
+   "Search online". Results are merged into the cache.
+3. **Client-side token-bucket rate limiter per source** wraps every API call: OFF-search
+   bucket (10/min), OFF-product bucket (15/min), USDA bucket. Requests queue when the
+   bucket is empty; UI shows "searching…/rate-limited, retrying in Ns" instead of erroring.
+4. **Aggressive caching:** every fetched product and search hit is stored in `foods`
+   with `updated_at`; barcodes cache effectively forever (background refresh only if
+   stale). Repeat scans/searches never touch the network.
+5. **Barcode scan = single product read**, which is the cheap 15/min endpoint — but it's
+   cache-checked first, so a re-scan is free.
+
 ## Roadmap (phased)
 
 - **Phase 0 — Scaffold:** Flutter project, drift schema + migrations, settings, theming.
