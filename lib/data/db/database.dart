@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 
 import '../../domain/enums.dart';
+import '../../domain/search_query.dart';
 import 'tables.dart';
 
 part 'database.g.dart';
@@ -55,16 +56,28 @@ class AppDatabase extends _$AppDatabase {
                 f.source.equalsValue(source) & f.externalId.equals(externalId)))
           .getSingleOrNull();
 
-  /// Local-first search over the cached/bundled catalog. Ranks favorites and
-  /// frequently-used foods first. Used for search-as-you-type (no network).
+  /// Local-first search over the cached/bundled catalog.
+  ///
+  /// Tokenizes the query (with produce synonyms) and requires every token to
+  /// appear in the name or brand — order-independent, so "sweet pepper" matches
+  /// "Peppers, sweet, green, raw". Ranks favorites and frequently-used first,
+  /// then shorter names so simple/raw entries beat prepared variants
+  /// ("Potatoes, raw" before "Potatoes, au gratin, dry mix, ...").
   Future<List<Food>> searchFoodsLocal(String query, {int limit = 50}) {
-    final q = query.trim();
-    final like = '%${q.replaceAll('%', '').replaceAll('_', '')}%';
+    final tokens = searchTokens(query);
     return (select(foods)
-          ..where((f) => f.name.like(like) | f.brand.like(like))
+          ..where((f) {
+            Expression<bool> expr = const Constant(true);
+            for (final t in tokens) {
+              final like = '%${t.replaceAll('%', '').replaceAll('_', '')}%';
+              expr = expr & (f.name.like(like) | f.brand.like(like));
+            }
+            return expr;
+          })
           ..orderBy([
             (f) => OrderingTerm.desc(f.isFavorite),
             (f) => OrderingTerm.desc(f.usageCount),
+            (f) => OrderingTerm.asc(f.name.length),
             (f) => OrderingTerm.asc(f.name),
           ])
           ..limit(limit))

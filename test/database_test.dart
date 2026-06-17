@@ -45,6 +45,37 @@ void main() {
     expect(found.length, 2);
   });
 
+  test('tokenized search matches USDA formal names via synonyms', () async {
+    await db.upsertFood(FoodsCompanion.insert(
+        source: FoodSource.usda,
+        externalId: const Value('p1'),
+        name: 'Peppers, sweet, green, raw',
+        kcal100: 20));
+    await db.upsertFood(FoodsCompanion.insert(
+        source: FoodSource.usda,
+        externalId: const Value('c1'),
+        name: 'Candies, milk chocolate',
+        kcal100: 535));
+    final r = await db.searchFoodsLocal('bell pepper');
+    expect(r.map((f) => f.name), contains('Peppers, sweet, green, raw'));
+    expect(r.map((f) => f.name), isNot(contains('Candies, milk chocolate')));
+  });
+
+  test('ranks simpler/shorter names first', () async {
+    await db.upsertFood(FoodsCompanion.insert(
+        source: FoodSource.usda,
+        externalId: const Value('a'),
+        name: 'Potatoes, au gratin, dry mix, prepared with water and milk',
+        kcal100: 93));
+    await db.upsertFood(FoodsCompanion.insert(
+        source: FoodSource.usda,
+        externalId: const Value('b'),
+        name: 'Potatoes, raw',
+        kcal100: 77));
+    final r = await db.searchFoodsLocal('potatoes');
+    expect(r.first.name, 'Potatoes, raw');
+  });
+
   test('watchDay reflects added entries', () async {
     const day = '2026-06-17';
     await db.addEntry(EntriesCompanion.insert(
