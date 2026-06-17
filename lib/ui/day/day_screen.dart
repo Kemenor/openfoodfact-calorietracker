@@ -12,6 +12,7 @@ import '../add/add_food_screen.dart';
 import '../food/log_food_sheet.dart';
 import '../recipes/recipes_screen.dart';
 import '../settings/settings_screen.dart';
+import 'split_meal_sheet.dart';
 
 class DayScreen extends ConsumerStatefulWidget {
   const DayScreen({super.key});
@@ -356,6 +357,8 @@ class _GroupSection extends ConsumerWidget {
                   switch (v) {
                     case 'rename':
                       _rename(context, ref);
+                    case 'split':
+                      showSplitMealSheet(context, group);
                     case 'recipe':
                       _saveAsRecipe(context, ref);
                     case 'delete':
@@ -364,6 +367,8 @@ class _GroupSection extends ConsumerWidget {
                 },
                 itemBuilder: (_) => const [
                   PopupMenuItem(value: 'rename', child: Text('Rename')),
+                  PopupMenuItem(
+                      value: 'split', child: Text('Split across days')),
                   PopupMenuItem(value: 'recipe', child: Text('Save as recipe')),
                   PopupMenuItem(value: 'delete', child: Text('Delete meal')),
                 ],

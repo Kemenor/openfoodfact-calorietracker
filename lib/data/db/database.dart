@@ -134,6 +134,12 @@ class AppDatabase extends _$AppDatabase {
   Future<List<Entry>> allEntries() =>
       (select(entries)..orderBy([(e) => OrderingTerm.asc(e.day)])).get();
 
+  Future<List<Entry>> entriesForGroup(int groupId) =>
+      (select(entries)
+            ..where((e) => e.groupId.equals(groupId))
+            ..orderBy([(e) => OrderingTerm.asc(e.sortIndex), (e) => OrderingTerm.asc(e.id)]))
+          .get();
+
   Future<int> addEntry(EntriesCompanion entry) => into(entries).insert(entry);
 
   Future<void> updateEntry(Entry entry) => update(entries).replace(entry);

@@ -69,4 +69,42 @@ class DiaryRepository {
       db.updateEntry(entry.copyWith(grams: grams, mealType: meal));
 
   Future<void> deleteEntry(int id) => db.deleteEntry(id);
+
+  /// Split a meal group into equal portions across [days]: each day gets a new
+  /// group (same name) with every ingredient scaled to 1/N of its grams. The
+  /// original group is replaced.
+  Future<void> splitGroupAcrossDays({
+    required int groupId,
+    required List<String> days,
+  }) async {
+    if (days.isEmpty) return;
+    final group = await db.entryGroupById(groupId);
+    if (group == null) return;
+    final items = await db.entriesForGroup(groupId);
+    final n = days.length;
+
+    await db.transaction(() async {
+      for (final day in days) {
+        final gid = await db.createEntryGroup(day, group.name);
+        for (var i = 0; i < items.length; i++) {
+          final e = items[i];
+          await db.addEntry(EntriesCompanion.insert(
+            day: day,
+            mealType: e.mealType,
+            groupId: Value(gid),
+            grams: e.grams / n,
+            foodId: Value(e.foodId),
+            sName: e.sName,
+            sKcal100: e.sKcal100,
+            sProtein100: Value(e.sProtein100),
+            sCarb100: Value(e.sCarb100),
+            sFat100: Value(e.sFat100),
+            sMicrosJson: Value(e.sMicrosJson),
+            sortIndex: Value(i),
+          ));
+        }
+      }
+      await db.deleteEntryGroup(groupId); // removes the original + its entries
+    });
+  }
 }
