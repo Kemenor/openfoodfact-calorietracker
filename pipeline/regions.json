@@ -1,3 +1,6 @@
 [
-  { "code": "ch", "name": "Switzerland", "tag": "en:switzerland" }
+  { "code": "ch", "name": "Switzerland", "tag": "en:switzerland" },
+  { "code": "de", "name": "Germany", "tag": "en:germany" },
+  { "code": "at", "name": "Austria", "tag": "en:austria" },
+  { "code": "fr", "name": "France", "tag": "en:france" }
 ]
