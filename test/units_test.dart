@@ -23,4 +23,16 @@ void main() {
     expect(AmountUnit.tablespoon.label, 'tbsp');
     expect(AmountUnit.grams.label, 'g');
   });
+
+  test('quick-pick amounts are unit-appropriate', () {
+    expect(AmountUnit.grams.quickAmounts, [50, 100, 150, 200]);
+    expect(AmountUnit.tablespoon.quickAmounts, [1, 2, 3]);
+    expect(AmountUnit.cup.quickAmounts, [0.5, 1, 2]);
+  });
+
+  test('typical amount seeds sensibly per unit', () {
+    expect(AmountUnit.grams.typicalAmount, 100);
+    expect(AmountUnit.tablespoon.typicalAmount, 1);
+    expect(AmountUnit.milliliters.typicalAmount, 200);
+  });
 }

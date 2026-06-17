@@ -144,14 +144,15 @@ class _LogSheetState extends State<_LogSheet> {
     });
   }
 
+  /// Set the amount in the current unit (used by the unit-aware quick-picks).
+  void _setAmount(double a) =>
+      setState(() => _amountCtrl.text = gramsStr(a));
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final grams = _grams;
     final kcal = widget.kcal100 * grams / 100;
-    final chips = <double>{50, 100, 150, 200, if (widget.servingG != null) widget.servingG!}
-        .toList()
-      ..sort();
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -209,7 +210,10 @@ class _LogSheetState extends State<_LogSheet> {
                 ChoiceChip(
                   label: Text(u.label),
                   selected: _unit == u,
-                  onSelected: (_) => setState(() => _unit = u),
+                  onSelected: (_) => setState(() {
+                    _unit = u;
+                    _amountCtrl.text = gramsStr(u.typicalAmount);
+                  }),
                   visualDensity: VisualDensity.compact,
                 ),
             ],
@@ -224,12 +228,15 @@ class _LogSheetState extends State<_LogSheet> {
           Wrap(
             spacing: 8,
             children: [
-              for (final c in chips)
+              for (final c in _unit.quickAmounts)
                 ActionChip(
-                  label: Text(widget.servingG == c
-                      ? '1 serving (${gramsStr(c)} g)'
-                      : '${gramsStr(c)} g'),
-                  onPressed: () => _setGrams(c),
+                  label: Text('${gramsStr(c)} ${_unit.label}'),
+                  onPressed: () => _setAmount(c),
+                ),
+              if (_unit == AmountUnit.grams && widget.servingG != null)
+                ActionChip(
+                  label: Text('1 serving (${gramsStr(widget.servingG!)} g)'),
+                  onPressed: () => _setGrams(widget.servingG!),
                 ),
             ],
           ),
