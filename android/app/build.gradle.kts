@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "ch.knabberfuchs.knabberfuchs"
+    namespace = "ch.knabberfuchs.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "ch.knabberfuchs.knabberfuchs"
+        applicationId = "ch.knabberfuchs.app"
         // Health Connect (health plugin) requires API 26+.
         minSdk = maxOf(26, flutter.minSdkVersion)
         targetSdk = flutter.targetSdkVersion

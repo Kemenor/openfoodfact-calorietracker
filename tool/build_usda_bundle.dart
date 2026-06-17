@@ -23,6 +23,41 @@ const _datasets = <Map<String, String>>[
   {'key': 'FoundationFoods', 'file': 'FoodData_Central_foundation_food_json_2026-04-30'},
 ];
 
+// Keep only whole-food / basic-ingredient categories. This drops the branded
+// and restaurant junk that lives in SR Legacy (Fast Foods, Restaurant Foods
+// like Applebee's, branded Baked Products/Snacks/Meals, sodas, etc.).
+// Foundation Foods are all curated whole foods, so they're kept regardless.
+const _wholeFoodCategories = <String>{
+  'Vegetables and Vegetable Products',
+  'Fruits and Fruit Juices',
+  'Legumes and Legume Products',
+  'Nut and Seed Products',
+  'Cereal Grains and Pasta',
+  'Breakfast Cereals',
+  'Dairy and Egg Products',
+  'Poultry Products',
+  'Beef Products',
+  'Pork Products',
+  'Lamb, Veal, and Game Products',
+  'Finfish and Shellfish Products',
+  'Spices and Herbs',
+  'Fats and Oils',
+  'Sweets', // honey, sugar, syrup, chocolate
+  'Sausages and Luncheon Meats',
+};
+
+// Brand names that show up inside otherwise-whole-food SR Legacy categories
+// (e.g. "Salad dressing, KRAFT ..."). These have barcodes anyway via OFF.
+const _brandDenylist = <String>[
+  'KRAFT', 'PILLSBURY', 'KELLOGG', 'GENERAL MILLS', 'QUAKER', 'POST ',
+  'CAMPBELL', 'NESTLE', 'HERSHEY', 'HORMEL', 'OSCAR MAYER', 'BANQUET',
+  'STOUFFER', 'HEALTHY CHOICE', 'LEAN CUISINE', 'KEEBLER', 'NABISCO',
+  'MORNINGSTAR', 'GARDENBURGER', 'DIGIORNO', 'ORE-IDA', 'GORTON',
+  'BETTY CROCKER', 'HUNT', "HELLMANN", 'MIRACLE WHIP', 'CHEEZ WHIZ',
+  'BREAKSTONE', 'KNUDSEN', 'DANNON', 'YOPLAIT', 'OVALTINE', 'GATORADE',
+  'POWERADE', 'SLIM-FAST', 'ENSURE', 'CARNATION', 'EAGLE BRAND',
+];
+
 // USDA nutrient ids (per 100 g).
 const _energyIds = [1008, 2047, 2048]; // kcal, Atwater general, Atwater specific
 const _idProtein = 1003;
@@ -73,10 +108,26 @@ Future<void> main() async {
 
     final data = jsonDecode(await jsonFile.readAsString()) as Map<String, dynamic>;
     final foods = (data[ds['key']] as List?) ?? const [];
+    final isFoundation = ds['key'] == 'FoundationFoods';
 
     var added = 0;
+    var skippedCategory = 0;
     for (final f in foods) {
       if (f is! Map<String, dynamic>) continue;
+
+      // Category filter (SR Legacy only; Foundation is already all whole foods).
+      final cat = f['foodCategory'] is Map
+          ? (f['foodCategory']['description'] ?? '').toString()
+          : '';
+      if (!isFoundation && !_wholeFoodCategories.contains(cat)) {
+        skippedCategory++;
+        continue;
+      }
+      final upper = (f['description'] ?? '').toString().toUpperCase();
+      if (!isFoundation && _brandDenylist.any(upper.contains)) {
+        skippedCategory++;
+        continue;
+      }
       final nutrients = <int, double>{};
       for (final fn in (f['foodNutrients'] as List? ?? const [])) {
         if (fn is! Map) continue;
@@ -112,7 +163,7 @@ Future<void> main() async {
       ].join(','));
       added++;
     }
-    stdout.writeln('  + $added foods');
+    stdout.writeln('  + $added foods (skipped $skippedCategory off-category)');
   }
 
   final csv = rows.join('\n');

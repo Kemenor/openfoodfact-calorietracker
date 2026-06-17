@@ -8,7 +8,10 @@ import '../../domain/enums.dart';
 import '../db/database.dart';
 
 const _assetPath = 'assets/usda_foods.csv.gz';
-const _seededKey = 'usdaSeeded';
+const _versionKey = 'usdaDatasetVersion';
+
+/// Bump whenever assets/usda_foods.csv.gz changes so existing installs re-import.
+const usdaDatasetVersion = '2';
 
 /// Minimal RFC-4180-ish CSV parser: handles quoted fields containing commas,
 /// newlines, and doubled quotes. Good enough for our controlled asset.
@@ -89,21 +92,28 @@ List<FoodsCompanion> parseUsdaCsv(String csv) {
   return out;
 }
 
-/// Import the bundled USDA produce dataset into the local catalog on first
-/// launch. Idempotent: guarded by a setting flag and insert-or-ignore on the
-/// (source, externalId) key. Returns the number of rows imported (0 if already
-/// seeded or asset missing).
+/// Import the bundled USDA produce dataset into the local catalog. Runs on
+/// first launch and again whenever [usdaDatasetVersion] changes (so cleaned/
+/// updated bundles replace the old rows). Idempotent within a version.
+/// Returns the number of rows imported (0 if up to date or asset missing).
 Future<int> seedUsdaIfNeeded(AppDatabase db, {AssetBundle? bundle}) async {
-  if (await db.getSetting(_seededKey) == '1') return 0;
+  if (await db.getSetting(_versionKey) == usdaDatasetVersion) return 0;
   final b = bundle ?? rootBundle;
   try {
     final data = await b.load(_assetPath);
     final csv = utf8.decode(gzip.decode(data.buffer.asUint8List()));
     final companions = parseUsdaCsv(csv);
-    await db.batch((batch) {
-      batch.insertAll(db.foods, companions, mode: InsertMode.insertOrIgnore);
+    await db.transaction(() async {
+      // Replace any previously-seeded USDA rows (entries keep their snapshots;
+      // the FK is set-null on delete).
+      await (db.delete(db.foods)
+            ..where((f) => f.source.equalsValue(FoodSource.usda)))
+          .go();
+      await db.batch((batch) {
+        batch.insertAll(db.foods, companions, mode: InsertMode.insertOrIgnore);
+      });
     });
-    await db.setSetting(_seededKey, '1');
+    await db.setSetting(_versionKey, usdaDatasetVersion);
     return companions.length;
   } catch (_) {
     // No asset bundled (e.g. dev build before the pipeline ran) — skip quietly.

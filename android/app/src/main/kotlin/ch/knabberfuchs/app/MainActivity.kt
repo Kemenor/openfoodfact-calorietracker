@@ -1,4 +1,4 @@
-package ch.knabberfuchs.knabberfuchs
+package ch.knabberfuchs.app
 
 import io.flutter.embedding.android.FlutterActivity
 
