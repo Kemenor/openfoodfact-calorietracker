@@ -101,10 +101,13 @@ Strategy:
 - **Phase 2 — Recipes & sharing:** ✅ DONE. Recipe editor (search/add ingredients,
   servings); detail with whole + per-serving nutrition; QR share (self-contained
   CTR1 payload) + share_plus text; import via QR scan.
-- **Phase 3 — Health Connect:** ⏳ NOT STARTED (needs a physical device + the Health
-  Connect app to verify, so deferred — can't validate headlessly). Plan: `health`
-  pkg (already a dep) write-only push of energy/macros on log, opt-in Settings toggle,
-  Health Connect permission declarations + privacy-policy intent in the manifest.
+- **Phase 3 — Health Connect:** ✅ DONE (verified on a physical Android 16 phone).
+  Opt-in "Sync to Health Connect" toggle writes each day's entries as nutrition/meal
+  records (calories + macros + meal type + name); idempotent per-day re-sync (delete
+  day + rewrite), auto-fires when the viewed day changes. `HealthService` (health pkg),
+  MainActivity = FlutterFragmentActivity, manifest READ/WRITE_NUTRITION + rationale
+  intents. Timestamps clamped to ≤ now (HC rejects future records). Confirmed the
+  record appears in Health Connect's Nutrition data.
 - **Phase 4 — Backup:** ✅ DONE. ZIP = backup.json (lossless logical restore) +
   entries.csv (portable) + manifest (schema version). Export shares the zip;
   import picks a zip (file_selector), confirms, and restores transactionally.
