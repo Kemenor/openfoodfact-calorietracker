@@ -85,13 +85,15 @@ class _DayBody extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: 96),
       children: [
         _SummaryCard(summary: summary),
-        if (summary.entries.isEmpty)
+        if (groupByMeal)
+          // Always show the four meal sections (with their + buttons) so there's
+          // somewhere to log into, even on an empty day.
+          ..._buildMeals(context)
+        else if (summary.entries.isEmpty)
           const Padding(
             padding: EdgeInsets.all(48),
             child: Center(child: Text('Nothing logged yet.')),
           )
-        else if (groupByMeal)
-          ..._buildMeals(context)
         else
           ..._buildFlat(context),
       ],
