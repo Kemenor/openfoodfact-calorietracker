@@ -14,6 +14,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          appStartupProvider.overrideWith((ref) async {}),
           daySummaryProvider.overrideWith(
             (ref) => Stream.value(
               DaySummary(day: DayKey.today(), entries: const [], kcalTarget: null),

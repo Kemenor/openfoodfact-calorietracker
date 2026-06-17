@@ -83,17 +83,26 @@ Strategy:
 
 - **Phase 0 — Scaffold:** ✅ Flutter project created (Android + Linux desktop), toolchain in
   a distrobox, debug APK builds. Next within Phase 0: drift schema + migrations, settings, theming.
-- **Phase 1 — Usable MVP:** build the USDA produce bundle (pipeline above); barcode scan +
-  text search (local cache + bundled USDA + OFF live) + manual food; log grams into a day;
-  day view (meal grouping + flat toggle) with running total; per-weekday target with
-  remaining/over readout; custom foods; local cache.
+- **Phase 1 — Usable MVP:** ✅ DONE. USDA produce bundle built (8,077 foods, 218 KB
+  gzipped asset, imported on first launch); barcode scan + text search (local cache +
+  bundled USDA + debounced OFF live) + manual food; log grams into a day; day view
+  (meal grouping + flat toggle) with running total; per-weekday target with
+  remaining/over readout; custom foods; local cache. 34 tests, debug APK builds.
 - **Phase 2 — Recipes & sharing:** build recipe from meal/products; QR share
   (macros, self-contained) + file share fallback; import via QR scan / file.
 - **Phase 3 — Health Connect:** opt-in write-only push of energy/macros/micros.
 - **Phase 4 — Backup:** ZIP export (SQLite + JSON + CSV) and import with migration.
 - **Phase 5 — Offline packs (optional):** DuckDB preprocessing of the OFF Parquet
   (5.74 GB worldwide) into a compact regional SQLite pack (~30–300 MB), downloadable
-  from Settings, with live API fallback for misses.
+  from Settings, with live API fallback for misses. **Hosting:** static file on
+  **GitHub Releases** (free, ≤2 GB/file) or Hugging Face; a free GitHub Actions job
+  rebuilds packs periodically and re-uploads them. Packs carry a manifest
+  (version + date + checksum) so the app can offer "update available". No server.
+- **Phase 6 — Batch cooking / portioning:** build a recipe (or ad-hoc meal) with all
+  ingredients, then split the total into N portions and assign portions across days —
+  e.g. cook once, log one portion today and another for tomorrow. Builds on the Phase 2
+  recipe model: logging a portion = a snapshot entry scaled to the portion fraction of
+  the recipe total, repeatable on any chosen day.
 
 ## Prerequisites / open dev details
 - ✅ Toolchain ready: Flutter 3.44.2 / Dart 3.12.2 / JDK 21 / Android SDK 35+36 in the

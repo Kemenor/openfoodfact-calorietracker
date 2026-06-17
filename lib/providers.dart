@@ -5,6 +5,7 @@ import 'data/db/database.dart';
 import 'data/repositories/diary_repository.dart';
 import 'data/repositories/food_repository.dart';
 import 'data/sources/off_api.dart';
+import 'data/sources/usda_seed.dart';
 import 'domain/day_summary.dart';
 
 // ---------------- Infrastructure ----------------
@@ -28,6 +29,11 @@ final foodRepositoryProvider = Provider<FoodRepository>(
 final diaryRepositoryProvider = Provider<DiaryRepository>(
   (ref) => DiaryRepository(ref.watch(dbProvider)),
 );
+
+/// One-time startup work: import the bundled USDA produce dataset on first run.
+final appStartupProvider = FutureProvider<void>((ref) async {
+  await seedUsdaIfNeeded(ref.watch(dbProvider));
+});
 
 // ---------------- Settings ----------------
 
