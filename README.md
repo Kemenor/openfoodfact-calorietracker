@@ -3,8 +3,6 @@
 An ad-free, no-subscription, no-popup calorie tracker for Android. Scan a barcode or
 search a food, enter grams, done. See your intake day by day.
 
-(App id `ch.knabberfuchs.knabberfuchs`; repo named `openfoodfact-calorietracker`.)
-
 > Built because every popular tracker nags with paywalls. This one doesn't.
 
 ## What it does (planned)
