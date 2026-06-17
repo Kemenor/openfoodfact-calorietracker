@@ -170,9 +170,11 @@ Open Food Facts and keep packs open (we do); show an attribution line on the reg
 - **Update:** apply sequential deltas to the region file; if older than retention, full
   re-download. Verify sha256. Dep to add: `crypto`.
 
-**Phasing:** 5a = pipeline (full packs only) + manifest + HF upload, app download/remove/
-search/lookup + attribution. 5b = per-region deltas + on-device sequential apply +
-"update available".
+**Phasing:** 5a ✅ DONE — pipeline (DuckDB+FTS5) + manifest + HF upload (live:
+`Knabberfuchs/offline-packs`, CH/DE/AT/FR) + GitHub Actions; app: Settings → Offline
+regions (download/verify-sha256/decompress/remove), FTS5 search merged into local search,
+barcode lookup, ODbL attribution. Verified on emulator (downloaded CH, searched "Rivella",
+logged it). **5b (next)** = per-region deltas + on-device sequential apply + "update available".
 
 ## Near-term enhancements (from on-device testing, 2026-06-17)
 
