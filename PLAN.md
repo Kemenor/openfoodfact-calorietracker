@@ -109,12 +109,9 @@ Strategy:
   entries.csv (portable) + manifest (schema version). Export shares the zip;
   import picks a zip (file_selector), confirms, and restores transactionally.
   (JSON restore is lossless for user data; cached OFF/USDA re-seed/re-fetch.)
-- **Phase 5 — Offline packs (optional):** DuckDB preprocessing of the OFF Parquet
-  (5.74 GB worldwide) into a compact regional SQLite pack (~30–300 MB), downloadable
-  from Settings, with live API fallback for misses. **Hosting:** static file on
-  **GitHub Releases** (free, ≤2 GB/file) or Hugging Face; a free GitHub Actions job
-  rebuilds packs periodically and re-uploads them. Packs carry a manifest
-  (version + date + checksum) so the app can offer "update available". No server.
+- **Phase 5 — Offline OFF regional packs (optional):** per-country SQLite packs built
+  from the OFF Parquet, hosted on Hugging Face, downloadable in-app with live-API
+  fallback. Full design below.
 - **Phase 6 — Batch cooking / portioning:** ✅ CORE DONE via the recipe "Log portion to
   a day" sheet (pick day + portion count, log repeatedly across days). Builds on the
   Phase 2 recipe model: a portion = a density-scaled snapshot entry. Possible polish
@@ -140,6 +137,42 @@ Strategy:
   list (a single item = a one-item group). Model: `entry_groups` table (id, day, name,
   createdAt) + `entries.groupId`; active-group id + last-activity time persisted for the
   timeout. Schema migration v3.
+
+## Phase 5 design — Offline OFF regional packs (planned 2026-06-17)
+
+**Decisions:** build on **GitHub Actions** → host on **Hugging Face** dataset; **per-country**
+regions (download any combination); **full download first, deltas as a fast-follow**; **lean
+packs** (only products with a name + energy). **License:** OFF data is **ODbL** → attribute
+Open Food Facts and keep packs open (we do); show an attribution line on the regions screen.
+
+**Build pipeline (GitHub Actions, weekly cron):**
+1. DuckDB reads OFF `food.parquet` directly from Hugging Face over HTTP (httpfs + predicate
+   pushdown — no full 5.74 GB download).
+2. Per country: filter `countries_tags` contains the country; require a name +
+   `energy-kcal_100g`; project barcode, names (region languages + generic), brand,
+   serving/quantity, kcal + protein/carb/fat/fiber/sugar/sat-fat/sodium/salt, nutriscore.
+3. Emit `region.sqlite` — a `products` table (barcode PK) + an **FTS5** index on name/brand
+   for fast search; gzip it (decompress on-device via dart:io, no extra dep).
+4. Compute the **delta** vs the previous version (upserted + deleted barcodes) — fast-follow.
+5. sha256 every artifact; write `manifest.json` (each region → latest version, full
+   URL/size/sha256, deltas list, product count, updated-at).
+6. Upload artifacts + manifest to the HF dataset; retain ~12 weeks of deltas.
+   Layout: `manifest.json`; `packs/<cc>/v<N>/region.sqlite.gz`; `packs/<cc>/deltas/vN-vN+1.gz`.
+   Generate for all countries above a product threshold (e.g. ≥5k); manifest lists them.
+
+**App side:**
+- **Offline regions** screen (Settings): list from the manifest; download / update / remove;
+  multiple regions; storage usage; OFF attribution.
+- Each downloaded region = a read-only `sqlite3` file (not drift); open handles tracked.
+- **Search:** main drift DB (custom / USDA / scan-cache) ∪ each region pack (FTS5 MATCH) →
+  dedup by barcode → existing simpler-first ranking. **Barcode lookup:** main cache → region
+  packs (barcode PK) → OFF live API.
+- **Update:** apply sequential deltas to the region file; if older than retention, full
+  re-download. Verify sha256. Dep to add: `crypto`.
+
+**Phasing:** 5a = pipeline (full packs only) + manifest + HF upload, app download/remove/
+search/lookup + attribution. 5b = per-region deltas + on-device sequential apply +
+"update available".
 
 ## Near-term enhancements (from on-device testing, 2026-06-17)
 
