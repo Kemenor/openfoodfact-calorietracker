@@ -160,6 +160,7 @@ class _LogPortionSheetState extends ConsumerState<_LogPortionSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final fixedMeals = ref.watch(groupByMealProvider).asData?.value ?? false;
     final grams = _oneServingGrams * _portions;
     final nutrition = Nutrition.fromPer100g(
       kcal100: widget.share.totalGrams == 0
@@ -208,18 +209,20 @@ class _LogPortionSheetState extends ConsumerState<_LogPortionSheet> {
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            children: [
-              for (final m in MealType.values)
-                ChoiceChip(
-                  label: Text(m.label),
-                  selected: _meal == m,
-                  onSelected: (_) => setState(() => _meal = m),
-                ),
-            ],
-          ),
+          if (fixedMeals) ...[
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              children: [
+                for (final m in MealType.values)
+                  ChoiceChip(
+                    label: Text(m.label),
+                    selected: _meal == m,
+                    onSelected: (_) => setState(() => _meal = m),
+                  ),
+              ],
+            ),
+          ],
           const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
@@ -248,11 +251,17 @@ class _LogPortionSheetState extends ConsumerState<_LogPortionSheet> {
     final grams = _oneServingGrams * _portions;
     final messenger = ScaffoldMessenger.of(context);
     final label = DayKey.label(_day);
+    final fixedMeals = ref.read(groupByMealProvider).asData?.value ?? false;
+    // Track-by-day: log the portion as its own meal group named after the recipe.
+    final groupId = fixedMeals
+        ? null
+        : await ref.read(dbProvider).createEntryGroup(_day, widget.share.name);
     await ref.read(recipeRepositoryProvider).logPortionGrams(
           share: widget.share,
           grams: grams,
-          meal: _meal,
+          meal: fixedMeals ? _meal : MealType.snack,
           day: _day,
+          groupId: groupId,
         );
     if (mounted) Navigator.of(context).pop();
     messenger.showSnackBar(SnackBar(content: Text('Logged to $label')));

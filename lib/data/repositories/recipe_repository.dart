@@ -70,6 +70,7 @@ class RecipeRepository {
     required double grams,
     required MealType meal,
     required String day,
+    int? groupId,
   }) async {
     final total = share.total;
     final totalG = share.totalGrams;
@@ -85,6 +86,7 @@ class RecipeRepository {
       grams: grams,
       meal: meal,
       day: day,
+      groupId: groupId,
     );
   }
 
