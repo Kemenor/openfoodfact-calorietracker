@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -6,7 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 /// Barcode/QR scanner. Pops the scanned (or manually entered) string.
-/// Falls back to manual entry where there's no camera (e.g. desktop dev).
+///
+/// Uses mobile_scanner's recommended explicit lifecycle (start/stop tied to
+/// app lifecycle, no autoStart race) to avoid the camera2 NPE on some devices
+/// (juliansteenbakker/mobile_scanner#719). Degrades to manual entry if the
+/// camera errors or isn't available (e.g. desktop).
 class ScanScreen extends StatefulWidget {
   final List<BarcodeFormat> formats;
   final String title;
@@ -28,7 +33,7 @@ class ScanScreen extends StatefulWidget {
   State<ScanScreen> createState() => _ScanScreenState();
 }
 
-class _ScanScreenState extends State<ScanScreen> {
+class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
   MobileScannerController? _controller;
   bool _handled = false;
 
@@ -40,30 +45,55 @@ class _ScanScreenState extends State<ScanScreen> {
     super.initState();
     if (_cameraSupported) {
       _controller = MobileScannerController(
+        autoStart: false,
         detectionSpeed: DetectionSpeed.noDuplicates,
         formats: widget.formats,
       );
+      WidgetsBinding.instance.addObserver(this);
+      _safeStart();
+    }
+  }
+
+  Future<void> _safeStart() async {
+    try {
+      await _controller?.start();
+    } catch (_) {
+      // Surfaced by errorBuilder; nothing else to do.
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final controller = _controller;
+    if (controller == null) return;
+    switch (state) {
+      case AppLifecycleState.resumed:
+        _safeStart();
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.hidden:
+      case AppLifecycleState.detached:
+        unawaited(controller.stop());
     }
   }
 
   @override
   void dispose() {
-    _controller?.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    unawaited(_controller?.dispose());
+    _controller = null;
     super.dispose();
   }
 
   void _onDetect(BarcodeCapture capture) {
     if (_handled) return;
-    String? code;
     for (final b in capture.barcodes) {
       if (b.rawValue != null && b.rawValue!.isNotEmpty) {
-        code = b.rawValue;
-        break;
+        _handled = true;
+        Navigator.of(context).pop(b.rawValue);
+        return;
       }
     }
-    if (code == null) return;
-    _handled = true;
-    Navigator.of(context).pop(code);
   }
 
   Future<void> _enterManually() async {
@@ -108,45 +138,78 @@ class _ScanScreenState extends State<ScanScreen> {
             ),
         ],
       ),
-      body: _cameraSupported
+      body: _cameraSupported && _controller != null
           ? Stack(
               alignment: Alignment.center,
               children: [
-                MobileScanner(controller: _controller, onDetect: _onDetect),
-                _ScanFrame(),
+                MobileScanner(
+                  controller: _controller!,
+                  onDetect: _onDetect,
+                  errorBuilder: (context, error) => _CameraError(
+                    message: error.errorDetails?.message ?? error.toString(),
+                    onManual: widget.allowManual ? _enterManually : null,
+                  ),
+                ),
+                const IgnorePointer(child: _ScanFrame()),
               ],
             )
-          : Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.photo_camera_front_outlined, size: 48),
-                  const SizedBox(height: 12),
-                  const Text('Camera scanning is only available on a device.'),
-                  const SizedBox(height: 12),
-                  FilledButton.icon(
-                    onPressed: _enterManually,
-                    icon: const Icon(Icons.keyboard),
-                    label: const Text('Enter barcode'),
-                  ),
-                ],
-              ),
+          : _CameraError(
+              message: 'Camera scanning is only available on a device.',
+              onManual: widget.allowManual ? _enterManually : null,
             ),
     );
   }
 }
 
-class _ScanFrame extends StatelessWidget {
+class _CameraError extends StatelessWidget {
+  final String message;
+  final VoidCallback? onManual;
+  const _CameraError({required this.message, this.onManual});
+
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: Container(
-        width: 250,
-        height: 160,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white70, width: 2),
-          borderRadius: BorderRadius.circular(12),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.photo_camera_back_outlined, size: 48),
+            const SizedBox(height: 12),
+            Text(
+              "Couldn't start the camera.",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 6),
+            Text(message,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall),
+            if (onManual != null) ...[
+              const SizedBox(height: 16),
+              FilledButton.icon(
+                onPressed: onManual,
+                icon: const Icon(Icons.keyboard),
+                label: const Text('Enter barcode manually'),
+              ),
+            ],
+          ],
         ),
+      ),
+    );
+  }
+}
+
+class _ScanFrame extends StatelessWidget {
+  const _ScanFrame();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 250,
+      height: 160,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.white70, width: 2),
+        borderRadius: BorderRadius.circular(12),
       ),
     );
   }
