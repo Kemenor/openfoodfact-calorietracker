@@ -3,6 +3,7 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/date_x.dart';
 import '../../data/db/database.dart';
@@ -112,8 +113,11 @@ class SettingsScreen extends ConsumerWidget {
                 applicationName: 'Knabberfuchs',
                 applicationVersion: '0.1.0',
                 aboutBoxChildren: [
+                  SizedBox(height: 4),
                   Text('Ad-free, no subscriptions. Data from Open Food Facts '
                       'and USDA FoodData Central.'),
+                  SizedBox(height: 20),
+                  _OpenFoodFactsThanks(),
                 ],
               ),
             ],
@@ -166,6 +170,51 @@ Future<void> _importBackup(BuildContext context, WidgetRef ref) async {
     messenger.showSnackBar(const SnackBar(content: Text('Backup restored.')));
   } catch (e) {
     messenger.showSnackBar(SnackBar(content: Text('Import failed: $e')));
+  }
+}
+
+/// A heartfelt thank-you to Open Food Facts, shown in the About box, with a
+/// link to their donation page.
+class _OpenFoodFactsThanks extends StatelessWidget {
+  const _OpenFoodFactsThanks();
+
+  static final _donateUrl =
+      Uri.parse('https://world.openfoodfacts.org/donate-to-open-food-facts');
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.favorite, size: 18, color: theme.colorScheme.primary),
+            const SizedBox(width: 6),
+            Text('Thanks to Open Food Facts',
+                style: theme.textTheme.titleSmall
+                    ?.copyWith(fontWeight: FontWeight.bold)),
+          ],
+        ),
+        const SizedBox(height: 6),
+        const Text(
+          'Knabberfuchs is built on Open Food Facts — a free, open, '
+          'crowdsourced food database kept alive by volunteers around the '
+          'world. Without their work, this app simply would not exist.\n\n'
+          'If Knabberfuchs is useful to you, please consider supporting them.',
+        ),
+        const SizedBox(height: 8),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: FilledButton.tonalIcon(
+            onPressed: () =>
+                launchUrl(_donateUrl, mode: LaunchMode.externalApplication),
+            icon: const Icon(Icons.favorite_border, size: 18),
+            label: const Text('Donate to Open Food Facts'),
+          ),
+        ),
+      ],
+    );
   }
 }
 
