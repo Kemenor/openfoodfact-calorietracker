@@ -140,6 +140,41 @@ Strategy:
   createdAt) + `entries.groupId`; active-group id + last-activity time persisted for the
   timeout. Schema migration v3.
 
+- **Phase 9 — Contribute a missing product to Open Food Facts:** 📋 PLANNED. When a
+  scanned barcode is found *nowhere* (local cache, offline packs, OFF live all miss),
+  turn the dead end into a contribution. Instead of "not found", offer **"Add this
+  product"** → a form pre-filled with the scanned barcode. To make data entry fast,
+  **OCR the label**: photograph the nutrition table (Nährwerttabelle) and the
+  ingredients list, run on-device ML Kit OCR (reuse the Phase 7 pipeline), and parse the
+  rows into our nutrition fields. Saving stores it as a **contributed custom food keyed
+  by the barcode**, so a re-scan finds it immediately — fully offline, no submission
+  required. Then an opt-in **"Submit to Open Food Facts"** posts the product (and
+  optionally photos) to OFF's write API **directly from the device** (keyless/serverless
+  principle intact), giving back to the database the whole app is built on. Sub-parts:
+  - **9a — Add product locally.** Barcode-miss → "Add product" form (name, brand,
+    quantity/serving, per-100 g energy + macros). Save keyed by barcode so it's instantly
+    loggable and persists for future scans. Likely a new `FoodSource.userContributed`
+    (or reuse `custom` + barcode) and a `submittedToOff` flag.
+  - **9b — OCR the nutrition + ingredients.** Photograph the label → OCR →
+    `parseNutritionLabel` maps **localized keys** (DE/FR/IT/EN — the user is Swiss:
+    Energie/Brennwert·Énergie·Energy, Fett·Matières grasses·Fat, davon Zucker·dont
+    sucres·of which sugars, Kohlenhydrate·Glucides·Carbohydrate, Eiweiß·Protéines·Protein,
+    Salz·Sel·Salt) to fields, normalizing units (**kJ→kcal**, g/mg) and handling
+    two-column "per 100 g / per serving" layouts. Also OCR the ingredients **text** for
+    the OFF ingredients field. User reviews/edits before saving (OCR is a head start,
+    not gospel). Reuse ML Kit + the row-by-vertical-position reconstruction from Phase 7.
+  - **9c — Submit to OFF.** Post from the device to OFF's write API
+    (`/cgi/product_jqm2.pl` or `/api/v3/product/{barcode}`), plus
+    `/cgi/product_image_upload.pl` for front/nutrition/ingredients photos. Identify the
+    app via a proper `User-Agent` (`Knabberfuchs/<ver>`) + app_name/uuid; auth via an
+    optional **OFF account** (recommended for attribution) or anonymous contribution.
+    Send only user-provided fields; queue when offline and submit on reconnect; track
+    per-product submission status. **Test against the OFF staging server**
+    (`world.openfoodfacts.net`) before touching production. Contributions are ODbL —
+    consistent with how we already use OFF data.
+  - **Deps / notes:** image capture (camera/image_picker), existing ML Kit OCR + http.
+    Optional small schema bump for the contributed-food flag + submission state.
+
 ## Phase 5 design — Offline OFF regional packs (planned 2026-06-17)
 
 **Decisions:** build on **GitHub Actions** → host on **Hugging Face** dataset; **per-country**
