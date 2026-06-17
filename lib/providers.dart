@@ -178,12 +178,13 @@ final targetsProvider = StreamProvider<List<Target>>(
   (ref) => ref.watch(dbProvider).watchTargets(),
 );
 
-/// Day view layout: true = grouped by meal, false = flat chronological list.
+/// Meal layout: true = fixed Breakfast/Lunch/Dinner/Snacks sections,
+/// false = automatic per-add meal groups (track-by-day). Defaults to false.
 final groupByMealProvider = StreamProvider<bool>((ref) {
   return ref
       .watch(dbProvider)
       .watchSetting('groupByMeal')
-      .map((v) => v != 'false'); // default true
+      .map((v) => v == 'true'); // default false (track-by-day)
 });
 
 // ---------------- Day selection & summary ----------------

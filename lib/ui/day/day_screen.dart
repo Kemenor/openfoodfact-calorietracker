@@ -46,7 +46,7 @@ class _DayScreenState extends ConsumerState<DayScreen>
   Widget build(BuildContext context) {
     final day = ref.watch(selectedDayProvider);
     final summaryAsync = ref.watch(daySummaryProvider);
-    final groupByMeal = ref.watch(groupByMealProvider).asData?.value ?? true;
+    final groupByMeal = ref.watch(groupByMealProvider).asData?.value ?? false;
 
     void shiftDay(int by) => ref.read(selectedDayProvider.notifier).shift(by);
 

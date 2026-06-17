@@ -10,7 +10,7 @@ import '../../providers.dart';
 
 /// Whether the meal picker should be shown (track-by-meal mode).
 bool _askMeal(WidgetRef ref) =>
-    ref.read(groupByMealProvider).asData?.value ?? true;
+    ref.read(groupByMealProvider).asData?.value ?? false;
 
 /// Sheet to log a catalog [food] into [day]/[meal].
 Future<bool?> showLogFoodSheet(

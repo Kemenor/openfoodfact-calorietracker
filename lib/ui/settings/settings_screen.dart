@@ -17,7 +17,7 @@ class SettingsScreen extends ConsumerWidget {
     final targetsAsync = ref.watch(targetsProvider);
     final defaultMin = ref.watch(defaultMinProvider).asData?.value;
     final defaultMax = ref.watch(defaultMaxProvider).asData?.value;
-    final trackByMeal = ref.watch(groupByMealProvider).asData?.value ?? true;
+    final fixedMeals = ref.watch(groupByMealProvider).asData?.value ?? false;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
@@ -67,10 +67,12 @@ class SettingsScreen extends ConsumerWidget {
               const Divider(),
               const _SectionHeader('Logging'),
               SwitchListTile(
-                title: const Text('Track by meal'),
+                title: const Text('Fixed meals'),
                 subtitle: const Text(
-                    'Off: log straight to the day without picking a meal'),
-                value: trackByMeal,
+                    'On: log into Breakfast / Lunch / Dinner / Snacks.\n'
+                    'Off: meals are grouped automatically as you add.'),
+                isThreeLine: true,
+                value: fixedMeals,
                 onChanged: (v) =>
                     db.setSetting('groupByMeal', v ? 'true' : 'false'),
               ),
