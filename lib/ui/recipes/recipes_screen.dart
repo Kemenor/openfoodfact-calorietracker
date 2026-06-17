@@ -1,0 +1,95 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+
+import '../../domain/recipe_share.dart';
+import '../../providers.dart';
+import '../scan/scan_screen.dart';
+import 'recipe_detail_screen.dart';
+import 'recipe_edit_screen.dart';
+
+class RecipesScreen extends ConsumerWidget {
+  const RecipesScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final recipesAsync = ref.watch(recipesProvider);
+
+    Future<void> importFromQr() async {
+      final messenger = ScaffoldMessenger.of(context);
+      final text = await Navigator.of(context).push<String>(
+        MaterialPageRoute(
+          builder: (_) => const ScanScreen(
+            formats: [BarcodeFormat.qrCode],
+            title: 'Scan recipe QR',
+            allowManual: false,
+          ),
+        ),
+      );
+      if (text == null) return;
+      final share = RecipeCodec.decode(text);
+      if (share == null) {
+        messenger.showSnackBar(
+            const SnackBar(content: Text('That QR code is not a recipe.')));
+        return;
+      }
+      await ref.read(recipeRepositoryProvider).importShare(share);
+      messenger.showSnackBar(
+          SnackBar(content: Text('Imported "${share.name}"')));
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Recipes'),
+        actions: [
+          IconButton(
+            tooltip: 'Import from QR',
+            icon: const Icon(Icons.qr_code_scanner),
+            onPressed: importFromQr,
+          ),
+        ],
+      ),
+      body: recipesAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text('Error: $e')),
+        data: (recipes) {
+          if (recipes.isEmpty) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(32),
+                child: Text(
+                  'No recipes yet.\nCreate one to reuse meals, share them, '
+                  'or batch-cook and split across days.',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }
+          return ListView.separated(
+            itemCount: recipes.length,
+            separatorBuilder: (_, _) => const Divider(height: 1),
+            itemBuilder: (context, i) {
+              final r = recipes[i];
+              return ListTile(
+                leading: const Icon(Icons.menu_book_outlined),
+                title: Text(r.name),
+                subtitle: Text('${r.servings.toStringAsFixed(r.servings == r.servings.roundToDouble() ? 0 : 1)} servings'),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (_) => RecipeDetailScreen(recipe: r)),
+                ),
+              );
+            },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const RecipeEditScreen()),
+        ),
+        icon: const Icon(Icons.add),
+        label: const Text('New recipe'),
+      ),
+    );
+  }
+}

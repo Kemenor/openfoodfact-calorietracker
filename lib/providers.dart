@@ -4,6 +4,7 @@ import 'core/date_x.dart';
 import 'data/db/database.dart';
 import 'data/repositories/diary_repository.dart';
 import 'data/repositories/food_repository.dart';
+import 'data/repositories/recipe_repository.dart';
 import 'data/sources/off_api.dart';
 import 'data/sources/usda_seed.dart';
 import 'domain/day_summary.dart';
@@ -28,6 +29,15 @@ final foodRepositoryProvider = Provider<FoodRepository>(
 
 final diaryRepositoryProvider = Provider<DiaryRepository>(
   (ref) => DiaryRepository(ref.watch(dbProvider)),
+);
+
+final recipeRepositoryProvider = Provider<RecipeRepository>(
+  (ref) => RecipeRepository(
+      ref.watch(dbProvider), ref.watch(diaryRepositoryProvider)),
+);
+
+final recipesProvider = StreamProvider<List<Recipe>>(
+  (ref) => ref.watch(recipeRepositoryProvider).watchRecipes(),
 );
 
 /// One-time startup work: import the bundled USDA produce dataset on first run.

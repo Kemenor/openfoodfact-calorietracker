@@ -5,10 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-/// Barcode scanner. Pops the scanned (or manually entered) barcode string.
+/// Barcode/QR scanner. Pops the scanned (or manually entered) string.
 /// Falls back to manual entry where there's no camera (e.g. desktop dev).
 class ScanScreen extends StatefulWidget {
-  const ScanScreen({super.key});
+  final List<BarcodeFormat> formats;
+  final String title;
+  final bool allowManual;
+
+  const ScanScreen({
+    super.key,
+    this.formats = const [
+      BarcodeFormat.ean13,
+      BarcodeFormat.ean8,
+      BarcodeFormat.upcA,
+      BarcodeFormat.upcE,
+    ],
+    this.title = 'Scan barcode',
+    this.allowManual = true,
+  });
 
   @override
   State<ScanScreen> createState() => _ScanScreenState();
@@ -27,12 +41,7 @@ class _ScanScreenState extends State<ScanScreen> {
     if (_cameraSupported) {
       _controller = MobileScannerController(
         detectionSpeed: DetectionSpeed.noDuplicates,
-        formats: const [
-          BarcodeFormat.ean13,
-          BarcodeFormat.ean8,
-          BarcodeFormat.upcA,
-          BarcodeFormat.upcE,
-        ],
+        formats: widget.formats,
       );
     }
   }
@@ -89,13 +98,14 @@ class _ScanScreenState extends State<ScanScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scan barcode'),
+        title: Text(widget.title),
         actions: [
-          IconButton(
-            tooltip: 'Enter manually',
-            icon: const Icon(Icons.keyboard),
-            onPressed: _enterManually,
-          ),
+          if (widget.allowManual)
+            IconButton(
+              tooltip: 'Enter manually',
+              icon: const Icon(Icons.keyboard),
+              onPressed: _enterManually,
+            ),
         ],
       ),
       body: _cameraSupported

@@ -9,6 +9,7 @@ import '../../domain/nutrition.dart';
 import '../../providers.dart';
 import '../add/add_food_screen.dart';
 import '../food/log_food_sheet.dart';
+import '../recipes/recipes_screen.dart';
 import '../settings/settings_screen.dart';
 
 class DayScreen extends ConsumerWidget {
@@ -37,6 +38,13 @@ class DayScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.chevron_right),
             onPressed: () => shiftDay(1),
+          ),
+          IconButton(
+            tooltip: 'Recipes',
+            icon: const Icon(Icons.menu_book_outlined),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const RecipesScreen()),
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
