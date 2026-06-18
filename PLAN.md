@@ -175,6 +175,29 @@ Strategy:
   - **Deps / notes:** image capture (camera/image_picker), existing ML Kit OCR + http.
     Optional small schema bump for the contributed-food flag + submission state.
 
+- **Phase 10 — All regions + searchable Offline regions screen:** 📋 PLANNED. Phase 5
+  shipped offline packs but only builds a handful of countries (CH/DE/AT/FR in
+  `pipeline/regions.json`). Expand to **every country** and make the picker usable at
+  that scale.
+  - **10a — Build every region.** Auto-generate the full region list instead of the
+    hand-curated `regions.json`: a step that scans the OFF parquet for distinct
+    `countries_tags` with product counts, maps each to an ISO code + display name, and
+    emits the build list. Decide a **min-product threshold** (e.g. skip countries with
+    only a handful of products, or build them but flag them tiny) so we don't ship
+    near-empty packs. The DuckDB build + `publish.py` + manifest already loop over the
+    list, so they scale; the work is the list generation + name/code mapping.
+  - **10b — CI / hosting at scale.** Building ~150+ countries weekly is much heavier
+    (more passes over the 7 GB parquet, more uploads, more Hugging Face storage — France
+    alone is 58 MB). Options: build all weekly if runtime/storage allow, or tier it
+    (top-N by product count weekly, the long tail monthly). Watch HF dataset storage and
+    GitHub Actions minutes; `log()` anything skipped so coverage stays honest.
+  - **10c — Searchable picker.** The Offline regions screen is a flat list — fine for 4
+    countries, unusable for 150+. Add a **text search/filter** by country name at the
+    top, and sort **installed first, then alphabetically** (show product count + size).
+    Pure client-side filter over the manifest; no backend.
+  - **Notes:** keeps the keyless/serverless model (anonymous HF downloads). Mostly
+    pipeline + a small UI addition; no app schema change.
+
 ## Phase 5 design — Offline OFF regional packs (planned 2026-06-17)
 
 **Decisions:** build on **GitHub Actions** → host on **Hugging Face** dataset; **per-country**
