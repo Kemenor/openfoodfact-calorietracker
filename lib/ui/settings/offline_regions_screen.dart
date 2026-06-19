@@ -18,6 +18,14 @@ class OfflineRegionsScreen extends ConsumerStatefulWidget {
 
 class _OfflineRegionsScreenState extends ConsumerState<OfflineRegionsScreen> {
   final Map<String, double> _progress = {};
+  final _searchCtrl = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
 
   Future<void> _download(OfflineManifest m, RegionInfo r) async {
     final messenger = ScaffoldMessenger.of(context);
@@ -70,33 +78,77 @@ class _OfflineRegionsScreenState extends ConsumerState<OfflineRegionsScreen> {
             ]),
           ),
         ),
-        data: (manifest) => ListView(
-          children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 12, 16, 4),
-              child: Text(
-                'Download a country to search its packaged products offline. '
-                'You can download several.',
+        data: (manifest) {
+          final q = _query.trim().toLowerCase();
+          final regions = manifest.regions
+              .where((r) => q.isEmpty || r.name.toLowerCase().contains(q))
+              .toList()
+            ..sort((a, b) {
+              // Installed first, then alphabetical by name.
+              final ai = installed.containsKey(a.code);
+              final bi = installed.containsKey(b.code);
+              if (ai != bi) return ai ? -1 : 1;
+              return a.name.compareTo(b.name);
+            });
+
+          return Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+                child: Text(
+                  'Download a country to search its packaged products offline. '
+                  'You can download several.',
+                ),
               ),
-            ),
-            for (final r in manifest.regions)
-              _RegionTile(
-                region: r,
-                installed: installed[r.code],
-                progress: _progress[r.code],
-                onDownload: () => _download(manifest, r),
-                onRemove: () => _remove(r.code, r.name),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: TextField(
+                  controller: _searchCtrl,
+                  onChanged: (v) => setState(() => _query = v),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    prefixIcon: const Icon(Icons.search),
+                    hintText: 'Search countries',
+                    border: const OutlineInputBorder(),
+                    suffixIcon: _query.isEmpty
+                        ? null
+                        : IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              _searchCtrl.clear();
+                              setState(() => _query = '');
+                            },
+                          ),
+                  ),
+                ),
               ),
-            const Divider(),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                manifest.attribution,
-                style: theme.textTheme.bodySmall,
+              Expanded(
+                child: regions.isEmpty
+                    ? Center(
+                        child: Text('No countries match "$_query".',
+                            style: theme.textTheme.bodyMedium))
+                    : ListView(
+                        children: [
+                          for (final r in regions)
+                            _RegionTile(
+                              region: r,
+                              installed: installed[r.code],
+                              progress: _progress[r.code],
+                              onDownload: () => _download(manifest, r),
+                              onRemove: () => _remove(r.code, r.name),
+                            ),
+                          const Divider(),
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Text(manifest.attribution,
+                                style: theme.textTheme.bodySmall),
+                          ),
+                        ],
+                      ),
               ),
-            ),
-          ],
-        ),
+            ],
+          );
+        },
       ),
     );
   }
