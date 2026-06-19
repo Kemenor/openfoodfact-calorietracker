@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/theme.dart';
 import 'providers.dart';
-import 'ui/day/day_screen.dart';
+import 'ui/home_shell.dart';
 
 class CalorieApp extends StatelessWidget {
   const CalorieApp({super.key});
@@ -28,10 +28,10 @@ class _Startup extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final startup = ref.watch(appStartupProvider);
     return startup.when(
-      data: (_) => const DayScreen(),
+      data: (_) => const HomeShell(),
       loading: () => const _Splash(),
       // Seeding failures are non-fatal — fall through to the app.
-      error: (_, _) => const DayScreen(),
+      error: (_, _) => const HomeShell(),
     );
   }
 }

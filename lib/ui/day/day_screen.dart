@@ -13,9 +13,6 @@ import '../../providers.dart';
 import '../add/add_food_screen.dart';
 import '../food/log_food_sheet.dart';
 import '../recipes/ocr_meal_screen.dart';
-import '../recipes/recipe_edit_screen.dart';
-import '../recipes/recipes_screen.dart';
-import '../settings/settings_screen.dart';
 import 'split_meal_sheet.dart';
 
 class DayScreen extends ConsumerStatefulWidget {
@@ -86,20 +83,6 @@ class _DayScreenState extends ConsumerState<DayScreen>
             icon: const Icon(Icons.chevron_right),
             onPressed: () => shiftDay(1),
           ),
-          IconButton(
-            tooltip: 'Recipes',
-            icon: const Icon(Icons.menu_book_outlined),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const RecipesScreen()),
-            ),
-          ),
-          IconButton(
-            tooltip: 'Settings',
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const SettingsScreen()),
-            ),
-          ),
         ],
       ),
       body: summaryAsync.when(
@@ -111,10 +94,10 @@ class _DayScreenState extends ConsumerState<DayScreen>
         mainAxisSize: MainAxisSize.min,
         children: [
           FloatingActionButton.small(
-            heroTag: 'dayMore',
-            tooltip: 'More',
-            onPressed: () => _showMoreActions(context, day),
-            child: const Icon(Icons.more_horiz),
+            heroTag: 'dayFromList',
+            tooltip: 'Meal from an ingredient list',
+            onPressed: () => startOcrMealFlow(context, ref),
+            child: const Icon(Icons.document_scanner_outlined),
           ),
           const SizedBox(width: 12),
           FloatingActionButton.extended(
@@ -139,41 +122,6 @@ class _DayScreenState extends ConsumerState<DayScreen>
     if (picked != null) {
       ref.read(selectedDayProvider.notifier).set(DayKey.of(picked));
     }
-  }
-
-  /// Secondary "+" actions that don't belong on the primary Add food button.
-  void _showMoreActions(BuildContext context, String day) {
-    showModalBottomSheet(
-      context: context,
-      showDragHandle: true,
-      builder: (sheetCtx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.add_circle_outline),
-              title: const Text('New recipe'),
-              subtitle: const Text('Build a reusable recipe'),
-              onTap: () {
-                Navigator.pop(sheetCtx);
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const RecipeEditScreen()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.document_scanner_outlined),
-              title: const Text('Meal from ingredient list'),
-              subtitle: const Text('Photograph a packaged ingredient list'),
-              onTap: () {
-                Navigator.pop(sheetCtx);
-                startOcrMealFlow(context, ref);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
 

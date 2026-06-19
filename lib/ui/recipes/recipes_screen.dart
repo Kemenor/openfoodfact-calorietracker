@@ -40,22 +40,53 @@ class RecipesScreen extends ConsumerWidget {
           SnackBar(content: Text('Imported "${share.name}"')));
     }
 
+    // One menu for every way to create a recipe, replacing the old bare FAB +
+    // two unlabeled app-bar icons.
+    void showCreateMenu() {
+      showModalBottomSheet<void>(
+        context: context,
+        showDragHandle: true,
+        builder: (sheetCtx) => SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.edit_outlined),
+                title: const Text('Build manually'),
+                subtitle: const Text('Add ingredients one by one'),
+                onTap: () {
+                  Navigator.pop(sheetCtx);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const RecipeEditScreen()));
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.document_scanner_outlined),
+                title: const Text('From an ingredient list'),
+                subtitle: const Text(
+                    'Photograph a printed list — save it or log it as a meal'),
+                onTap: () {
+                  Navigator.pop(sheetCtx);
+                  startOcrMealFlow(context, ref);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.qr_code_scanner),
+                title: const Text('Import from QR code'),
+                subtitle: const Text('Scan a shared recipe'),
+                onTap: () {
+                  Navigator.pop(sheetCtx);
+                  importFromQr();
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Recipes'),
-        actions: [
-          IconButton(
-            tooltip: 'Meal from ingredient list',
-            icon: const Icon(Icons.document_scanner_outlined),
-            onPressed: () => startOcrMealFlow(context, ref),
-          ),
-          IconButton(
-            tooltip: 'Import from QR',
-            icon: const Icon(Icons.qr_code_scanner),
-            onPressed: importFromQr,
-          ),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Recipes')),
       body: recipesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
@@ -91,9 +122,7 @@ class RecipesScreen extends ConsumerWidget {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const RecipeEditScreen()),
-        ),
+        onPressed: showCreateMenu,
         icon: const Icon(Icons.add),
         label: const Text('New recipe'),
       ),
