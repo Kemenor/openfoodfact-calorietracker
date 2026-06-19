@@ -1,6 +1,638 @@
 [
-  { "code": "ch", "name": "Switzerland", "tag": "en:switzerland" },
-  { "code": "de", "name": "Germany", "tag": "en:germany" },
-  { "code": "at", "name": "Austria", "tag": "en:austria" },
-  { "code": "fr", "name": "France", "tag": "en:france" }
+  {
+    "code": "fr",
+    "name": "France",
+    "tag": "en:france",
+    "products": 1237278
+  },
+  {
+    "code": "us",
+    "name": "United States",
+    "tag": "en:united-states",
+    "products": 921043
+  },
+  {
+    "code": "de",
+    "name": "Germany",
+    "tag": "en:germany",
+    "products": 412541
+  },
+  {
+    "code": "es",
+    "name": "Spain",
+    "tag": "en:spain",
+    "products": 354471
+  },
+  {
+    "code": "it",
+    "name": "Italy",
+    "tag": "en:italy",
+    "products": 266891
+  },
+  {
+    "code": "gb",
+    "name": "United Kingdom",
+    "tag": "en:united-kingdom",
+    "products": 187665
+  },
+  {
+    "code": "ca",
+    "name": "Canada",
+    "tag": "en:canada",
+    "products": 120778
+  },
+  {
+    "code": "ch",
+    "name": "Switzerland",
+    "tag": "en:switzerland",
+    "products": 103611
+  },
+  {
+    "code": "be",
+    "name": "Belgium",
+    "tag": "en:belgium",
+    "products": 98465
+  },
+  {
+    "code": "ie",
+    "name": "Ireland",
+    "tag": "en:ireland",
+    "products": 78779
+  },
+  {
+    "code": "nl",
+    "name": "Netherlands",
+    "tag": "en:netherlands",
+    "products": 77774
+  },
+  {
+    "code": "au",
+    "name": "Australia",
+    "tag": "en:australia",
+    "products": 75341
+  },
+  {
+    "code": "jp",
+    "name": "Japan",
+    "tag": "en:japan",
+    "products": 40207
+  },
+  {
+    "code": "ro",
+    "name": "Romania",
+    "tag": "en:romania",
+    "products": 39463
+  },
+  {
+    "code": "pl",
+    "name": "Poland",
+    "tag": "en:poland",
+    "products": 34972
+  },
+  {
+    "code": "ru",
+    "name": "Russia",
+    "tag": "en:russia",
+    "products": 34657
+  },
+  {
+    "code": "br",
+    "name": "Brazil",
+    "tag": "en:brazil",
+    "products": 34185
+  },
+  {
+    "code": "no",
+    "name": "Norway",
+    "tag": "en:norway",
+    "products": 25855
+  },
+  {
+    "code": "se",
+    "name": "Sweden",
+    "tag": "en:sweden",
+    "products": 25407
+  },
+  {
+    "code": "ma",
+    "name": "Morocco",
+    "tag": "en:morocco",
+    "products": 22236
+  },
+  {
+    "code": "at",
+    "name": "Austria",
+    "tag": "en:austria",
+    "products": 21767
+  },
+  {
+    "code": "in",
+    "name": "India",
+    "tag": "en:india",
+    "products": 21546
+  },
+  {
+    "code": "pt",
+    "name": "Portugal",
+    "tag": "en:portugal",
+    "products": 21348
+  },
+  {
+    "code": "dk",
+    "name": "Denmark",
+    "tag": "en:denmark",
+    "products": 19561
+  },
+  {
+    "code": "fi",
+    "name": "Finland",
+    "tag": "en:finland",
+    "products": 19561
+  },
+  {
+    "code": "cz",
+    "name": "Czech Republic",
+    "tag": "en:czech-republic",
+    "products": 19289
+  },
+  {
+    "code": "mx",
+    "name": "Mexico",
+    "tag": "en:mexico",
+    "products": 16846
+  },
+  {
+    "code": "bg",
+    "name": "Bulgaria",
+    "tag": "en:bulgaria",
+    "products": 16646
+  },
+  {
+    "code": "sa",
+    "name": "Saudi Arabia",
+    "tag": "en:saudi-arabia",
+    "products": 15607
+  },
+  {
+    "code": "ar",
+    "name": "Argentina",
+    "tag": "en:argentina",
+    "products": 15407
+  },
+  {
+    "code": "nz",
+    "name": "New Zealand",
+    "tag": "en:new-zealand",
+    "products": 14954
+  },
+  {
+    "code": "lu",
+    "name": "Luxembourg",
+    "tag": "en:luxembourg",
+    "products": 11237
+  },
+  {
+    "code": "gr",
+    "name": "Greece",
+    "tag": "en:greece",
+    "products": 11189
+  },
+  {
+    "code": "hu",
+    "name": "Hungary",
+    "tag": "en:hungary",
+    "products": 10828
+  },
+  {
+    "code": "th",
+    "name": "Thailand",
+    "tag": "en:thailand",
+    "products": 10646
+  },
+  {
+    "code": "lt",
+    "name": "Lithuania",
+    "tag": "en:lithuania",
+    "products": 10334
+  },
+  {
+    "code": "sg",
+    "name": "Singapore",
+    "tag": "en:singapore",
+    "products": 10317
+  },
+  {
+    "code": "za",
+    "name": "South Africa",
+    "tag": "en:south-africa",
+    "products": 9812
+  },
+  {
+    "code": "ph",
+    "name": "Philippines",
+    "tag": "en:philippines",
+    "products": 8328
+  },
+  {
+    "code": "id",
+    "name": "Indonesia",
+    "tag": "en:indonesia",
+    "products": 8308
+  },
+  {
+    "code": "sk",
+    "name": "Slovakia",
+    "tag": "en:slovakia",
+    "products": 8252
+  },
+  {
+    "code": "ae",
+    "name": "United Arab Emirates",
+    "tag": "en:united-arab-emirates",
+    "products": 7989
+  },
+  {
+    "code": "tr",
+    "name": "Turkey",
+    "tag": "en:turkey",
+    "products": 7985
+  },
+  {
+    "code": "il",
+    "name": "Israel",
+    "tag": "en:israel",
+    "products": 7641
+  },
+  {
+    "code": "dz",
+    "name": "Algeria",
+    "tag": "en:algeria",
+    "products": 7191
+  },
+  {
+    "code": "hr",
+    "name": "Croatia",
+    "tag": "en:croatia",
+    "products": 6981
+  },
+  {
+    "code": "co",
+    "name": "Colombia",
+    "tag": "en:colombia",
+    "products": 6909
+  },
+  {
+    "code": "ua",
+    "name": "Ukraine",
+    "tag": "en:ukraine",
+    "products": 6632
+  },
+  {
+    "code": "cl",
+    "name": "Chile",
+    "tag": "en:chile",
+    "products": 6454
+  },
+  {
+    "code": "qa",
+    "name": "Qatar",
+    "tag": "en:qatar",
+    "products": 6319
+  },
+  {
+    "code": "iq",
+    "name": "Iraq",
+    "tag": "en:iraq",
+    "products": 5929
+  },
+  {
+    "code": "ee",
+    "name": "Estonia",
+    "tag": "en:estonia",
+    "products": 5854
+  },
+  {
+    "code": "my",
+    "name": "Malaysia",
+    "tag": "en:malaysia",
+    "products": 5450
+  },
+  {
+    "code": "hk",
+    "name": "Hong Kong",
+    "tag": "en:hong-kong",
+    "products": 5046
+  },
+  {
+    "code": "rs",
+    "name": "Serbia",
+    "tag": "en:serbia",
+    "products": 4675
+  },
+  {
+    "code": "re",
+    "name": "Réunion",
+    "tag": "en:reunion",
+    "products": 4584
+  },
+  {
+    "code": "lv",
+    "name": "Latvia",
+    "tag": "en:latvia",
+    "products": 4462
+  },
+  {
+    "code": "bo",
+    "name": "Bolivia",
+    "tag": "en:bolivia",
+    "products": 4334
+  },
+  {
+    "code": "si",
+    "name": "Slovenia",
+    "tag": "en:slovenia",
+    "products": 4049
+  },
+  {
+    "code": "eg",
+    "name": "Egypt",
+    "tag": "en:egypt",
+    "products": 3905
+  },
+  {
+    "code": "tn",
+    "name": "Tunisia",
+    "tag": "en:tunisia",
+    "products": 3749
+  },
+  {
+    "code": "lb",
+    "name": "Lebanon",
+    "tag": "en:lebanon",
+    "products": 3747
+  },
+  {
+    "code": "kr",
+    "name": "South Korea",
+    "tag": "en:south-korea",
+    "products": 3021
+  },
+  {
+    "code": "kw",
+    "name": "Kuwait",
+    "tag": "en:kuwait",
+    "products": 2953
+  },
+  {
+    "code": "pr",
+    "name": "Puerto Rico",
+    "tag": "en:puerto-rico",
+    "products": 2918
+  },
+  {
+    "code": "tw",
+    "name": "Taiwan",
+    "tag": "en:taiwan",
+    "products": 2806
+  },
+  {
+    "code": "is",
+    "name": "Iceland",
+    "tag": "en:iceland",
+    "products": 2777
+  },
+  {
+    "code": "pe",
+    "name": "Peru",
+    "tag": "en:peru",
+    "products": 2657
+  },
+  {
+    "code": "cr",
+    "name": "Costa Rica",
+    "tag": "en:costa-rica",
+    "products": 2583
+  },
+  {
+    "code": "cy",
+    "name": "Cyprus",
+    "tag": "en:cyprus",
+    "products": 2513
+  },
+  {
+    "code": "nc",
+    "name": "New Caledonia",
+    "tag": "en:new-caledonia",
+    "products": 2488
+  },
+  {
+    "code": "ec",
+    "name": "Ecuador",
+    "tag": "en:ecuador",
+    "products": 2180
+  },
+  {
+    "code": "ge",
+    "name": "Georgia",
+    "tag": "en:georgia",
+    "products": 2171
+  },
+  {
+    "code": "mt",
+    "name": "Malta",
+    "tag": "en:malta",
+    "products": 2077
+  },
+  {
+    "code": "pa",
+    "name": "Panama",
+    "tag": "en:panama",
+    "products": 2000
+  },
+  {
+    "code": "uy",
+    "name": "Uruguay",
+    "tag": "en:uruguay",
+    "products": 1908
+  },
+  {
+    "code": "pf",
+    "name": "French Polynesia",
+    "tag": "en:french-polynesia",
+    "products": 1842
+  },
+  {
+    "code": "gp",
+    "name": "Guadeloupe",
+    "tag": "en:guadeloupe",
+    "products": 1809
+  },
+  {
+    "code": "md",
+    "name": "Moldova",
+    "tag": "en:moldova",
+    "products": 1733
+  },
+  {
+    "code": "ve",
+    "name": "Venezuela",
+    "tag": "en:venezuela",
+    "products": 1675
+  },
+  {
+    "code": "do",
+    "name": "Dominican Republic",
+    "tag": "en:dominican-republic",
+    "products": 1668
+  },
+  {
+    "code": "cn",
+    "name": "China",
+    "tag": "en:china",
+    "products": 1624
+  },
+  {
+    "code": "ni",
+    "name": "Nicaragua",
+    "tag": "en:nicaragua",
+    "products": 1612
+  },
+  {
+    "code": "pk",
+    "name": "Pakistan",
+    "tag": "en:pakistan",
+    "products": 1610
+  },
+  {
+    "code": "uz",
+    "name": "Uzbekistan",
+    "tag": "en:uzbekistan",
+    "products": 1579
+  },
+  {
+    "code": "mu",
+    "name": "Mauritius",
+    "tag": "en:mauritius",
+    "products": 1489
+  },
+  {
+    "code": "cu",
+    "name": "Cuba",
+    "tag": "en:cuba",
+    "products": 1473
+  },
+  {
+    "code": "vn",
+    "name": "Vietnam",
+    "tag": "en:vietnam",
+    "products": 1453
+  },
+  {
+    "code": "ba",
+    "name": "Bosnia And Herzegovina",
+    "tag": "en:bosnia-and-herzegovina",
+    "products": 1370
+  },
+  {
+    "code": "by",
+    "name": "Belarus",
+    "tag": "en:belarus",
+    "products": 1349
+  },
+  {
+    "code": "py",
+    "name": "Paraguay",
+    "tag": "en:paraguay",
+    "products": 1344
+  },
+  {
+    "code": "mk",
+    "name": "North Macedonia",
+    "tag": "en:north-macedonia",
+    "products": 1325
+  },
+  {
+    "code": "sn",
+    "name": "Senegal",
+    "tag": "en:senegal",
+    "products": 1312
+  },
+  {
+    "code": "hn",
+    "name": "Honduras",
+    "tag": "en:honduras",
+    "products": 1300
+  },
+  {
+    "code": "sv",
+    "name": "El Salvador",
+    "tag": "en:el-salvador",
+    "products": 1274
+  },
+  {
+    "code": "mq",
+    "name": "Martinique",
+    "tag": "en:martinique",
+    "products": 1249
+  },
+  {
+    "code": "az",
+    "name": "Azerbaijan",
+    "tag": "en:azerbaijan",
+    "products": 1211
+  },
+  {
+    "code": "kh",
+    "name": "Cambodia",
+    "tag": "en:cambodia",
+    "products": 1185
+  },
+  {
+    "code": "vi",
+    "name": "Virgin Islands Of The United States",
+    "tag": "en:virgin-islands-of-the-united-states",
+    "products": 1169
+  },
+  {
+    "code": "jo",
+    "name": "Jordan",
+    "tag": "en:jordan",
+    "products": 1141
+  },
+  {
+    "code": "bh",
+    "name": "Bahrain",
+    "tag": "en:bahrain",
+    "products": 1120
+  },
+  {
+    "code": "gt",
+    "name": "Guatemala",
+    "tag": "en:guatemala",
+    "products": 1116
+  },
+  {
+    "code": "ci",
+    "name": "Côte d'Ivoire",
+    "tag": "en:cote-d-ivoire",
+    "products": 1116
+  },
+  {
+    "code": "bd",
+    "name": "Bangladesh",
+    "tag": "en:bangladesh",
+    "products": 1096
+  },
+  {
+    "code": "tt",
+    "name": "Trinidad And Tobago",
+    "tag": "en:trinidad-and-tobago",
+    "products": 1082
+  },
+  {
+    "code": "al",
+    "name": "Albania",
+    "tag": "en:albania",
+    "products": 1042
+  }
 ]

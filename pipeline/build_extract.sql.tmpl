@@ -1,0 +1,38 @@
+-- One-time extraction: OFF parquet -> a lean intermediate parquet that keeps
+-- countries_tags, so each per-country pack is built with a fast scan of this
+-- (small) file instead of re-reading the 7 GB source 100+ times.
+-- Placeholders (substituted by build_all.sh): __SRC__ (OFF parquet) __EXTRACT__
+COPY (
+  SELECT * FROM (
+    SELECT
+      code AS barcode,
+      trim(coalesce(
+        list_filter(product_name, lambda x: x.lang = 'main')[1].text,
+        list_filter(product_name, lambda x: x.lang = 'en')[1].text,
+        list_filter(product_name, lambda x: x.lang = 'de')[1].text,
+        list_filter(product_name, lambda x: x.lang = 'fr')[1].text,
+        list_filter(product_name, lambda x: x.lang = 'it')[1].text,
+        product_name[1].text
+      )) AS name,
+      nullif(trim(brands), '') AS brand,
+      lang AS lang,
+      nullif(trim(serving_size), '') AS serving_label,
+      try_cast(serving_quantity AS DOUBLE) AS serving_g,
+      (list_filter(nutriments, lambda x: x.name = 'energy-kcal')[1])['100g']    AS kcal100,
+      (list_filter(nutriments, lambda x: x.name = 'proteins')[1])['100g']       AS protein100,
+      (list_filter(nutriments, lambda x: x.name = 'carbohydrates')[1])['100g']  AS carb100,
+      (list_filter(nutriments, lambda x: x.name = 'fat')[1])['100g']            AS fat100,
+      (list_filter(nutriments, lambda x: x.name = 'fiber')[1])['100g']          AS fiber100,
+      (list_filter(nutriments, lambda x: x.name = 'sugars')[1])['100g']         AS sugar100,
+      (list_filter(nutriments, lambda x: x.name = 'saturated-fat')[1])['100g']  AS satfat100,
+      (list_filter(nutriments, lambda x: x.name = 'sodium')[1])['100g'] * 1000  AS sodium_mg100,
+      (list_filter(nutriments, lambda x: x.name = 'salt')[1])['100g']           AS salt100,
+      nullif(nutriscore_grade, '') AS nutriscore,
+      countries_tags
+    FROM read_parquet('__SRC__')
+    WHERE code IS NOT NULL
+  )
+  WHERE name IS NOT NULL AND name <> ''
+    AND kcal100 IS NOT NULL
+    AND kcal100 BETWEEN 0 AND 1000
+) TO '__EXTRACT__' (FORMAT parquet, COMPRESSION zstd);

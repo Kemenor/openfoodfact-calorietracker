@@ -175,10 +175,13 @@ Strategy:
   - **Deps / notes:** image capture (camera/image_picker), existing ML Kit OCR + http.
     Optional small schema bump for the contributed-food flag + submission state.
 
-- **Phase 10 — All regions + searchable Offline regions screen:** 📋 PLANNED. Phase 5
-  shipped offline packs but only builds a handful of countries (CH/DE/AT/FR in
-  `pipeline/regions.json`). Expand to **every country** and make the picker usable at
-  that scale.
+- **Phase 10 — All regions + searchable Offline regions screen:** ✅ DONE (2026-06-19).
+  **106 countries** (≥1000 products each) now live on the HF dataset; the picker has a
+  text search + installed-first sort. Pipeline refactored to a single extraction pass
+  (`build_extract.sql.tmpl` → `.cache/extracted.parquet`, then fast per-country scans);
+  `gen_regions.py` auto-derives the list from the parquet (DuckDB + pycountry, friendly
+  names, overrides for the tricky ones); `publish.py` uploads all packs + manifest in one
+  commit; CI regenerates the list + frees the source for disk. Original goal below.
   - **10a — Build every region.** Auto-generate the full region list instead of the
     hand-curated `regions.json`: a step that scans the OFF parquet for distinct
     `countries_tags` with product counts, maps each to an ISO code + display name, and

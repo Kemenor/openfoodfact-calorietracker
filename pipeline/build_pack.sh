@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
-# Build one per-country OFF pack: <country_tag> <country_code> <out_dir> [parquet_src]
-#   e.g. build_pack.sh en:switzerland ch out/ .cache/food.parquet
-# Produces <out_dir>/region_<cc>.sqlite(.gz) with a products table + FTS5 index,
-# and prints row count + gzip size + sha256.
+# Build one per-country OFF pack from the extracted intermediate parquet:
+#   build_pack.sh <country_tag> <country_code> <out_dir> <extracted.parquet>
+#   e.g. build_pack.sh en:switzerland ch out/ .cache/extracted.parquet
+# (Run build_all.sh to produce the intermediate first.) Produces
+# <out_dir>/region_<cc>.sqlite(.gz) with a products table + FTS5 index, and
+# prints row count + gzip size + sha256.
 set -euo pipefail
 
 TAG="$1"; CC="$2"; OUTDIR="$3"
-SRC="${4:-https://huggingface.co/datasets/openfoodfacts/product-database/resolve/main/food.parquet}"
+SRC="${4:-.cache/extracted.parquet}"
 DIR="$(cd "$(dirname "$0")" && pwd)"
 OUT="$OUTDIR/region_${CC}.sqlite"
 
 mkdir -p "$OUTDIR"
 rm -f "$OUT" "$OUT.gz"
 
-echo "[$CC] extracting from $(basename "$SRC") ..."
+echo "[$CC] building from $(basename "$SRC") ..."
 sed "s|__SRC__|${SRC//&/\\&}|g; s|__COUNTRY_TAG__|${TAG}|g; s|__OUT__|${OUT}|g" \
   "$DIR/build_region.sql.tmpl" | duckdb
 

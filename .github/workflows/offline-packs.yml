@@ -25,13 +25,21 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install huggingface_hub
-        run: pip install --quiet huggingface_hub
+      - name: Install Python deps
+        run: pip install --quiet huggingface_hub duckdb pycountry
 
       - name: Verify Python sqlite has FTS5
         run: python -c "import sqlite3; sqlite3.connect(':memory:').execute('CREATE VIRTUAL TABLE t USING fts5(x)'); print('fts5 ok')"
 
-      - name: Build region packs
+      - name: Free up disk
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android || true
+          df -h /
+
+      - name: Build region packs (regen list, extract once, free source)
+        env:
+          REGEN_REGIONS: "1"
+          FREE_SRC: "1"
         run: bash pipeline/build_all.sh
 
       - name: Publish to Hugging Face

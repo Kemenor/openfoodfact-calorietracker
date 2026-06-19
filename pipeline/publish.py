@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Publish built region packs + a manifest to the Hugging Face dataset.
+"""Publish built region packs + a manifest to the Hugging Face dataset, in a
+single commit.
 
 Usage: HF_TOKEN=... python publish.py [out_dir] [version]
   version defaults to today's date (YYYYMMDD).
@@ -14,7 +15,7 @@ import os
 import sqlite3
 import sys
 
-from huggingface_hub import HfApi
+from huggingface_hub import CommitOperationAdd, HfApi
 
 REPO = os.environ.get("HF_REPO", "Knabberfuchs/offline-packs")
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -34,7 +35,7 @@ def sha256(path):
     return h.hexdigest()
 
 
-regions_meta = []
+ops, regions_meta = [], []
 for r in REGIONS:
     cc = r["code"]
     gz = os.path.join(OUTDIR, f"region_{cc}.sqlite.gz")
@@ -44,16 +45,14 @@ for r in REGIONS:
         continue
     count = sqlite3.connect(sq).execute("SELECT count(*) FROM products").fetchone()[0]
     path_in_repo = f"packs/{cc}/{VERSION}/region_{cc}.sqlite.gz"
-    print(f"uploading {cc} ({count} products, {os.path.getsize(gz)} bytes) -> {path_in_repo}")
-    api.upload_file(path_or_fileobj=gz, path_in_repo=path_in_repo,
-                    repo_id=REPO, repo_type="dataset",
-                    commit_message=f"pack {cc} {VERSION}")
+    ops.append(CommitOperationAdd(path_in_repo=path_in_repo, path_or_fileobj=gz))
     regions_meta.append({
         "code": cc, "name": r["name"], "country_tag": r["tag"],
         "version": VERSION, "products": count,
         "file": path_in_repo, "size": os.path.getsize(gz),
         "sha256": sha256(gz), "deltas": [],
     })
+    print(f"staged {cc}: {count} products, {os.path.getsize(gz)} bytes")
 
 manifest = {
     "schema": 1,
@@ -64,6 +63,11 @@ manifest = {
 }
 mpath = os.path.join(OUTDIR, "manifest.json")
 json.dump(manifest, open(mpath, "w"), indent=2)
-api.upload_file(path_or_fileobj=mpath, path_in_repo="manifest.json",
-                repo_id=REPO, repo_type="dataset", commit_message=f"manifest {VERSION}")
-print(f"\nPublished {len(regions_meta)} region(s) to {REPO} (version {VERSION}).")
+ops.append(CommitOperationAdd(path_in_repo="manifest.json", path_or_fileobj=mpath))
+
+print(f"\ncommitting {len(regions_meta)} packs + manifest in one commit ...")
+api.create_commit(
+    repo_id=REPO, repo_type="dataset", operations=ops,
+    commit_message=f"Publish {len(regions_meta)} regions ({VERSION})",
+)
+print(f"Published {len(regions_meta)} region(s) to {REPO} (version {VERSION}).")
