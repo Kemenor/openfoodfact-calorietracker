@@ -44,13 +44,18 @@ for r in REGIONS:
         print(f"skip {cc}: no pack at {gz}")
         continue
     count = sqlite3.connect(sq).execute("SELECT count(*) FROM products").fetchone()[0]
-    path_in_repo = f"packs/{cc}/{VERSION}/region_{cc}.sqlite.gz"
+    sha = sha256(gz)
+    # Content-addressed version: changes only when the pack's bytes change, so a
+    # weekly rebuild of unchanged data doesn't trip "update available". The path
+    # carries the hash too, so each version has a stable (cache-safe) URL.
+    version = sha[:16]
+    path_in_repo = f"packs/{cc}/{version}/region_{cc}.sqlite.gz"
     ops.append(CommitOperationAdd(path_in_repo=path_in_repo, path_or_fileobj=gz))
     regions_meta.append({
         "code": cc, "name": r["name"], "country_tag": r["tag"],
-        "version": VERSION, "products": count,
+        "version": version, "products": count,
         "file": path_in_repo, "size": os.path.getsize(gz),
-        "sha256": sha256(gz), "deltas": [],
+        "sha256": sha, "deltas": [],
     })
     print(f"staged {cc}: {count} products, {os.path.getsize(gz)} bytes")
 

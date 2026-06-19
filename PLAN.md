@@ -250,7 +250,13 @@ Open Food Facts and keep packs open (we do); show an attribution line on the reg
 `Knabberfuchs/offline-packs`, CH/DE/AT/FR) + GitHub Actions; app: Settings → Offline
 regions (download/verify-sha256/decompress/remove), FTS5 search merged into local search,
 barcode lookup, ODbL attribution. Verified on emulator (downloaded CH, searched "Rivella",
-logged it). **5b (next)** = per-region deltas + on-device sequential apply + "update available".
+logged it). Phase 10 later expanded this to all 106 countries.
+
+**5b (per-region deltas): PARKED INDEFINITELY (decision 2026-06-19).** Not worth the
+complexity — packs are tiny: median **0.24 MB**, 87% under 2 MB, 100/106 under 10 MB; only
+France (60 MB) and US (59 MB) are large, and only re-syncs of *those* would benefit. Full
+re-download already works at these sizes. Instead, fix update-detection to be content-based
+(see below) so unchanged packs don't show "update available".
 
 ## Near-term enhancements (from on-device testing, 2026-06-17)
 

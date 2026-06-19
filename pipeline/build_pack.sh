@@ -21,6 +21,6 @@ sed "s|__SRC__|${SRC//&/\\&}|g; s|__COUNTRY_TAG__|${TAG}|g; s|__OUT__|${OUT}|g" 
 
 echo "[$CC] dedup + index + FTS5 ..."
 N=$(python3 "$DIR/finalize_pack.py" "$OUT")
-gzip -9 -k -f "$OUT"
+gzip -9 -n -k -f "$OUT"  # -n: no timestamp/name -> deterministic bytes
 SHA=$(sha256sum "$OUT.gz" | cut -d' ' -f1)
 echo "[$CC] rows=$N  sqlite=$(du -h "$OUT" | cut -f1)  gz=$(du -h "$OUT.gz" | cut -f1)  sha256=$SHA"
