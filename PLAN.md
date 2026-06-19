@@ -140,7 +140,9 @@ Strategy:
   createdAt) + `entries.groupId`; active-group id + last-activity time persisted for the
   timeout. Schema migration v3.
 
-- **Phase 9 — Contribute a missing product to Open Food Facts:** 📋 PLANNED. When a
+- **Phase 9 — Contribute a missing product to Open Food Facts:** ✅ DONE near-term
+  (2026-06-19) — 9a (add product locally) + 9b (OCR nutrition label) + 9c (link out to
+  OFF) built & emulator-verified; **9d (in-app API submit via OAuth) deferred**. When a
   scanned barcode is found *nowhere* (local cache, offline packs, OFF live all miss),
   turn the dead end into a contribution. Instead of "not found", offer **"Add this
   product"** → a form pre-filled with the scanned barcode. To make data entry fast,
