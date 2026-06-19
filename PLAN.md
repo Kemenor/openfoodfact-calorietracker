@@ -163,17 +163,28 @@ Strategy:
     two-column "per 100 g / per serving" layouts. Also OCR the ingredients **text** for
     the OFF ingredients field. User reviews/edits before saving (OCR is a head start,
     not gospel). Reuse ML Kit + the row-by-vertical-position reconstruction from Phase 7.
-  - **9c — Submit to OFF.** Post from the device to OFF's write API
-    (`/cgi/product_jqm2.pl` or `/api/v3/product/{barcode}`), plus
-    `/cgi/product_image_upload.pl` for front/nutrition/ingredients photos. Identify the
-    app via a proper `User-Agent` (`Knabberfuchs/<ver>`) + app_name/uuid; auth via an
-    optional **OFF account** (recommended for attribution) or anonymous contribution.
-    Send only user-provided fields; queue when offline and submit on reconnect; track
-    per-product submission status. **Test against the OFF staging server**
-    (`world.openfoodfacts.net`) before touching production. Contributions are ODbL —
-    consistent with how we already use OFF data.
-  - **Deps / notes:** image capture (camera/image_picker), existing ML Kit OCR + http.
-    Optional small schema bump for the contributed-food flag + submission state.
+  - **9c — Submit to OFF (account required).** OFF requires authentication for all
+    writes — **anonymous product adds are NOT allowed** (verified against the OFF API
+    docs). The account gates **only this step**; 9a/9b work with no account. **Auth via
+    OAuth, not a custom password screen:** use OFF's Keycloak/OIDC with the
+    **Authorization Code + PKCE** flow — a *public* client (no client secret shipped, so
+    keyless intact) that opens the system browser; OFF/Keycloak handles the credentials
+    (passkeys/social/password), and the app only ever holds the returned tokens (in
+    `flutter_secure_storage`). Libraries: `flutter_appauth` / `openid_client`. **OFF
+    pre-configures no clients** — register a **public native OIDC client for Knabberfuchs**
+    (redirect e.g. `ch.knabberfuchs.app://oauth`) with the OFF team first, and confirm
+    they support public/PKCE clients (their docs lean toward backend confidential
+    clients). Legacy `user_id`+`password` write API stays as a transitional fallback only
+    if PKCE isn't available for native apps yet. Then POST to the write API
+    (`/cgi/product_jqm2.pl` or `/api/v3/product/{barcode}`) + `/cgi/product_image_upload.pl`
+    for photos, with a proper `User-Agent` (`Knabberfuchs/<ver>`). Send only
+    user-provided fields; queue offline + submit on reconnect; track per-product
+    submission status. **Test against staging** (`world.openfoodfacts.net`) first.
+    Contributions are ODbL.
+  - **Deps / notes:** image capture (camera/image_picker), OAuth (`flutter_appauth`),
+    `flutter_secure_storage`, existing ML Kit OCR + http. One-time: register the app's
+    OIDC client + an app account / API-usage form with OFF. Optional small schema bump
+    for the contributed-food flag + submission state.
 
 - **Phase 10 — All regions + searchable Offline regions screen:** ✅ DONE (2026-06-19).
   **106 countries** (≥1000 products each) now live on the HF dataset; the picker has a
