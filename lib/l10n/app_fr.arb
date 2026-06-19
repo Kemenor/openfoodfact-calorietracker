@@ -1,0 +1,23 @@
+{
+  "@@locale": "fr",
+
+  "appTitle": "Knabberfuchs",
+
+  "navDay": "Jour",
+  "navRecipes": "Recettes",
+  "navSettings": "Paramètres",
+
+  "actionSave": "Enregistrer",
+  "actionCancel": "Annuler",
+  "actionDelete": "Supprimer",
+  "actionAdd": "Ajouter",
+  "actionImport": "Importer",
+
+  "settingsSectionLanguage": "Langue",
+  "settingsLanguage": "Langue de l’application",
+  "languageSystem": "Par défaut du système",
+  "languageEnglish": "English",
+  "languageGerman": "Deutsch",
+  "languageFrench": "Français",
+  "languageItalian": "Italiano"
+}

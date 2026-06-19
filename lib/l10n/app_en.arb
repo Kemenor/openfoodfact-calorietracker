@@ -1,0 +1,30 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Knabberfuchs",
+  "@appTitle": { "description": "Application name (brand; usually not translated)" },
+
+  "navDay": "Day",
+  "@navDay": { "description": "Bottom navigation: the daily diary tab" },
+  "navRecipes": "Recipes",
+  "@navRecipes": { "description": "Bottom navigation: the recipes tab" },
+  "navSettings": "Settings",
+  "@navSettings": { "description": "Bottom navigation: the settings tab" },
+
+  "actionSave": "Save",
+  "actionCancel": "Cancel",
+  "actionDelete": "Delete",
+  "actionAdd": "Add",
+  "actionImport": "Import",
+
+  "settingsSectionLanguage": "Language",
+  "@settingsSectionLanguage": { "description": "Settings section header for the app language" },
+  "settingsLanguage": "App language",
+  "@settingsLanguage": { "description": "Settings row title for choosing the UI language" },
+  "languageSystem": "System default",
+  "@languageSystem": { "description": "Language option that follows the device locale" },
+  "languageEnglish": "English",
+  "languageGerman": "Deutsch",
+  "languageFrench": "Français",
+  "languageItalian": "Italiano"
+}

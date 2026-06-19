@@ -10,6 +10,7 @@ import '../../core/date_x.dart';
 import '../../data/db/database.dart';
 import '../../domain/enums.dart';
 import '../../domain/meal_times.dart';
+import '../../l10n/app_localizations.dart';
 import '../../providers.dart';
 import 'offline_regions_screen.dart';
 
@@ -31,9 +32,13 @@ class SettingsScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (targets) {
+          final l10n = AppLocalizations.of(context);
           Target rowFor(int wd) => targets.firstWhere((t) => t.weekday == wd);
           return ListView(
             children: [
+              _SectionHeader(l10n.settingsSectionLanguage),
+              const _LanguagePicker(),
+              const Divider(),
               const _SectionHeader('Calorie targets'),
               const Padding(
                 padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
@@ -322,6 +327,49 @@ class _MealTimeRow extends ConsumerWidget {
               onPressed: () => pick(false), child: Text(_fmtMins(end))),
         ],
       ),
+    );
+  }
+}
+
+/// Language override: System default + the four supported locales. Writes the
+/// 'appLocale' setting, which drives [localeProvider] → MaterialApp.locale.
+class _LanguagePicker extends ConsumerWidget {
+  const _LanguagePicker();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final db = ref.read(dbProvider);
+    final current =
+        ref.watch(localeProvider).asData?.value?.languageCode ?? 'system';
+    final options = <String, String>{
+      'system': l10n.languageSystem,
+      'en': l10n.languageEnglish,
+      'de': l10n.languageGerman,
+      'fr': l10n.languageFrench,
+      'it': l10n.languageItalian,
+    };
+    return ExpansionTile(
+      leading: const Icon(Icons.translate),
+      title: Text(l10n.settingsLanguage),
+      subtitle: Text(options[current] ?? options['system']!),
+      children: [
+        RadioGroup<String>(
+          groupValue: current,
+          onChanged: (v) {
+            if (v != null) db.setSetting('appLocale', v);
+          },
+          child: Column(
+            children: [
+              for (final e in options.entries)
+                RadioListTile<String>(
+                  value: e.key,
+                  title: Text(e.value),
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

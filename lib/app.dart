@@ -2,19 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/theme.dart';
+import 'l10n/app_localizations.dart';
 import 'providers.dart';
 import 'ui/home_shell.dart';
 
-class CalorieApp extends StatelessWidget {
+class CalorieApp extends ConsumerWidget {
   const CalorieApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // null until the setting stream resolves → falls back to the device locale.
+    final locale = ref.watch(localeProvider).asData?.value;
     return MaterialApp(
-      title: 'Knabberfuchs',
+      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
       theme: buildTheme(Brightness.light),
       darkTheme: buildTheme(Brightness.dark),
+      locale: locale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: const _Startup(),
     );
   }

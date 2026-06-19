@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -227,6 +228,13 @@ final defaultMaxProvider = StreamProvider<double?>((ref) {
 final targetsProvider = StreamProvider<List<Target>>(
   (ref) => ref.watch(dbProvider).watchTargets(),
 );
+
+/// The UI language override. `null` = follow the device locale; otherwise a
+/// `Locale` built from the stored language code ('en'/'de'/'fr'/'it').
+final localeProvider = StreamProvider<Locale?>((ref) => ref
+    .watch(dbProvider)
+    .watchSetting('appLocale')
+    .map((v) => (v == null || v.isEmpty || v == 'system') ? null : Locale(v)));
 
 /// User-configured meal windows. Used to auto-label a new meal group (its name)
 /// and to tag entries for Health Connect.
