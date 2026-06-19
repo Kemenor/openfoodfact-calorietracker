@@ -1,5 +1,6 @@
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
+import '../../domain/nutrition_label.dart';
 import '../../domain/ocr_ingredient.dart';
 
 /// On-device OCR (ML Kit) for recipe screenshots. Reconstructs rows by vertical
@@ -11,6 +12,11 @@ class OcrService {
 
   Future<List<OcrIngredient>> ingredientsFromImage(String path) async {
     return parseIngredientLines(await _rows(path));
+  }
+
+  /// OCR a nutrition table into per-100 g values (for the add-product flow).
+  Future<NutritionLabel> nutritionFromImage(String path) async {
+    return parseNutritionLabel(await _rows(path));
   }
 
   Future<List<String>> _rows(String path) async {

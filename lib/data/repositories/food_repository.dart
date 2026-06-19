@@ -92,6 +92,8 @@ class FoodRepository {
   Future<BarcodeHit> lookupBarcode(String barcode) async {
     final cached = await db.foodByExternal(FoodSource.openFoodFacts, barcode);
     if (cached != null) return BarcodeHit(cached, BarcodeSource.cache);
+    final mine = await db.foodByExternal(FoodSource.userContributed, barcode);
+    if (mine != null) return BarcodeHit(mine, BarcodeSource.cache);
     final fromPack = packs.lookupBarcode(barcode);
     if (fromPack != null) {
       return BarcodeHit(await ensurePersisted(fromPack), BarcodeSource.pack);
@@ -120,6 +122,43 @@ class FoodRepository {
       protein100: Value(protein100),
       carb100: Value(carb100),
       fat100: Value(fat100),
+      servingG: Value(servingG),
+      servingLabel: Value(servingLabel),
+    ));
+    return (await db.foodById(id))!;
+  }
+
+  /// Create (or update) a product the user added for a missing barcode. Keyed
+  /// by barcode under [FoodSource.userContributed] so a re-scan finds it.
+  Future<Food> createContributedFood({
+    required String barcode,
+    required String name,
+    String? brand,
+    required double kcal100,
+    double? protein100,
+    double? carb100,
+    double? fat100,
+    double? fiber100,
+    double? sugar100,
+    double? satFat100,
+    double? saltG100,
+    double? servingG,
+    String? servingLabel,
+  }) async {
+    final id = await db.upsertFood(FoodsCompanion.insert(
+      source: FoodSource.userContributed,
+      externalId: Value(barcode),
+      barcode: Value(barcode),
+      name: name,
+      brand: Value(brand),
+      kcal100: kcal100,
+      protein100: Value(protein100),
+      carb100: Value(carb100),
+      fat100: Value(fat100),
+      fiber100: Value(fiber100),
+      sugar100: Value(sugar100),
+      satFat100: Value(satFat100),
+      saltG100: Value(saltG100),
       servingG: Value(servingG),
       servingLabel: Value(servingLabel),
     ));

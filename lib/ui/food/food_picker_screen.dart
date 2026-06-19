@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../core/snackbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../data/db/database.dart';
 import '../../providers.dart';
 import '../scan/scan_screen.dart';
+import 'add_product_screen.dart';
 import 'food_search_list.dart';
 import 'manual_food_screen.dart';
 import 'offline_reminder.dart';
@@ -26,7 +26,6 @@ class FoodPickerScreen extends ConsumerWidget {
       ]),
     ));
     if (barcode == null || !context.mounted) return;
-    final messenger = ScaffoldMessenger.of(context);
     final hit = await ref.read(foodRepositoryProvider).lookupBarcode(barcode);
     if (!context.mounted) return;
     if (hit.food != null) {
@@ -34,8 +33,9 @@ class FoodPickerScreen extends ConsumerWidget {
       Navigator.of(context).pop(hit.food);
       reminder?.call(); // shows on the screen we return to
     } else {
-      messenger.showAutoSnackBar(
-          SnackBar(content: Text('No product found for $barcode')));
+      final created = await Navigator.of(context).push<Food>(MaterialPageRoute(
+          builder: (_) => AddProductScreen(barcode: barcode)));
+      if (created != null && context.mounted) Navigator.of(context).pop(created);
     }
   }
 

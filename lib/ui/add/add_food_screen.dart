@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../core/snackbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/db/database.dart';
 import '../../domain/enums.dart';
 import '../../providers.dart';
+import '../food/add_product_screen.dart';
 import '../food/food_search_list.dart';
 import '../food/offline_reminder.dart';
 import '../food/log_food_sheet.dart';
@@ -40,7 +40,6 @@ class AddFoodScreen extends ConsumerWidget {
       MaterialPageRoute(builder: (_) => const ScanScreen()),
     );
     if (barcode == null || !context.mounted) return;
-    final messenger = ScaffoldMessenger.of(context);
     final hit = await ref.read(foodRepositoryProvider).lookupBarcode(barcode);
     if (!context.mounted) return;
     if (hit.food != null) {
@@ -48,8 +47,10 @@ class AddFoodScreen extends ConsumerWidget {
       await _pick(context, ref, hit.food!);
       reminder?.call(); // after the log sheet closes, so it isn't hidden
     } else {
-      messenger.showAutoSnackBar(
-          SnackBar(content: Text('No product found for $barcode')));
+      // Not found anywhere — let the user add it (and optionally send to OFF).
+      final created = await Navigator.of(context).push<Food>(MaterialPageRoute(
+          builder: (_) => AddProductScreen(barcode: barcode)));
+      if (created != null && context.mounted) await _pick(context, ref, created);
     }
   }
 

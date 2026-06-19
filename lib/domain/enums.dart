@@ -8,6 +8,10 @@ enum FoodSource {
 
   /// Entered by the user.
   custom,
+
+  /// A product the user added for a missing barcode (may be contributed to OFF).
+  /// Appended last so the stored enum indices of the others never shift.
+  userContributed,
 }
 
 /// Meal a diary entry belongs to. Order matters: it's the display order.

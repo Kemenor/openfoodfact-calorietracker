@@ -157,6 +157,7 @@ class _FoodTile extends StatelessWidget {
         FoodSource.openFoodFacts => 'Open Food Facts',
         FoodSource.usda => 'USDA',
         FoodSource.custom => 'Custom',
+        FoodSource.userContributed => 'Added by you',
       },
     ];
     return ListTile(
