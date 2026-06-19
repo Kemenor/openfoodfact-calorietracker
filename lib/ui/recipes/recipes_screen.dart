@@ -4,6 +4,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../core/snackbar.dart';
 import '../../domain/recipe_share.dart';
+import '../../l10n/app_localizations.dart';
 import '../../providers.dart';
 import '../scan/scan_screen.dart';
 import 'ocr_meal_screen.dart';
@@ -16,6 +17,7 @@ class RecipesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final recipesAsync = ref.watch(recipesProvider);
+    final l10n = AppLocalizations.of(context);
 
     Future<void> importFromQr() async {
       final messenger = ScaffoldMessenger.of(context);
@@ -32,12 +34,12 @@ class RecipesScreen extends ConsumerWidget {
       final share = RecipeCodec.decode(text);
       if (share == null) {
         messenger.showAutoSnackBar(
-            const SnackBar(content: Text('That QR code is not a recipe.')));
+            SnackBar(content: Text(l10n.qrNotRecipe)));
         return;
       }
       await ref.read(recipeRepositoryProvider).importShare(share);
       messenger.showAutoSnackBar(
-          SnackBar(content: Text('Imported "${share.name}"')));
+          SnackBar(content: Text(l10n.recipeImported(share.name))));
     }
 
     // One menu for every way to create a recipe, replacing the old bare FAB +
@@ -52,8 +54,8 @@ class RecipesScreen extends ConsumerWidget {
             children: [
               ListTile(
                 leading: const Icon(Icons.edit_outlined),
-                title: const Text('Build manually'),
-                subtitle: const Text('Add ingredients one by one'),
+                title: Text(l10n.createBuildManually),
+                subtitle: Text(l10n.createBuildManuallySub),
                 onTap: () {
                   Navigator.pop(sheetCtx);
                   Navigator.of(context).push(MaterialPageRoute(
@@ -62,9 +64,8 @@ class RecipesScreen extends ConsumerWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.document_scanner_outlined),
-                title: const Text('From an ingredient list'),
-                subtitle: const Text(
-                    'Photograph a printed list — save it or log it as a meal'),
+                title: Text(l10n.createFromList),
+                subtitle: Text(l10n.createFromListSub),
                 onTap: () {
                   Navigator.pop(sheetCtx);
                   startOcrMealFlow(context, ref);
@@ -72,8 +73,8 @@ class RecipesScreen extends ConsumerWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.qr_code_scanner),
-                title: const Text('Import from QR code'),
-                subtitle: const Text('Scan a shared recipe'),
+                title: Text(l10n.createFromQr),
+                subtitle: Text(l10n.createFromQrSub),
                 onTap: () {
                   Navigator.pop(sheetCtx);
                   importFromQr();
@@ -86,18 +87,17 @@ class RecipesScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Recipes')),
+      appBar: AppBar(title: Text(l10n.recipesTitle)),
       body: recipesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (recipes) {
           if (recipes.isEmpty) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Text(
-                  'No recipes yet.\nCreate one to reuse meals, share them, '
-                  'or batch-cook and split across days.',
+                  l10n.recipesEmpty,
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -111,7 +111,9 @@ class RecipesScreen extends ConsumerWidget {
               return ListTile(
                 leading: const Icon(Icons.menu_book_outlined),
                 title: Text(r.name),
-                subtitle: Text('${r.servings.toStringAsFixed(r.servings == r.servings.roundToDouble() ? 0 : 1)} servings'),
+                subtitle: Text(l10n.recipeServings(r.servings
+                    .toStringAsFixed(
+                        r.servings == r.servings.roundToDouble() ? 0 : 1))),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
                       builder: (_) => RecipeDetailScreen(recipe: r)),
@@ -124,7 +126,7 @@ class RecipesScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: showCreateMenu,
         icon: const Icon(Icons.add),
-        label: const Text('New recipe'),
+        label: Text(l10n.recipeNew),
       ),
     );
   }

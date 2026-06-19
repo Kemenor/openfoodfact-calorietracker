@@ -151,4 +151,46 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get editMealWhen => 'When';
+
+  @override
+  String get recipesTitle => 'Recipes';
+
+  @override
+  String get recipesEmpty =>
+      'No recipes yet.\nCreate one to reuse meals, share them, or batch-cook and split across days.';
+
+  @override
+  String get recipeNew => 'New recipe';
+
+  @override
+  String recipeServings(String count) {
+    return '$count servings';
+  }
+
+  @override
+  String recipeImported(String name) {
+    return 'Imported \"$name\"';
+  }
+
+  @override
+  String get qrNotRecipe => 'That QR code is not a recipe.';
+
+  @override
+  String get createBuildManually => 'Build manually';
+
+  @override
+  String get createBuildManuallySub => 'Add ingredients one by one';
+
+  @override
+  String get createFromList => 'From an ingredient list';
+
+  @override
+  String get createFromListSub =>
+      'Photograph a printed list — save it or log it as a meal';
+
+  @override
+  String get createFromQr => 'Import from QR code';
+
+  @override
+  String get createFromQrSub => 'Scan a shared recipe';
 }

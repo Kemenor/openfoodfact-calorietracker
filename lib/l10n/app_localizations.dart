@@ -359,6 +359,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'When'**
   String get editMealWhen;
+
+  /// No description provided for @recipesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipes'**
+  String get recipesTitle;
+
+  /// No description provided for @recipesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No recipes yet.\nCreate one to reuse meals, share them, or batch-cook and split across days.'**
+  String get recipesEmpty;
+
+  /// No description provided for @recipeNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New recipe'**
+  String get recipeNew;
+
+  /// No description provided for @recipeServings.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} servings'**
+  String recipeServings(String count);
+
+  /// No description provided for @recipeImported.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported \"{name}\"'**
+  String recipeImported(String name);
+
+  /// No description provided for @qrNotRecipe.
+  ///
+  /// In en, this message translates to:
+  /// **'That QR code is not a recipe.'**
+  String get qrNotRecipe;
+
+  /// No description provided for @createBuildManually.
+  ///
+  /// In en, this message translates to:
+  /// **'Build manually'**
+  String get createBuildManually;
+
+  /// No description provided for @createBuildManuallySub.
+  ///
+  /// In en, this message translates to:
+  /// **'Add ingredients one by one'**
+  String get createBuildManuallySub;
+
+  /// No description provided for @createFromList.
+  ///
+  /// In en, this message translates to:
+  /// **'From an ingredient list'**
+  String get createFromList;
+
+  /// No description provided for @createFromListSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Photograph a printed list — save it or log it as a meal'**
+  String get createFromListSub;
+
+  /// No description provided for @createFromQr.
+  ///
+  /// In en, this message translates to:
+  /// **'Import from QR code'**
+  String get createFromQr;
+
+  /// No description provided for @createFromQrSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan a shared recipe'**
+  String get createFromQrSub;
 }
 
 class _AppLocalizationsDelegate

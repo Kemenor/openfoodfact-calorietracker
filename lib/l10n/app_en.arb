@@ -66,5 +66,21 @@
   "editMealTitle": "Edit meal",
   "editMealName": "Name",
   "editMealType": "Meal type",
-  "editMealWhen": "When"
+  "editMealWhen": "When",
+
+  "recipesTitle": "Recipes",
+  "recipesEmpty": "No recipes yet.\nCreate one to reuse meals, share them, or batch-cook and split across days.",
+  "recipeNew": "New recipe",
+  "recipeServings": "{count} servings",
+  "@recipeServings": { "placeholders": { "count": { "type": "String" } } },
+  "recipeImported": "Imported \"{name}\"",
+  "@recipeImported": { "placeholders": { "name": { "type": "String" } } },
+  "qrNotRecipe": "That QR code is not a recipe.",
+
+  "createBuildManually": "Build manually",
+  "createBuildManuallySub": "Add ingredients one by one",
+  "createFromList": "From an ingredient list",
+  "createFromListSub": "Photograph a printed list — save it or log it as a meal",
+  "createFromQr": "Import from QR code",
+  "createFromQrSub": "Scan a shared recipe"
 }
