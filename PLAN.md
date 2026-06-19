@@ -238,6 +238,27 @@ Strategy:
     change. The OCR nutrition-label parser already handles DE/FR/IT/EN *input* keys —
     separate from UI i18n but the same languages.
 
+- **Phase 12 — Data localization:** 📋 PLANNED. Localize the *food data*, not just the UI
+  (Phase 11). Key asymmetry: **OFF data is already mostly localized** (the pack pipeline
+  extracts each product's native "main" name), so the real work is the **English-only USDA
+  bundle** (~5,600 generic whole foods — there is no DE/FR/IT USDA).
+  - **12a — Translate USDA at build time.** In `tool/build_usda_bundle.dart`, machine-
+    translate the names (DeepL/Google) and bundle `name_de` / `name_fr` / `name_it`
+    columns into `assets/usda_foods.csv.gz`. One-time build cost; **no runtime API key**.
+    Hand-review the **top ~200 common foods** (machine translations of USDA's formal
+    taxonomic names are stilted); leave the long tail machine-translated.
+  - **12b — Locale-aware food display + search.** Show the name column for the current
+    locale (fallback to English); make local search match localized queries (e.g. "Banane"
+    → "Bananen, roh"). Localize the produce **synonyms** (`search_query.dart`) too, or
+    accept weaker synonym matching in non-English.
+  - **12c — OFF region-language preference (refinement, optional).** The pack name is
+    currently `coalesce(main, en, de, fr, it)`. Could prefer the *region's* language per
+    pack (de-first for the DE pack, etc.) for the few products whose `main` isn't local.
+    Mostly already handled — low priority.
+  - **Notes:** depends on Phase 11 (locale selection). Build-time only — no keys shipped,
+    no runtime cost, asset grows modestly. Scope is small because OFF (the big dataset) is
+    already multilingual.
+
 ## Phase 5 design — Offline OFF regional packs (planned 2026-06-17)
 
 **Decisions:** build on **GitHub Actions** → host on **Hugging Face** dataset; **per-country**
