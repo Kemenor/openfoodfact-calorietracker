@@ -214,6 +214,30 @@ Strategy:
   - **Notes:** keeps the keyless/serverless model (anonymous HF downloads). Mostly
     pipeline + a small UI addition; no app schema change.
 
+- **Phase 11 — App translations (i18n):** 📋 PLANNED. Localize the app UI. Swiss-first
+  target locales: **English, German, French, Italian** (start there; easy to add more).
+  Uses Flutter's standard stack — `flutter_localizations` + `gen_l10n` + ARB files (`intl`
+  is already a dep). NB: this is the app **chrome** only — food/product names come from
+  OFF/USDA in their own languages and aren't translated by us.
+  - **11a — Infrastructure.** Add `flutter_localizations`, `generate: true` + `l10n.yaml`,
+    `lib/l10n/app_en.arb` baseline, wire `localizationsDelegates` + `supportedLocales` into
+    `MaterialApp`. Default to the system locale; add a **language override** in Settings
+    (persisted) for users who want a specific one.
+  - **11b — Extract strings (the bulk).** Replace every hardcoded UI string across the
+    app (day, settings, food/log sheet, recipes, OCR, offline regions, add-product, health,
+    backup, snackbars…) with ARB keys via `AppLocalizations.of(context)`. Handle
+    parameters + plurals (`{n} products`, `Logged to {day}`, `{kcal} kcal`). Largely
+    mechanical but touches nearly every UI file — do it in passes per screen.
+  - **11c — Translate.** Fill `app_de.arb` / `app_fr.arb` / `app_it.arb`. Review by a
+    native/fluent speaker (the user is Swiss — DE/FR at least) since machine translations
+    of UI microcopy are often stilted.
+  - **11d — Locale-aware numbers (nice-to-have).** Display/parse decimals per locale
+    (German/French use "1,5"). The app already tolerates comma input; this makes
+    *display* consistent too (via `intl` NumberFormat). Dates already go through `intl`.
+  - **Notes:** big mechanical refactor, low architectural risk; no backend, no schema
+    change. The OCR nutrition-label parser already handles DE/FR/IT/EN *input* keys —
+    separate from UI i18n but the same languages.
+
 ## Phase 5 design — Offline OFF regional packs (planned 2026-06-17)
 
 **Decisions:** build on **GitHub Actions** → host on **Hugging Face** dataset; **per-country**
