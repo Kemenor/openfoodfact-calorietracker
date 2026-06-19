@@ -53,9 +53,13 @@ class HealthService {
       for (var i = 0; i < entries.length; i++) {
         final e = entries[i];
         final factor = e.grams / 100.0;
-        // A representative time in the day, but never in the future — Health
-        // Connect rejects future-dated records. Entries are spread a minute apart.
-        var endT = start.add(Duration(hours: _hour(e.mealType), minutes: i));
+        // Use the real moment the entry was logged (editable via back-dating).
+        // Fall back to the day's noon if somehow unset, and never write a
+        // future-dated record — Health Connect rejects those.
+        var endT = e.createdAt;
+        if (endT.isBefore(start) || !endT.isBefore(end)) {
+          endT = start.add(const Duration(hours: 12, minutes: 1));
+        }
         if (endT.isAfter(now)) {
           endT = now.subtract(Duration(minutes: entries.length - i));
         }
@@ -93,13 +97,6 @@ class HealthService {
       );
     } catch (_) {}
   }
-
-  int _hour(MealType m) => switch (m) {
-        MealType.breakfast => 8,
-        MealType.lunch => 12,
-        MealType.dinner => 19,
-        MealType.snack => 15,
-      };
 
   h.MealType _mealType(MealType m) => switch (m) {
         MealType.breakfast => h.MealType.BREAKFAST,

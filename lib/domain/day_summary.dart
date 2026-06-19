@@ -37,17 +37,6 @@ class GroupView {
   Nutrition get subtotal => Nutrition.sum(items.map((e) => e.nutrition));
 }
 
-/// Entries of one meal plus their subtotal.
-class MealGroup {
-  final MealType meal;
-  final List<EntryView> items;
-
-  MealGroup(this.meal, this.items);
-
-  Nutrition get subtotal => Nutrition.sum(items.map((e) => e.nutrition));
-  bool get isEmpty => items.isEmpty;
-}
-
 /// Where the day's total sits relative to its (optional) calorie bounds.
 enum TargetStatus { none, under, inRange, over }
 
@@ -91,11 +80,6 @@ class DaySummary {
     if (hasTarget) return TargetStatus.inRange;
     return TargetStatus.none;
   }
-
-  /// All meals in display order (includes empty meals for the grouped view).
-  List<MealGroup> get meals => MealType.values
-      .map((m) => MealGroup(m, entries.where((e) => e.meal == m).toList()))
-      .toList();
 }
 
 /// Resolve the calorie bounds for a weekday: the weekday's own values if set,

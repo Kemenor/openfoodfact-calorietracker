@@ -14,6 +14,7 @@ import 'data/offline/region_pack_store.dart';
 import 'data/sources/off_api.dart';
 import 'data/sources/usda_seed.dart';
 import 'domain/day_summary.dart';
+import 'domain/enums.dart';
 import 'domain/meal_times.dart';
 import 'domain/offline_manifest.dart';
 
@@ -167,7 +168,10 @@ class ActiveGroupNotifier extends Notifier<int?> {
         return current;
       }
     }
-    final name = 'Meal ${DateFormat('HH:mm').format(DateTime.now())}';
+    final now = DateTime.now();
+    final mt = MealTimes.fromSettings(
+        {for (final s in await _db.watchAllSettings().first) s.key: s.value});
+    final name = '${mt.inferAt(now).title} ${DateFormat('HH:mm').format(now)}';
     final id = await _db.createEntryGroup(day, name);
     await _setActive(id);
     return id;
@@ -224,19 +228,11 @@ final targetsProvider = StreamProvider<List<Target>>(
   (ref) => ref.watch(dbProvider).watchTargets(),
 );
 
-/// Meal layout: true = fixed Breakfast/Lunch/Dinner/Snacks sections,
-/// false = automatic per-add meal groups (track-by-day). Defaults to false.
-/// User-configured meal windows for auto-labeling track-by-day entries.
+/// User-configured meal windows. Used to auto-label a new meal group (its name)
+/// and to tag entries for Health Connect.
 final mealTimesProvider = StreamProvider<MealTimes>((ref) =>
     ref.watch(dbProvider).watchAllSettings().map((rows) =>
         MealTimes.fromSettings({for (final s in rows) s.key: s.value})));
-
-final groupByMealProvider = StreamProvider<bool>((ref) {
-  return ref
-      .watch(dbProvider)
-      .watchSetting('groupByMeal')
-      .map((v) => v == 'true'); // default false (track-by-day)
-});
 
 // ---------------- Day selection & summary ----------------
 

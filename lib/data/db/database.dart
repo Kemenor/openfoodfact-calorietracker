@@ -195,6 +195,34 @@ class AppDatabase extends _$AppDatabase {
       (update(entryGroups)..where((g) => g.id.equals(id)))
           .write(EntryGroupsCompanion(name: Value(name)));
 
+  /// Edit a meal group: rename, reclassify ([mealType]) and move it to [day] at
+  /// [time]. The group and all its entries are re-filed onto [day]; entry times
+  /// are spread a minute apart from [time] so Health Connect keeps their order.
+  Future<void> editEntryGroup({
+    required int id,
+    required String name,
+    required String day,
+    required DateTime time,
+    required MealType mealType,
+  }) async {
+    await transaction(() async {
+      await (update(entryGroups)..where((g) => g.id.equals(id))).write(
+        EntryGroupsCompanion(
+            name: Value(name), day: Value(day), createdAt: Value(time)),
+      );
+      final items = await entriesForGroup(id);
+      for (var i = 0; i < items.length; i++) {
+        await (update(entries)..where((e) => e.id.equals(items[i].id))).write(
+          EntriesCompanion(
+            day: Value(day),
+            mealType: Value(mealType),
+            createdAt: Value(time.add(Duration(minutes: i))),
+          ),
+        );
+      }
+    });
+  }
+
   Future<void> deleteEntryGroup(int id) =>
       (delete(entryGroups)..where((g) => g.id.equals(id))).go();
 

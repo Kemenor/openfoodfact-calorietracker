@@ -20,7 +20,6 @@ void main() {
               DaySummary(day: DayKey.today(), entries: const []),
             ),
           ),
-          groupByMealProvider.overrideWith((ref) => Stream.value(true)),
         ],
         child: const CalorieApp(),
       ),
@@ -29,8 +28,7 @@ void main() {
 
     expect(find.text('Today'), findsOneWidget);
     expect(find.text('Add food'), findsOneWidget);
-    // Meal mode (overridden true): empty day shows the four meal sections.
-    expect(find.text('Breakfast'), findsOneWidget);
-    expect(find.text('Snacks'), findsOneWidget);
+    // Empty day shows the fluid-mode hint to start a meal.
+    expect(find.textContaining('Tap + to start a meal'), findsOneWidget);
   });
 }

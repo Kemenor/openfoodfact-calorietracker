@@ -22,7 +22,6 @@ class SettingsScreen extends ConsumerWidget {
     final targetsAsync = ref.watch(targetsProvider);
     final defaultMin = ref.watch(defaultMinProvider).asData?.value;
     final defaultMax = ref.watch(defaultMaxProvider).asData?.value;
-    final fixedMeals = ref.watch(groupByMealProvider).asData?.value ?? false;
     final healthSync =
         ref.watch(healthSyncEnabledProvider).asData?.value ?? false;
 
@@ -77,33 +76,24 @@ class SettingsScreen extends ConsumerWidget {
               ),
               const Divider(),
               const _SectionHeader('Logging'),
-              SwitchListTile(
-                title: const Text('Fixed meals'),
-                subtitle: const Text(
-                    'On: log into Breakfast / Lunch / Dinner / Snacks.\n'
-                    'Off: meals are grouped automatically as you add.'),
-                isThreeLine: true,
-                value: fixedMeals,
-                onChanged: (v) =>
-                    db.setSetting('groupByMeal', v ? 'true' : 'false'),
+              ExpansionTile(
+                leading: const Icon(Icons.schedule),
+                title: const Text('Meal times'),
+                subtitle: const Text('Names each meal by the time you log it'),
+                childrenPadding: const EdgeInsets.only(bottom: 8),
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
+                    child: Text(
+                        'A new meal is named after the window its first item '
+                        'falls in (e.g. "Breakfast 08:23"). Anything outside '
+                        'these windows is a snack. You can always rename a meal.'),
+                  ),
+                  _MealTimeRow(meal: MealType.breakfast),
+                  _MealTimeRow(meal: MealType.lunch),
+                  _MealTimeRow(meal: MealType.dinner),
+                ],
               ),
-              if (!fixedMeals) ...[
-                const ListTile(
-                  leading: Icon(Icons.schedule),
-                  title: Text('Meal times'),
-                  subtitle: Text(
-                      'Auto-labels each entry by the time you log it. '
-                      'Anything outside these windows counts as a snack.'),
-                  isThreeLine: true,
-                ),
-                for (final m in const [
-                  MealType.breakfast,
-                  MealType.lunch,
-                  MealType.dinner
-                ])
-                  _MealTimeRow(meal: m),
-                const SizedBox(height: 8),
-              ],
               const Divider(),
               const _SectionHeader('Food data'),
               ListTile(
@@ -125,24 +115,12 @@ class SettingsScreen extends ConsumerWidget {
                 onChanged: (v) => _toggleHealthSync(context, ref, v),
               ),
               if (healthSync)
-                ExpansionTile(
-                  leading: const Icon(Icons.schedule),
-                  title: const Text('Meal times'),
-                  subtitle: const Text(
-                      'When each meal is timestamped in Health Connect'),
-                  childrenPadding: const EdgeInsets.only(bottom: 8),
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
-                      child: Text(
-                          'Entries are written to Health Connect at the start '
-                          'of their meal window, so calories land at a sensible '
-                          'time of day.'),
-                    ),
-                    _MealTimeRow(meal: MealType.breakfast),
-                    _MealTimeRow(meal: MealType.lunch),
-                    _MealTimeRow(meal: MealType.dinner),
-                  ],
+                const ListTile(
+                  leading: Icon(Icons.info_outline),
+                  dense: true,
+                  title: Text('Entries sync at the time you logged them'),
+                  subtitle: Text(
+                      'Back-date a meal from its ⋮ menu to change its time.'),
                 ),
               const Divider(),
               const _SectionHeader('Data & backup'),

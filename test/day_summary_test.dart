@@ -39,17 +39,6 @@ void main() {
       expect(s.total.protein, closeTo(10, 0.001));
     });
 
-    test('groups by meal in display order, includes empty meals', () {
-      final s = DaySummary(day: '2026-06-17', entries: entries);
-      final meals = s.meals;
-      expect(meals.map((m) => m.meal).toList(), MealType.values);
-      final breakfast = meals.firstWhere((m) => m.meal == MealType.breakfast);
-      expect(breakfast.items.length, 2);
-      expect(breakfast.subtotal.kcal, closeTo(250, 0.001));
-      final lunch = meals.firstWhere((m) => m.meal == MealType.lunch);
-      expect(lunch.isEmpty, isTrue);
-    });
-
     // total is 550 kcal for the shared entries.
     test('over max', () {
       final s = DaySummary(day: '2026-06-17', entries: entries, kcalMax: 500);

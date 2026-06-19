@@ -50,7 +50,6 @@ class _DayScreenState extends ConsumerState<DayScreen>
   Widget build(BuildContext context) {
     final day = ref.watch(selectedDayProvider);
     final summaryAsync = ref.watch(daySummaryProvider);
-    final groupByMeal = ref.watch(groupByMealProvider).asData?.value ?? false;
 
     // Push this day's nutrition to Health Connect whenever its entries change
     // (no-op unless the user enabled sync in Settings).
@@ -106,7 +105,7 @@ class _DayScreenState extends ConsumerState<DayScreen>
       body: summaryAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
-        data: (summary) => _DayBody(summary: summary, groupByMeal: groupByMeal),
+        data: (summary) => _DayBody(summary: summary),
       ),
       floatingActionButton: Row(
         mainAxisSize: MainAxisSize.min,
@@ -120,9 +119,7 @@ class _DayScreenState extends ConsumerState<DayScreen>
           const SizedBox(width: 12),
           FloatingActionButton.extended(
             heroTag: 'dayAddFood',
-            onPressed: () => groupByMeal
-                ? addFoodToMeal(context, day, MealType.snack)
-                : addFoodByDay(context, ref, day),
+            onPressed: () => addFoodByDay(context, ref, day),
             icon: const Icon(Icons.add),
             label: const Text('Add food'),
           ),
@@ -180,15 +177,8 @@ class _DayScreenState extends ConsumerState<DayScreen>
   }
 }
 
-/// Push the add-food flow for a fixed meal (meal mode).
-void addFoodToMeal(BuildContext context, String day, MealType meal) {
-  Navigator.of(context).push(
-    MaterialPageRoute(builder: (_) => AddFoodScreen(day: day, meal: meal)),
-  );
-}
-
-/// Push the add-food flow for track-by-day mode; the target group (active or a
-/// new time-named one) is resolved at log time so empty groups never linger.
+/// Push the add-food flow; the target group (active or a new time-named one) is
+/// resolved at log time so empty groups never linger.
 void addFoodByDay(BuildContext context, WidgetRef ref, String day) {
   final meal = (ref.read(mealTimesProvider).asData?.value ?? MealTimes.defaults)
       .inferNow();
@@ -206,37 +196,30 @@ void addFoodByDay(BuildContext context, WidgetRef ref, String day) {
 
 class _DayBody extends ConsumerWidget {
   final DaySummary summary;
-  final bool groupByMeal;
-  const _DayBody({required this.summary, required this.groupByMeal});
+  const _DayBody({required this.summary});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final children = <Widget>[_SummaryCard(summary: summary)];
 
-    if (groupByMeal) {
-      children.addAll([
-        for (final m in summary.meals) _MealSection(group: m, day: summary.day),
-      ]);
-    } else {
-      final groups = ref.watch(dayGroupViewsProvider);
-      final ungrouped = ref.watch(ungroupedDayEntriesProvider);
-      if (groups.isEmpty && ungrouped.isEmpty) {
-        children.add(const Padding(
-          padding: EdgeInsets.all(48),
-          child: Center(
-            child: Text(
-              'Tap + to start a meal.\nEverything you add flows into it '
-              'until you tap ✓ (or 15 min pass).',
-              textAlign: TextAlign.center,
-            ),
+    final groups = ref.watch(dayGroupViewsProvider);
+    final ungrouped = ref.watch(ungroupedDayEntriesProvider);
+    if (groups.isEmpty && ungrouped.isEmpty) {
+      children.add(const Padding(
+        padding: EdgeInsets.all(48),
+        child: Center(
+          child: Text(
+            'Tap + to start a meal.\nEverything you add flows into it '
+            'until you tap ✓ (or 15 min pass).',
+            textAlign: TextAlign.center,
           ),
-        ));
-      } else {
-        children.addAll([
-          for (final g in groups) _GroupSection(group: g, day: summary.day),
-          for (final e in ungrouped) _EntryTile(view: e, day: summary.day),
-        ]);
-      }
+        ),
+      ));
+    } else {
+      children.addAll([
+        for (final g in groups) _GroupSection(group: g, day: summary.day),
+        for (final e in ungrouped) _EntryTile(view: e, day: summary.day),
+      ]);
     }
 
     return ListView(
@@ -360,45 +343,6 @@ class _MacroRow extends StatelessWidget {
   }
 }
 
-class _MealSection extends ConsumerWidget {
-  final MealGroup group;
-  final String day;
-  const _MealSection({required this.group, required this.day});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 8, 0),
-          child: Row(
-            children: [
-              Text(group.meal.label,
-                  style: theme.textTheme.titleSmall
-                      ?.copyWith(fontWeight: FontWeight.bold)),
-              const SizedBox(width: 8),
-              if (!group.isEmpty)
-                Text('${kcalStr(group.subtotal.kcal)} kcal',
-                    style: theme.textTheme.bodySmall),
-              const Spacer(),
-              IconButton(
-                visualDensity: VisualDensity.compact,
-                icon: const Icon(Icons.add, size: 20),
-                onPressed: () => addFoodToMeal(context, day, group.meal),
-              ),
-            ],
-          ),
-        ),
-        for (final e in group.items) _EntryTile(view: e, day: day),
-        if (group.isEmpty)
-          const Divider(height: 1, indent: 16, endIndent: 16),
-      ],
-    );
-  }
-}
-
 /// A track-by-day ad-hoc meal group: header with rename / save-as-recipe /
 /// delete, plus the +/✓ edit-mode control.
 class _GroupSection extends ConsumerWidget {
@@ -426,7 +370,7 @@ class _GroupSection extends ConsumerWidget {
               Expanded(
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () => _rename(context, ref),
+                  onTap: () => _editMeal(context, ref),
                   child: Row(
                     children: [
                       Flexible(
@@ -447,8 +391,8 @@ class _GroupSection extends ConsumerWidget {
                 icon: const Icon(Icons.more_vert, size: 20),
                 onSelected: (v) {
                   switch (v) {
-                    case 'rename':
-                      _rename(context, ref);
+                    case 'edit':
+                      _editMeal(context, ref);
                     case 'split':
                       showSplitMealSheet(context, group);
                     case 'recipe':
@@ -458,7 +402,8 @@ class _GroupSection extends ConsumerWidget {
                   }
                 },
                 itemBuilder: (_) => const [
-                  PopupMenuItem(value: 'rename', child: Text('Rename')),
+                  PopupMenuItem(
+                      value: 'edit', child: Text('Edit meal')),
                   PopupMenuItem(
                       value: 'split', child: Text('Split across days')),
                   PopupMenuItem(value: 'recipe', child: Text('Save as recipe')),
@@ -488,25 +433,13 @@ class _GroupSection extends ConsumerWidget {
     );
   }
 
-  Future<void> _rename(BuildContext context, WidgetRef ref) async {
-    final controller = TextEditingController(text: group.name);
-    final name = await showDialog<String>(
+  void _editMeal(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet<void>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Rename meal'),
-        content: TextField(controller: controller, autofocus: true),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
-          FilledButton(
-              onPressed: () => Navigator.pop(ctx, controller.text.trim()),
-              child: const Text('Save')),
-        ],
-      ),
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (_) => _EditMealSheet(group: group, day: day),
     );
-    if (name != null && name.isNotEmpty) {
-      await ref.read(dbProvider).renameEntryGroup(group.id, name);
-    }
   }
 
   Future<void> _saveAsRecipe(BuildContext context, WidgetRef ref) async {
@@ -535,6 +468,157 @@ class _GroupSection extends ConsumerWidget {
       await ref.read(activeGroupProvider.notifier).end();
     }
     await ref.read(dbProvider).deleteEntryGroup(group.id);
+  }
+}
+
+/// Edit a meal: rename, reclassify its meal type, and back-date it (moving the
+/// whole meal — header + entries — to another day/time).
+class _EditMealSheet extends ConsumerStatefulWidget {
+  final GroupView group;
+  final String day;
+  const _EditMealSheet({required this.group, required this.day});
+
+  @override
+  ConsumerState<_EditMealSheet> createState() => _EditMealSheetState();
+}
+
+class _EditMealSheetState extends ConsumerState<_EditMealSheet> {
+  late final TextEditingController _nameCtrl =
+      TextEditingController(text: widget.group.name);
+  late MealType _meal = widget.group.items.isNotEmpty
+      ? widget.group.items.first.meal
+      : MealType.snack;
+  late DateTime _when = widget.group.group.createdAt;
+  // Once the user edits the name by hand, stop auto-rewriting it on reclassify.
+  bool _nameDirty = false;
+
+  String get _timeLabel =>
+      '${_when.hour.toString().padLeft(2, '0')}:${_when.minute.toString().padLeft(2, '0')}';
+  String get _autoName => '${_meal.title} $_timeLabel';
+
+  @override
+  void dispose() {
+    _nameCtrl.dispose();
+    super.dispose();
+  }
+
+  void _reclassify(MealType m) {
+    setState(() {
+      _meal = m;
+      if (!_nameDirty) _nameCtrl.text = _autoName;
+    });
+  }
+
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _when,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (picked != null) {
+      setState(() => _when =
+          DateTime(picked.year, picked.month, picked.day, _when.hour, _when.minute));
+    }
+  }
+
+  Future<void> _pickTime() async {
+    final picked = await showTimePicker(
+        context: context, initialTime: TimeOfDay.fromDateTime(_when));
+    if (picked != null) {
+      setState(() {
+        _when = DateTime(
+            _when.year, _when.month, _when.day, picked.hour, picked.minute);
+        if (!_nameDirty) _nameCtrl.text = _autoName;
+      });
+    }
+  }
+
+  Future<void> _save() async {
+    final name = _nameCtrl.text.trim();
+    final newDay = DayKey.of(_when);
+    await ref.read(dbProvider).editEntryGroup(
+          id: widget.group.id,
+          name: name.isEmpty ? _autoName : name,
+          day: newDay,
+          time: _when,
+          mealType: _meal,
+        );
+    // If the meal moved off the visible day, follow it there.
+    if (newDay != widget.day) {
+      ref.read(selectedDayProvider.notifier).set(newDay);
+    }
+    if (mounted) Navigator.of(context).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+            16, 0, 16, MediaQuery.of(context).viewInsets.bottom + 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Edit meal', style: theme.textTheme.titleLarge),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _nameCtrl,
+              autofocus: false,
+              decoration: const InputDecoration(
+                labelText: 'Name',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (_) => _nameDirty = true,
+            ),
+            const SizedBox(height: 16),
+            Text('Meal type', style: theme.textTheme.labelLarge),
+            const SizedBox(height: 4),
+            Wrap(
+              spacing: 8,
+              children: [
+                for (final m in MealType.values)
+                  ChoiceChip(
+                    label: Text(m.title),
+                    selected: _meal == m,
+                    onSelected: (_) => _reclassify(m),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text('When', style: theme.textTheme.labelLarge),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    icon: const Icon(Icons.calendar_today, size: 18),
+                    label: Text(DayKey.label(DayKey.of(_when))),
+                    onPressed: _pickDate,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.schedule, size: 18),
+                  label: Text(_timeLabel),
+                  onPressed: _pickTime,
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                const Spacer(),
+                FilledButton(onPressed: _save, child: const Text('Save')),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

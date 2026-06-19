@@ -8,11 +8,8 @@ import '../../domain/enums.dart';
 import '../../domain/units.dart';
 import '../../providers.dart';
 
-/// Whether the meal picker should be shown (track-by-meal mode).
-bool _askMeal(WidgetRef ref) =>
-    ref.read(groupByMealProvider).asData?.value ?? false;
-
-/// Sheet to log a catalog [food] into [day]/[meal].
+/// Sheet to log a catalog [food] into [day]. [meal] is the inferred meal tag
+/// (for Health Connect); the user no longer picks it here.
 Future<bool?> showLogFoodSheet(
   BuildContext context,
   WidgetRef ref, {
@@ -21,9 +18,6 @@ Future<bool?> showLogFoodSheet(
   required MealType meal,
   Future<int?> Function()? resolveGroup,
 }) {
-  // Read once, now — never inside the builder, which re-runs on sheet rebuilds
-  // when the caller's ref may already be disposed (e.g. after delete).
-  final askMeal = _askMeal(ref);
   return showModalBottomSheet<bool>(
     context: context,
     isScrollControlled: true,
@@ -40,8 +34,7 @@ Future<bool?> showLogFoodSheet(
       servingG: food.servingG,
       servingLabel: food.servingLabel,
       initialGrams: food.servingG ?? 100,
-      initialMeal: meal,
-      askMeal: askMeal,
+      meal: meal,
       onSubmit: (g, m) async {
         final groupId = resolveGroup == null ? null : await resolveGroup();
         await ref.read(diaryRepositoryProvider).logFood(
@@ -84,17 +77,15 @@ Future<double?> showAmountSheet(
       servingG: servingG,
       servingLabel: servingLabel,
       initialGrams: initialGrams ?? servingG ?? 100,
-      initialMeal: MealType.snack,
-      askMeal: false,
+      meal: MealType.snack,
       onSubmit: (g, _) async => result = g,
     ),
   );
   return ok == true ? result : null;
 }
 
-/// Sheet to edit an existing diary [entry] (grams + meal, or delete).
+/// Sheet to edit an existing diary [entry] (grams, or delete).
 void showEditEntrySheet(BuildContext context, WidgetRef ref, Entry entry) {
-  final askMeal = _askMeal(ref);
   showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
@@ -111,8 +102,7 @@ void showEditEntrySheet(BuildContext context, WidgetRef ref, Entry entry) {
       servingG: null,
       servingLabel: null,
       initialGrams: entry.grams,
-      initialMeal: entry.mealType,
-      askMeal: askMeal,
+      meal: entry.mealType,
       onSubmit: (g, m) =>
           ref.read(diaryRepositoryProvider).editEntry(entry, grams: g, meal: m),
       onDelete: () async {
@@ -135,8 +125,7 @@ class _LogSheet extends StatefulWidget {
   final double? servingG;
   final String? servingLabel;
   final double initialGrams;
-  final MealType initialMeal;
-  final bool askMeal;
+  final MealType meal;
   final Future<void> Function(double grams, MealType meal) onSubmit;
   final Future<void> Function()? onDelete;
 
@@ -152,8 +141,7 @@ class _LogSheet extends StatefulWidget {
     required this.servingG,
     required this.servingLabel,
     required this.initialGrams,
-    required this.initialMeal,
-    required this.askMeal,
+    required this.meal,
     required this.onSubmit,
     this.onDelete,
   });
@@ -165,7 +153,6 @@ class _LogSheet extends StatefulWidget {
 class _LogSheetState extends State<_LogSheet> {
   late final TextEditingController _amountCtrl =
       TextEditingController(text: gramsStr(widget.initialGrams));
-  late MealType _meal = widget.initialMeal;
   AmountUnit _unit = AmountUnit.grams;
 
   double get _amount =>
@@ -285,22 +272,6 @@ class _LogSheetState extends State<_LogSheet> {
                 ),
             ],
           ),
-          if (widget.askMeal) ...[
-            const SizedBox(height: 16),
-            Text('Meal', style: theme.textTheme.labelLarge),
-            const SizedBox(height: 4),
-            Wrap(
-              spacing: 8,
-              children: [
-                for (final m in MealType.values)
-                  ChoiceChip(
-                    label: Text(m.label),
-                    selected: _meal == m,
-                    onSelected: (_) => setState(() => _meal = m),
-                  ),
-              ],
-            ),
-          ],
           const SizedBox(height: 20),
           Row(
             children: [
@@ -320,7 +291,7 @@ class _LogSheetState extends State<_LogSheet> {
                 onPressed: _grams <= 0
                     ? null
                     : () async {
-                        await widget.onSubmit(_grams, _meal);
+                        await widget.onSubmit(_grams, widget.meal);
                         if (context.mounted) Navigator.of(context).pop(true);
                       },
                 child: Text(widget.submitLabel),

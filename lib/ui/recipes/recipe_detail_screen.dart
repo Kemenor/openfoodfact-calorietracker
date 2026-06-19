@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/date_x.dart';
 import '../../core/format.dart';
 import '../../data/db/database.dart';
-import '../../domain/enums.dart';
 import '../../domain/meal_times.dart';
 import '../../domain/nutrition.dart';
 import '../../domain/recipe_share.dart';
@@ -172,7 +171,6 @@ class _LogPortionSheet extends ConsumerStatefulWidget {
 
 class _LogPortionSheetState extends ConsumerState<_LogPortionSheet> {
   String _day = DayKey.today();
-  MealType _meal = MealType.dinner;
   double _portions = 1;
 
   double get _oneServingGrams =>
@@ -181,7 +179,6 @@ class _LogPortionSheetState extends ConsumerState<_LogPortionSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final fixedMeals = ref.watch(groupByMealProvider).asData?.value ?? false;
     final grams = _oneServingGrams * _portions;
     final nutrition = Nutrition.fromPer100g(
       kcal100: widget.share.totalGrams == 0
@@ -232,20 +229,6 @@ class _LogPortionSheetState extends ConsumerState<_LogPortionSheet> {
               ),
             ],
           ),
-          if (fixedMeals) ...[
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              children: [
-                for (final m in MealType.values)
-                  ChoiceChip(
-                    label: Text(m.label),
-                    selected: _meal == m,
-                    onSelected: (_) => setState(() => _meal = m),
-                  ),
-              ],
-            ),
-          ],
           const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
@@ -275,15 +258,11 @@ class _LogPortionSheetState extends ConsumerState<_LogPortionSheet> {
     final grams = _oneServingGrams * _portions;
     final messenger = ScaffoldMessenger.of(context);
     final label = DayKey.label(_day);
-    final fixedMeals = ref.read(groupByMealProvider).asData?.value ?? false;
-    // Track-by-day: log the portion as its own meal group named after the recipe.
-    final groupId = fixedMeals
-        ? null
-        : await ref.read(dbProvider).createEntryGroup(_day, widget.share.name);
-    final meal = fixedMeals
-        ? _meal
-        : (ref.read(mealTimesProvider).asData?.value ?? MealTimes.defaults)
-            .inferNow();
+    // Log the portion as its own meal group named after the recipe.
+    final groupId =
+        await ref.read(dbProvider).createEntryGroup(_day, widget.share.name);
+    final meal = (ref.read(mealTimesProvider).asData?.value ?? MealTimes.defaults)
+        .inferNow();
     await ref.read(recipeRepositoryProvider).logPortionGrams(
           share: widget.share,
           grams: grams,
