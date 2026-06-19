@@ -18,7 +18,7 @@ class AppDatabase extends _$AppDatabase {
       : super(executor ?? driftDatabase(name: 'calorie_tracker'));
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -52,6 +52,14 @@ class AppDatabase extends _$AppDatabase {
           if (from < 5) {
             // Remembered OCR ingredient-name -> food matches.
             await m.createTable(ocrMappings);
+          }
+          if (from < 6) {
+            // Track recency for the "recently used" default food list. Seed it
+            // from updatedAt so previously-used foods aren't all blank.
+            await m.addColumn(foods, foods.lastUsedAt);
+            await customStatement(
+                'UPDATE foods SET last_used_at = updated_at '
+                'WHERE usage_count > 0');
           }
         },
         beforeOpen: (details) async {
@@ -118,6 +126,18 @@ class AppDatabase extends _$AppDatabase {
       variables: [Variable.withInt(foodId)],
       updates: {foods},
     );
+    await (update(foods)..where((f) => f.id.equals(foodId)))
+        .write(FoodsCompanion(lastUsedAt: Value(DateTime.now())));
+  }
+
+  /// The most recently logged foods, newest first — shown as the default list
+  /// in the food picker before the user types anything. Empty for a fresh user.
+  Future<List<Food>> recentFoods({int limit = 30}) {
+    return (select(foods)
+          ..where((f) => f.lastUsedAt.isNotNull())
+          ..orderBy([(f) => OrderingTerm.desc(f.lastUsedAt)])
+          ..limit(limit))
+        .get();
   }
 
   Future<void> setFavorite(int foodId, bool value) =>

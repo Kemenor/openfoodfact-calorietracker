@@ -240,6 +240,17 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, Food> {
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _lastUsedAtMeta = const VerificationMeta(
+    'lastUsedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastUsedAt = GeneratedColumn<DateTime>(
+    'last_used_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
   );
@@ -275,6 +286,7 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, Food> {
     microsJson,
     isFavorite,
     usageCount,
+    lastUsedAt,
     updatedAt,
   ];
   @override
@@ -416,6 +428,15 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, Food> {
         usageCount.isAcceptableOrUnknown(data['usage_count']!, _usageCountMeta),
       );
     }
+    if (data.containsKey('last_used_at')) {
+      context.handle(
+        _lastUsedAtMeta,
+        lastUsedAt.isAcceptableOrUnknown(
+          data['last_used_at']!,
+          _lastUsedAtMeta,
+        ),
+      );
+    }
     if (data.containsKey('updated_at')) {
       context.handle(
         _updatedAtMeta,
@@ -521,6 +542,10 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, Food> {
         DriftSqlType.int,
         data['${effectivePrefix}usage_count'],
       )!,
+      lastUsedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_used_at'],
+      ),
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
@@ -565,6 +590,9 @@ class Food extends DataClass implements Insertable<Food> {
   final String? microsJson;
   final bool isFavorite;
   final int usageCount;
+
+  /// Last time this food was logged; powers the "recently used" default list.
+  final DateTime? lastUsedAt;
   final DateTime updatedAt;
   const Food({
     required this.id,
@@ -588,6 +616,7 @@ class Food extends DataClass implements Insertable<Food> {
     this.microsJson,
     required this.isFavorite,
     required this.usageCount,
+    this.lastUsedAt,
     required this.updatedAt,
   });
   @override
@@ -646,6 +675,9 @@ class Food extends DataClass implements Insertable<Food> {
     }
     map['is_favorite'] = Variable<bool>(isFavorite);
     map['usage_count'] = Variable<int>(usageCount);
+    if (!nullToAbsent || lastUsedAt != null) {
+      map['last_used_at'] = Variable<DateTime>(lastUsedAt);
+    }
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
@@ -703,6 +735,9 @@ class Food extends DataClass implements Insertable<Food> {
           : Value(microsJson),
       isFavorite: Value(isFavorite),
       usageCount: Value(usageCount),
+      lastUsedAt: lastUsedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastUsedAt),
       updatedAt: Value(updatedAt),
     );
   }
@@ -736,6 +771,7 @@ class Food extends DataClass implements Insertable<Food> {
       microsJson: serializer.fromJson<String?>(json['microsJson']),
       isFavorite: serializer.fromJson<bool>(json['isFavorite']),
       usageCount: serializer.fromJson<int>(json['usageCount']),
+      lastUsedAt: serializer.fromJson<DateTime?>(json['lastUsedAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
@@ -766,6 +802,7 @@ class Food extends DataClass implements Insertable<Food> {
       'microsJson': serializer.toJson<String?>(microsJson),
       'isFavorite': serializer.toJson<bool>(isFavorite),
       'usageCount': serializer.toJson<int>(usageCount),
+      'lastUsedAt': serializer.toJson<DateTime?>(lastUsedAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
@@ -792,6 +829,7 @@ class Food extends DataClass implements Insertable<Food> {
     Value<String?> microsJson = const Value.absent(),
     bool? isFavorite,
     int? usageCount,
+    Value<DateTime?> lastUsedAt = const Value.absent(),
     DateTime? updatedAt,
   }) => Food(
     id: id ?? this.id,
@@ -815,6 +853,7 @@ class Food extends DataClass implements Insertable<Food> {
     microsJson: microsJson.present ? microsJson.value : this.microsJson,
     isFavorite: isFavorite ?? this.isFavorite,
     usageCount: usageCount ?? this.usageCount,
+    lastUsedAt: lastUsedAt.present ? lastUsedAt.value : this.lastUsedAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
   Food copyWithCompanion(FoodsCompanion data) {
@@ -854,6 +893,9 @@ class Food extends DataClass implements Insertable<Food> {
       usageCount: data.usageCount.present
           ? data.usageCount.value
           : this.usageCount,
+      lastUsedAt: data.lastUsedAt.present
+          ? data.lastUsedAt.value
+          : this.lastUsedAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
@@ -882,6 +924,7 @@ class Food extends DataClass implements Insertable<Food> {
           ..write('microsJson: $microsJson, ')
           ..write('isFavorite: $isFavorite, ')
           ..write('usageCount: $usageCount, ')
+          ..write('lastUsedAt: $lastUsedAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
@@ -910,6 +953,7 @@ class Food extends DataClass implements Insertable<Food> {
     microsJson,
     isFavorite,
     usageCount,
+    lastUsedAt,
     updatedAt,
   ]);
   @override
@@ -937,6 +981,7 @@ class Food extends DataClass implements Insertable<Food> {
           other.microsJson == this.microsJson &&
           other.isFavorite == this.isFavorite &&
           other.usageCount == this.usageCount &&
+          other.lastUsedAt == this.lastUsedAt &&
           other.updatedAt == this.updatedAt);
 }
 
@@ -962,6 +1007,7 @@ class FoodsCompanion extends UpdateCompanion<Food> {
   final Value<String?> microsJson;
   final Value<bool> isFavorite;
   final Value<int> usageCount;
+  final Value<DateTime?> lastUsedAt;
   final Value<DateTime> updatedAt;
   const FoodsCompanion({
     this.id = const Value.absent(),
@@ -985,6 +1031,7 @@ class FoodsCompanion extends UpdateCompanion<Food> {
     this.microsJson = const Value.absent(),
     this.isFavorite = const Value.absent(),
     this.usageCount = const Value.absent(),
+    this.lastUsedAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
   FoodsCompanion.insert({
@@ -1009,6 +1056,7 @@ class FoodsCompanion extends UpdateCompanion<Food> {
     this.microsJson = const Value.absent(),
     this.isFavorite = const Value.absent(),
     this.usageCount = const Value.absent(),
+    this.lastUsedAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   }) : source = Value(source),
        name = Value(name),
@@ -1035,6 +1083,7 @@ class FoodsCompanion extends UpdateCompanion<Food> {
     Expression<String>? microsJson,
     Expression<bool>? isFavorite,
     Expression<int>? usageCount,
+    Expression<DateTime>? lastUsedAt,
     Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
@@ -1059,6 +1108,7 @@ class FoodsCompanion extends UpdateCompanion<Food> {
       if (microsJson != null) 'micros_json': microsJson,
       if (isFavorite != null) 'is_favorite': isFavorite,
       if (usageCount != null) 'usage_count': usageCount,
+      if (lastUsedAt != null) 'last_used_at': lastUsedAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
   }
@@ -1085,6 +1135,7 @@ class FoodsCompanion extends UpdateCompanion<Food> {
     Value<String?>? microsJson,
     Value<bool>? isFavorite,
     Value<int>? usageCount,
+    Value<DateTime?>? lastUsedAt,
     Value<DateTime>? updatedAt,
   }) {
     return FoodsCompanion(
@@ -1109,6 +1160,7 @@ class FoodsCompanion extends UpdateCompanion<Food> {
       microsJson: microsJson ?? this.microsJson,
       isFavorite: isFavorite ?? this.isFavorite,
       usageCount: usageCount ?? this.usageCount,
+      lastUsedAt: lastUsedAt ?? this.lastUsedAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
@@ -1181,6 +1233,9 @@ class FoodsCompanion extends UpdateCompanion<Food> {
     if (usageCount.present) {
       map['usage_count'] = Variable<int>(usageCount.value);
     }
+    if (lastUsedAt.present) {
+      map['last_used_at'] = Variable<DateTime>(lastUsedAt.value);
+    }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
@@ -1211,6 +1266,7 @@ class FoodsCompanion extends UpdateCompanion<Food> {
           ..write('microsJson: $microsJson, ')
           ..write('isFavorite: $isFavorite, ')
           ..write('usageCount: $usageCount, ')
+          ..write('lastUsedAt: $lastUsedAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
@@ -4705,6 +4761,7 @@ typedef $$FoodsTableCreateCompanionBuilder =
       Value<String?> microsJson,
       Value<bool> isFavorite,
       Value<int> usageCount,
+      Value<DateTime?> lastUsedAt,
       Value<DateTime> updatedAt,
     });
 typedef $$FoodsTableUpdateCompanionBuilder =
@@ -4730,6 +4787,7 @@ typedef $$FoodsTableUpdateCompanionBuilder =
       Value<String?> microsJson,
       Value<bool> isFavorite,
       Value<int> usageCount,
+      Value<DateTime?> lastUsedAt,
       Value<DateTime> updatedAt,
     });
 
@@ -4886,6 +4944,11 @@ class $$FoodsTableFilterComposer extends Composer<_$AppDatabase, $FoodsTable> {
 
   ColumnFilters<int> get usageCount => $composableBuilder(
     column: $table.usageCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastUsedAt => $composableBuilder(
+    column: $table.lastUsedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5059,6 +5122,11 @@ class $$FoodsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get lastUsedAt => $composableBuilder(
+    column: $table.lastUsedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
@@ -5148,6 +5216,11 @@ class $$FoodsTableAnnotationComposer
 
   GeneratedColumn<int> get usageCount => $composableBuilder(
     column: $table.usageCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get lastUsedAt => $composableBuilder(
+    column: $table.lastUsedAt,
     builder: (column) => column,
   );
 
@@ -5254,6 +5327,7 @@ class $$FoodsTableTableManager
                 Value<String?> microsJson = const Value.absent(),
                 Value<bool> isFavorite = const Value.absent(),
                 Value<int> usageCount = const Value.absent(),
+                Value<DateTime?> lastUsedAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => FoodsCompanion(
                 id: id,
@@ -5277,6 +5351,7 @@ class $$FoodsTableTableManager
                 microsJson: microsJson,
                 isFavorite: isFavorite,
                 usageCount: usageCount,
+                lastUsedAt: lastUsedAt,
                 updatedAt: updatedAt,
               ),
           createCompanionCallback:
@@ -5302,6 +5377,7 @@ class $$FoodsTableTableManager
                 Value<String?> microsJson = const Value.absent(),
                 Value<bool> isFavorite = const Value.absent(),
                 Value<int> usageCount = const Value.absent(),
+                Value<DateTime?> lastUsedAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => FoodsCompanion.insert(
                 id: id,
@@ -5325,6 +5401,7 @@ class $$FoodsTableTableManager
                 microsJson: microsJson,
                 isFavorite: isFavorite,
                 usageCount: usageCount,
+                lastUsedAt: lastUsedAt,
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0

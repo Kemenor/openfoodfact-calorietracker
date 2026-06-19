@@ -51,24 +51,28 @@ class SettingsScreen extends ConsumerWidget {
                 onMax: (v) =>
                     db.setSetting('defaultKcalMax', v?.toStringAsFixed(0)),
               ),
-              const Divider(),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
-                child: Text('Per weekday (training days can differ)'),
+              const SizedBox(height: 8),
+              ExpansionTile(
+                leading: const Icon(Icons.event_repeat),
+                title: const Text('Customize per day'),
+                subtitle: const Text('Training days and weekends can differ'),
+                childrenPadding: const EdgeInsets.only(bottom: 8),
+                children: [
+                  for (var wd = 0; wd < 7; wd++)
+                    _TargetRow(
+                      label: kWeekdayNames[wd],
+                      keyPrefix: 'wd$wd',
+                      initialMin: rowFor(wd).kcalMin,
+                      initialMax: rowFor(wd).kcalMax,
+                      hintMin: defaultMin?.toStringAsFixed(0),
+                      hintMax: defaultMax?.toStringAsFixed(0),
+                      onMin: (v) =>
+                          db.setTarget(wd, TargetsCompanion(kcalMin: Value(v))),
+                      onMax: (v) =>
+                          db.setTarget(wd, TargetsCompanion(kcalMax: Value(v))),
+                    ),
+                ],
               ),
-              for (var wd = 0; wd < 7; wd++)
-                _TargetRow(
-                  label: kWeekdayNames[wd],
-                  keyPrefix: 'wd$wd',
-                  initialMin: rowFor(wd).kcalMin,
-                  initialMax: rowFor(wd).kcalMax,
-                  hintMin: defaultMin?.toStringAsFixed(0),
-                  hintMax: defaultMax?.toStringAsFixed(0),
-                  onMin: (v) =>
-                      db.setTarget(wd, TargetsCompanion(kcalMin: Value(v))),
-                  onMax: (v) =>
-                      db.setTarget(wd, TargetsCompanion(kcalMax: Value(v))),
-                ),
               const Divider(),
               const _SectionHeader('Logging'),
               SwitchListTile(
@@ -109,7 +113,7 @@ class SettingsScreen extends ConsumerWidget {
                     builder: (_) => const OfflineRegionsScreen())),
               ),
               const Divider(),
-              const _SectionHeader('Integrations'),
+              const _SectionHeader('Health Connect'),
               SwitchListTile(
                 secondary: const Icon(Icons.favorite_border),
                 title: const Text('Sync to Health Connect'),
@@ -119,6 +123,8 @@ class SettingsScreen extends ConsumerWidget {
                     false,
                 onChanged: (v) => _toggleHealthSync(context, ref, v),
               ),
+              const Divider(),
+              const _SectionHeader('Data & backup'),
               ListTile(
                 leading: const Icon(Icons.upload_outlined),
                 title: const Text('Export backup'),
@@ -131,6 +137,8 @@ class SettingsScreen extends ConsumerWidget {
                 subtitle: const Text('Restore from a .zip (replaces all data)'),
                 onTap: () => _importBackup(context, ref),
               ),
+              const Divider(),
+              const _SectionHeader('About'),
               const AboutListTile(
                 icon: Icon(Icons.info_outline),
                 applicationName: 'Knabberfuchs',

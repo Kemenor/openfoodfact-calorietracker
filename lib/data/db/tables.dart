@@ -35,6 +35,8 @@ class Foods extends Table {
 
   BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
   IntColumn get usageCount => integer().withDefault(const Constant(0))();
+  /// Last time this food was logged; powers the "recently used" default list.
+  DateTimeColumn get lastUsedAt => dateTime().nullable()();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 
   /// One row per (source, externalId). NULL externalIds (custom foods) stay distinct

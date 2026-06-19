@@ -26,6 +26,9 @@ class FoodRepository {
   /// Instant, network-free search over the local catalog + downloaded region
   /// packs, deduped by barcode (local cached rows win over pack rows).
   Future<List<Food>> searchLocal(String query) async {
+    // Empty query = the default list: show recently used foods (newest first),
+    // not a random slice of the bundled catalog. Empty for a fresh user.
+    if (query.trim().isEmpty) return db.recentFoods();
     final local = await db.searchFoodsLocal(query);
     final fromPacks = packs.search(query);
     final seen = <String>{};

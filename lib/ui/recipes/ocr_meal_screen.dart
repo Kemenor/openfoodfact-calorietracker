@@ -1,10 +1,11 @@
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import '../../core/snackbar.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/date_x.dart';
 import '../../core/format.dart';
+import '../../core/snackbar.dart';
 import '../../data/db/database.dart';
 import '../../domain/meal_times.dart';
 import '../../domain/nutrition.dart';
@@ -13,6 +14,39 @@ import '../../domain/recipe_share.dart';
 import '../../domain/units.dart';
 import '../../providers.dart';
 import '../food/food_picker_screen.dart';
+
+/// Pick image(s) of an ingredient list, OCR them, and open the review screen.
+/// Shared by the day-screen "more" menu and the recipes screen.
+Future<void> startOcrMealFlow(BuildContext context, WidgetRef ref) async {
+  final messenger = ScaffoldMessenger.of(context);
+  final navigator = Navigator.of(context);
+  final files = await openFiles(acceptedTypeGroups: const [
+    XTypeGroup(label: 'Images', extensions: ['png', 'jpg', 'jpeg', 'webp']),
+  ]);
+  if (files.isEmpty || !context.mounted) return;
+
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => const Center(child: CircularProgressIndicator()),
+  );
+  final ocr = ref.read(ocrServiceProvider);
+  final all = <OcrIngredient>[];
+  for (final f in files) {
+    try {
+      all.addAll(await ocr.ingredientsFromImage(f.path));
+    } catch (_) {/* skip unreadable image */}
+  }
+  navigator.pop(); // close the loading dialog
+
+  if (all.isEmpty) {
+    messenger.showAutoSnackBar(const SnackBar(
+        content: Text('No ingredients found in those images.')));
+    return;
+  }
+  navigator
+      .push(MaterialPageRoute(builder: (_) => OcrMealScreen(ingredients: all)));
+}
 
 class _Item {
   final OcrIngredient parsed;

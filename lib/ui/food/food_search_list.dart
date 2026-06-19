@@ -120,6 +120,17 @@ class _FoodSearchListState extends ConsumerState<FoodSearchList> {
             ),
           ),
         ),
+        if (_query.isEmpty && results.isNotEmpty)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
+              child: Text('Recently used',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.outline,
+                      )),
+            ),
+          ),
         Expanded(
           child: results.isEmpty
               ? _EmptyState(query: _query, onCreate: widget.onCreateCustom)

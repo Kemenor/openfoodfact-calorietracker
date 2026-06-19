@@ -12,6 +12,8 @@ import '../../domain/recipe_share.dart';
 import '../../providers.dart';
 import '../add/add_food_screen.dart';
 import '../food/log_food_sheet.dart';
+import '../recipes/ocr_meal_screen.dart';
+import '../recipes/recipe_edit_screen.dart';
 import '../recipes/recipes_screen.dart';
 import '../settings/settings_screen.dart';
 import 'split_meal_sheet.dart';
@@ -64,15 +66,24 @@ class _DayScreenState extends ConsumerState<DayScreen>
     return Scaffold(
       appBar: AppBar(
         title: GestureDetector(
-          onTap: () => ref.read(selectedDayProvider.notifier).today(),
-          child: Text(DayKey.label(day)),
+          onTap: () => _pickDate(context, day),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(DayKey.label(day)),
+              const SizedBox(width: 4),
+              const Icon(Icons.arrow_drop_down, size: 22),
+            ],
+          ),
         ),
         leading: IconButton(
+          tooltip: 'Previous day',
           icon: const Icon(Icons.chevron_left),
           onPressed: () => shiftDay(-1),
         ),
         actions: [
           IconButton(
+            tooltip: 'Next day',
             icon: const Icon(Icons.chevron_right),
             onPressed: () => shiftDay(1),
           ),
@@ -84,6 +95,7 @@ class _DayScreenState extends ConsumerState<DayScreen>
             ),
           ),
           IconButton(
+            tooltip: 'Settings',
             icon: const Icon(Icons.settings_outlined),
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const SettingsScreen()),
@@ -96,12 +108,73 @@ class _DayScreenState extends ConsumerState<DayScreen>
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (summary) => _DayBody(summary: summary, groupByMeal: groupByMeal),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => groupByMeal
-            ? addFoodToMeal(context, day, MealType.snack)
-            : addFoodByDay(context, ref, day),
-        icon: const Icon(Icons.add),
-        label: const Text('Add food'),
+      floatingActionButton: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton.small(
+            heroTag: 'dayMore',
+            tooltip: 'More',
+            onPressed: () => _showMoreActions(context, day),
+            child: const Icon(Icons.more_horiz),
+          ),
+          const SizedBox(width: 12),
+          FloatingActionButton.extended(
+            heroTag: 'dayAddFood',
+            onPressed: () => groupByMeal
+                ? addFoodToMeal(context, day, MealType.snack)
+                : addFoodByDay(context, ref, day),
+            icon: const Icon(Icons.add),
+            label: const Text('Add food'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Jump to any date via the calendar picker.
+  Future<void> _pickDate(BuildContext context, String day) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DayKey.parse(day),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (picked != null) {
+      ref.read(selectedDayProvider.notifier).set(DayKey.of(picked));
+    }
+  }
+
+  /// Secondary "+" actions that don't belong on the primary Add food button.
+  void _showMoreActions(BuildContext context, String day) {
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      builder: (sheetCtx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.add_circle_outline),
+              title: const Text('New recipe'),
+              subtitle: const Text('Build a reusable recipe'),
+              onTap: () {
+                Navigator.pop(sheetCtx);
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const RecipeEditScreen()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.document_scanner_outlined),
+              title: const Text('Meal from ingredient list'),
+              subtitle: const Text('Photograph a packaged ingredient list'),
+              onTap: () {
+                Navigator.pop(sheetCtx);
+                startOcrMealFlow(context, ref);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
