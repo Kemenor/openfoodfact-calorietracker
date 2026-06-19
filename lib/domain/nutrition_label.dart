@@ -39,6 +39,13 @@ double? _num(String s) {
   return m == null ? null : double.tryParse(m.group(1)!.replaceAll(',', '.'));
 }
 
+/// A gram value per 100 g can't exceed 100; reject OCR misreads (e.g. "1,5"
+/// read as "159") so we don't prefill impossible numbers.
+double? _grams(String s) {
+  final v = _num(s);
+  return (v != null && v >= 0 && v <= 100) ? v : null;
+}
+
 double? _energyKcal(String line) {
   final k = _kcalRe.firstMatch(line);
   if (k != null) return double.tryParse(k.group(1)!.replaceAll(',', '.'));
@@ -59,21 +66,22 @@ NutritionLabel parseNutritionLabel(Iterable<String> lines) {
     if (line.isEmpty) continue;
 
     if (out.kcal100 == null && _has(line, _energy)) {
-      out.kcal100 = _energyKcal(line);
+      final k = _energyKcal(line);
+      out.kcal100 = (k != null && k >= 0 && k <= 900) ? k : null;
     } else if (out.satFat100 == null && _has(line, _satFat)) {
-      out.satFat100 = _num(line);
+      out.satFat100 = _grams(line);
     } else if (out.sugar100 == null && _has(line, _sugar)) {
-      out.sugar100 = _num(line);
+      out.sugar100 = _grams(line);
     } else if (out.fiber100 == null && _has(line, _fiber)) {
-      out.fiber100 = _num(line);
+      out.fiber100 = _grams(line);
     } else if (out.fat100 == null && _has(line, _fat)) {
-      out.fat100 = _num(line);
+      out.fat100 = _grams(line);
     } else if (out.carb100 == null && _has(line, _carb)) {
-      out.carb100 = _num(line);
+      out.carb100 = _grams(line);
     } else if (out.protein100 == null && _has(line, _protein)) {
-      out.protein100 = _num(line);
+      out.protein100 = _grams(line);
     } else if (out.saltG100 == null && _has(line, _salt)) {
-      out.saltG100 = _num(line);
+      out.saltG100 = _grams(line);
     }
   }
   return out;

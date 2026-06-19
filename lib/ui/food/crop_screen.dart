@@ -47,6 +47,8 @@ class _CropScreenState extends State<CropScreen> {
       body: Crop(
         image: widget.image,
         controller: _controller,
+        // Start with a tighter box centered on the image to nudge framing.
+        initialRectBuilder: InitialRectBuilder.withSizeAndRatio(size: 0.6),
         baseColor: Colors.black,
         maskColor: Colors.black.withValues(alpha: 0.6),
         onCropped: (result) {

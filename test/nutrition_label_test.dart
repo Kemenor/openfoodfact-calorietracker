@@ -62,4 +62,15 @@ void main() {
   test('hasAny false on irrelevant text', () {
     expect(parseNutritionLabel(['Ingredients: water, sugar']).hasAny, isFalse);
   });
+
+  test('rejects physically impossible values (OCR misreads)', () {
+    final n = parseNutritionLabel([
+      'Fett 159 g', // "1,5" misread -> impossible (>100 g/100 g)
+      'Brennwert 9999 kcal',
+      'Eiweiß 12 g', // plausible -> kept
+    ]);
+    expect(n.fat100, isNull);
+    expect(n.kcal100, isNull);
+    expect(n.protein100, 12);
+  });
 }

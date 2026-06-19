@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/format.dart';
 import '../../core/snackbar.dart';
 import '../../data/db/database.dart';
+import '../../data/ocr/image_preprocess.dart';
 import '../../providers.dart';
 import 'crop_screen.dart';
 
@@ -81,8 +82,9 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     final cropped = await navigator.push<Uint8List>(
         MaterialPageRoute(builder: (_) => CropScreen(image: bytes)));
     if (cropped == null || !mounted) return;
+    final processed = preprocessLabelImage(cropped);
     final path = '${(await getTemporaryDirectory()).path}/label_ocr.jpg';
-    await File(path).writeAsBytes(cropped, flush: true);
+    await File(path).writeAsBytes(processed, flush: true);
 
     setState(() => _ocrBusy = true);
     try {
