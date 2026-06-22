@@ -39,10 +39,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settingsSectionLanguage => 'Lingua';
 
   @override
-  String get settingsLanguage => 'Lingua dell’app';
+  String get settingsLanguage => 'Lingua dell\'app';
 
   @override
-  String get languageSystem => 'Predefinito di sistema';
+  String get languageSystem => 'Predefinita di sistema';
 
   @override
   String get languageEnglish => 'English';
@@ -57,276 +57,280 @@ class AppLocalizationsIt extends AppLocalizations {
   String get languageItalian => 'Italiano';
 
   @override
-  String get dayPreviousDay => 'Previous day';
+  String get dayPreviousDay => 'Giorno precedente';
 
   @override
-  String get dayNextDay => 'Next day';
+  String get dayNextDay => 'Giorno successivo';
 
   @override
-  String get dayAddFood => 'Add food';
+  String get dayAddFood => 'Aggiungi alimento';
 
   @override
-  String get dayMealFromList => 'Meal from an ingredient list';
+  String get dayMealFromList => 'Pasto da un elenco di ingredienti';
 
   @override
   String get dayEmptyHint =>
-      'Tap + to start a meal.\nEverything you add flows into it until you tap ✓ (or 15 min pass).';
+      'Tocca + per iniziare un pasto.\nTutto ciò che aggiungi vi confluisce finché non tocchi ✓ (o passano 15 min).';
 
   @override
   String get unitKcal => 'kcal';
 
   @override
-  String get macroProtein => 'Protein';
+  String get macroProtein => 'Proteine';
 
   @override
-  String get macroCarbs => 'Carbs';
+  String get macroCarbs => 'Carboidrati';
 
   @override
-  String get macroFat => 'Fat';
+  String get macroFat => 'Grassi';
 
   @override
   String targetOver(String kcal) {
-    return '$kcal over';
+    return '$kcal in più';
   }
 
   @override
   String targetToGo(String kcal) {
-    return '$kcal to go';
+    return 'ancora $kcal';
   }
 
   @override
   String targetLeft(String kcal) {
-    return '$kcal left';
+    return '$kcal rimaste';
   }
 
   @override
-  String get targetMinReached => 'minimum reached';
+  String get targetMinReached => 'minimo raggiunto';
 
   @override
   String targetRangeBoth(String min, String max) {
-    return 'Target $min–$max kcal';
+    return 'Obiettivo $min–$max kcal';
   }
 
   @override
   String targetRangeMax(String max) {
-    return 'Target $max kcal';
+    return 'Obiettivo $max kcal';
   }
 
   @override
   String targetRangeMin(String min) {
-    return 'Minimum $min kcal';
+    return 'Minimo $min kcal';
   }
 
   @override
-  String get mealMenuEdit => 'Edit meal';
+  String get mealMenuEdit => 'Modifica pasto';
 
   @override
-  String get mealMenuSplit => 'Split across days';
+  String get mealMenuSplit => 'Distribuisci su più giorni';
 
   @override
-  String get mealMenuSaveRecipe => 'Save as recipe';
+  String get mealMenuSaveRecipe => 'Salva come ricetta';
 
   @override
-  String get mealMenuDelete => 'Delete meal';
+  String get mealMenuDelete => 'Elimina pasto';
 
   @override
-  String get mealFinish => 'Finish meal';
+  String get mealFinish => 'Termina pasto';
 
   @override
-  String get mealAddTo => 'Add to this meal';
+  String get mealAddTo => 'Aggiungi a questo pasto';
 
   @override
   String mealSavedToRecipes(String name) {
-    return 'Saved \"$name\" to recipes';
+    return '\"$name\" salvato nelle ricette';
   }
 
   @override
-  String get editMealTitle => 'Edit meal';
+  String get editMealTitle => 'Modifica pasto';
 
   @override
-  String get editMealName => 'Name';
+  String get editMealName => 'Nome';
 
   @override
-  String get editMealType => 'Meal type';
+  String get editMealType => 'Tipo di pasto';
 
   @override
-  String get editMealWhen => 'When';
+  String get editMealWhen => 'Quando';
 
   @override
-  String get recipesTitle => 'Recipes';
+  String get recipesTitle => 'Ricette';
 
   @override
   String get recipesEmpty =>
-      'No recipes yet.\nCreate one to reuse meals, share them, or batch-cook and split across days.';
+      'Ancora nessuna ricetta.\nCreane una per riutilizzare i pasti, condividerli o cucinare in grandi quantità e distribuire su più giorni.';
 
   @override
-  String get recipeNew => 'New recipe';
+  String get recipeNew => 'Nuova ricetta';
 
   @override
   String recipeServings(String count) {
-    return '$count servings';
+    return '$count porzioni';
   }
 
   @override
   String recipeImported(String name) {
-    return 'Imported \"$name\"';
+    return '\"$name\" importato';
   }
 
   @override
-  String get qrNotRecipe => 'That QR code is not a recipe.';
+  String get qrNotRecipe => 'Quel codice QR non è una ricetta.';
 
   @override
-  String get createBuildManually => 'Build manually';
+  String get createBuildManually => 'Crea manualmente';
 
   @override
-  String get createBuildManuallySub => 'Add ingredients one by one';
+  String get createBuildManuallySub => 'Aggiungi gli ingredienti uno per uno';
 
   @override
-  String get createFromList => 'From an ingredient list';
+  String get createFromList => 'Da un elenco di ingredienti';
 
   @override
   String get createFromListSub =>
-      'Photograph a printed list — save it or log it as a meal';
+      'Fotografa un elenco stampato — salvalo o registralo come pasto';
 
   @override
-  String get createFromQr => 'Import from QR code';
+  String get createFromQr => 'Importa da codice QR';
 
   @override
-  String get createFromQrSub => 'Scan a shared recipe';
+  String get createFromQrSub => 'Scansiona una ricetta condivisa';
 
   @override
   String genericError(String error) {
-    return 'Error: $error';
+    return 'Errore: $error';
   }
 
   @override
-  String get settingsTargets => 'Calorie targets';
+  String get settingsTargets => 'Obiettivi calorici';
 
   @override
   String get settingsTargetsHelp =>
-      'Set a minimum, a maximum, or both. A minimum helps if you need to make sure you eat enough. Leave blank to use the default.';
+      'Imposta un minimo, un massimo o entrambi. Un minimo aiuta se devi assicurarti di mangiare abbastanza. Lascia vuoto per usare il valore predefinito.';
 
   @override
-  String get settingsTargetDefault => 'Default';
+  String get settingsTargetDefault => 'Predefinito';
 
   @override
-  String get settingsCustomizePerDay => 'Customize per day';
+  String get settingsCustomizePerDay => 'Personalizza per giorno';
 
   @override
   String get settingsCustomizePerDaySub =>
-      'Training days and weekends can differ';
+      'I giorni di allenamento e i fine settimana possono differire';
 
   @override
-  String get settingsLogging => 'Logging';
+  String get settingsLogging => 'Registrazione';
 
   @override
-  String get settingsMealTimes => 'Meal times';
+  String get settingsMealTimes => 'Orari dei pasti';
 
   @override
-  String get settingsMealTimesSub => 'Names each meal by the time you log it';
+  String get settingsMealTimesSub =>
+      'Nomina ogni pasto in base all\'ora di registrazione';
 
   @override
   String get settingsMealTimesHelp =>
-      'A new meal is named after the window its first item falls in (e.g. \"Breakfast 08:23\"). Anything outside these windows is a snack. You can always rename a meal.';
+      'Un nuovo pasto prende il nome dalla fascia oraria in cui ricade il suo primo elemento (es. \"Colazione 08:23\"). Tutto ciò che è fuori da queste fasce è uno spuntino. Puoi sempre rinominare un pasto.';
 
   @override
-  String get settingsFoodData => 'Food data';
+  String get settingsFoodData => 'Dati alimentari';
 
   @override
-  String get settingsOfflineRegions => 'Offline regions';
+  String get settingsOfflineRegions => 'Regioni offline';
 
   @override
   String get settingsOfflineRegionsSub =>
-      'Download country product databases for offline search';
+      'Scarica i database di prodotti per paese per la ricerca offline';
 
   @override
   String get settingsHealthConnect => 'Health Connect';
 
   @override
-  String get settingsHealthSync => 'Sync to Health Connect';
+  String get settingsHealthSync => 'Sincronizza con Health Connect';
 
   @override
   String get settingsHealthSyncSub =>
-      'Write logged calories & macros to Health Connect';
+      'Scrivi calorie e macro registrate in Health Connect';
 
   @override
   String get settingsHealthTimeNote =>
-      'Entries sync at the time you logged them';
+      'Le voci si sincronizzano all\'ora di registrazione';
 
   @override
   String get settingsHealthTimeNoteSub =>
-      'Back-date a meal from its ⋮ menu to change its time.';
+      'Retrodata un pasto dal suo menu ⋮ per cambiarne l\'ora.';
 
   @override
-  String get settingsDataBackup => 'Data & backup';
+  String get settingsDataBackup => 'Dati e backup';
 
   @override
-  String get settingsExport => 'Export backup';
+  String get settingsExport => 'Esporta backup';
 
   @override
-  String get settingsExportSub => 'Share a .zip (JSON + CSV)';
+  String get settingsExportSub => 'Condividi uno .zip (JSON + CSV)';
 
   @override
-  String get settingsImport => 'Import backup';
+  String get settingsImport => 'Importa backup';
 
   @override
-  String get settingsImportSub => 'Restore from a .zip (replaces all data)';
+  String get settingsImportSub =>
+      'Ripristina da uno .zip (sostituisce tutti i dati)';
 
   @override
-  String get settingsAbout => 'About';
+  String get settingsAbout => 'Informazioni';
 
   @override
   String get settingsAboutBody =>
-      'Ad-free, no subscriptions. Data from Open Food Facts and USDA FoodData Central.';
+      'Senza pubblicità, senza abbonamenti. Dati da Open Food Facts e USDA FoodData Central.';
 
   @override
-  String get offThanksTitle => 'Thanks to Open Food Facts';
+  String get offThanksTitle => 'Grazie a Open Food Facts';
 
   @override
   String get offThanksBody =>
-      'Knabberfuchs is built on Open Food Facts — a free, open, crowdsourced food database kept alive by volunteers around the world. Without their work, this app simply would not exist.\n\nIf Knabberfuchs is useful to you, please consider supporting them.';
+      'Knabberfuchs si basa su Open Food Facts — un database alimentare gratuito, aperto e collaborativo, mantenuto vivo da volontari di tutto il mondo. Senza il loro lavoro, questa app semplicemente non esisterebbe.\n\nSe Knabberfuchs ti è utile, valuta di sostenerli.';
 
   @override
-  String get offDonate => 'Donate to Open Food Facts';
+  String get offDonate => 'Dona a Open Food Facts';
 
   @override
-  String get healthSyncOff => 'Health Connect sync turned off.';
+  String get healthSyncOff => 'Sincronizzazione Health Connect disattivata.';
 
   @override
   String get healthUnavailable =>
-      'Health Connect is not available on this device.';
+      'Health Connect non è disponibile su questo dispositivo.';
 
   @override
-  String get healthNoPermission => 'Health Connect permission was not granted.';
+  String get healthNoPermission =>
+      'L\'autorizzazione a Health Connect non è stata concessa.';
 
   @override
-  String get healthSyncOn => 'Health Connect sync on — today pushed.';
+  String get healthSyncOn =>
+      'Sincronizzazione Health Connect attiva — oggi inviato.';
 
   @override
   String backupExportFailed(String error) {
-    return 'Export failed: $error';
+    return 'Esportazione non riuscita: $error';
   }
 
   @override
-  String get backupReplaceTitle => 'Replace all data?';
+  String get backupReplaceTitle => 'Sostituire tutti i dati?';
 
   @override
   String get backupReplaceBody =>
-      'Importing will replace your current entries, custom foods, recipes, targets, and settings with the backup contents.';
+      'L\'importazione sostituirà le voci attuali, gli alimenti personalizzati, le ricette, gli obiettivi e le impostazioni con il contenuto del backup.';
 
   @override
-  String get backupRestored => 'Backup restored.';
+  String get backupRestored => 'Backup ripristinato.';
 
   @override
   String backupImportFailed(String error) {
-    return 'Import failed: $error';
+    return 'Importazione non riuscita: $error';
   }
 
   @override
-  String get amountLabel => 'Amount';
+  String get amountLabel => 'Quantità';
 
   @override
-  String get editEntryTitle => 'Edit entry';
+  String get editEntryTitle => 'Modifica voce';
 
   @override
   String kcalPer100(String kcal) {
@@ -335,30 +339,30 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String volumeApprox(String grams) {
-    return '≈ $grams g (assumes ~1 g/ml)';
+    return '≈ $grams g (assume ~1 g/ml)';
   }
 
   @override
   String oneServing(String grams) {
-    return '1 serving ($grams g)';
+    return '1 porzione ($grams g)';
   }
 
   @override
-  String get searchFoodsHint => 'Search foods…';
+  String get searchFoodsHint => 'Cerca alimenti…';
 
   @override
-  String get searchRecentlyUsed => 'Recently used';
+  String get searchRecentlyUsed => 'Usati di recente';
 
   @override
-  String get createCustomFood => 'Create custom food';
+  String get createCustomFood => 'Crea alimento personalizzato';
 
   @override
   String get searchEmptyPrompt =>
-      'Search for a food, scan a barcode,\nor create your own.';
+      'Cerca un alimento, scansiona un codice a barre\no crea il tuo.';
 
   @override
   String searchNoMatches(String query) {
-    return 'No matches for \"$query\".';
+    return 'Nessun risultato per \"$query\".';
   }
 
   @override
@@ -373,31 +377,31 @@ class AppLocalizationsIt extends AppLocalizations {
   String get sourceUsda => 'USDA';
 
   @override
-  String get sourceCustom => 'Custom';
+  String get sourceCustom => 'Personalizzato';
 
   @override
-  String get sourceContributed => 'Added by you';
+  String get sourceContributed => 'Aggiunto da te';
 
   @override
-  String get scanBarcode => 'Scan barcode';
+  String get scanBarcode => 'Scansiona codice a barre';
 
   @override
-  String get selectFood => 'Select food';
+  String get selectFood => 'Seleziona alimento';
 
   @override
-  String get addIngredient => 'Add ingredient';
+  String get addIngredient => 'Aggiungi ingrediente';
 
   @override
-  String get ingredients => 'Ingredients';
+  String get ingredients => 'Ingredienti';
 
   @override
-  String get actionEdit => 'Edit';
+  String get actionEdit => 'Modifica';
 
   @override
-  String get actionShare => 'Share';
+  String get actionShare => 'Condividi';
 
   @override
-  String get actionSet => 'Set';
+  String get actionSet => 'Imposta';
 
   @override
   String kcalValue(String kcal) {
@@ -416,113 +420,115 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String kcalTotal(String kcal) {
-    return '$kcal kcal total';
+    return '$kcal kcal totali';
   }
 
   @override
   String loggedTo(String day) {
-    return 'Logged to $day';
+    return 'Registrato per $day';
   }
 
   @override
-  String get recipeEdit => 'Edit recipe';
+  String get recipeEdit => 'Modifica ricetta';
 
   @override
-  String get recipeNeedName => 'Give the recipe a name.';
+  String get recipeNeedName => 'Dai un nome alla ricetta.';
 
   @override
-  String get recipeNeedIngredient => 'Add at least one ingredient.';
+  String get recipeNeedIngredient => 'Aggiungi almeno un ingrediente.';
 
   @override
-  String get recipeName => 'Recipe name';
+  String get recipeName => 'Nome della ricetta';
 
   @override
-  String get recipeServingsField => 'Servings (portions this makes)';
+  String get recipeServingsField => 'Porzioni (che questa ricetta produce)';
 
   @override
-  String get recipeLogPortion => 'Log portion to a day';
+  String get recipeLogPortion => 'Registra una porzione per un giorno';
 
   @override
-  String get recipeWhole => 'Whole recipe';
+  String get recipeWhole => 'Ricetta intera';
 
   @override
   String recipePerServing(String count) {
-    return 'Per serving ($count)';
+    return 'Per porzione ($count)';
   }
 
   @override
-  String get recipeLogPortionTitle => 'Log a portion';
+  String get recipeLogPortionTitle => 'Registra una porzione';
 
   @override
-  String get recipePortions => 'Portions';
+  String get recipePortions => 'Porzioni';
 
   @override
   String recipeLogToDay(String day) {
-    return 'Log to $day';
+    return 'Registra per $day';
   }
 
   @override
   String shareTitle(String name) {
-    return 'Share \"$name\"';
+    return 'Condividi \"$name\"';
   }
 
   @override
   String get shareScanHint =>
-      'Scan this in another phone’s \"Import from QR\".';
+      'Scansiona questo su un altro telefono in \"Importa da QR\".';
 
   @override
-  String get shareAsText => 'Share as text';
+  String get shareAsText => 'Condividi come testo';
 
   @override
   String shareMeta(String ingredients, String servings, String bytes) {
-    return '$ingredients ingredients · $servings servings · $bytes bytes';
+    return '$ingredients ingredienti · $servings porzioni · $bytes byte';
   }
 
   @override
   String shareSubject(String name) {
-    return 'Recipe: $name';
+    return 'Ricetta: $name';
   }
 
   @override
-  String get ocrNoIngredients => 'No ingredients found in those images.';
+  String get ocrNoIngredients =>
+      'Nessun ingrediente trovato in quelle immagini.';
 
   @override
-  String get ocrDefaultMealName => 'Meal from photo';
+  String get ocrDefaultMealName => 'Pasto da foto';
 
   @override
-  String get ocrNeedMatch => 'Match at least one ingredient first.';
+  String get ocrNeedMatch => 'Associa prima almeno un ingrediente.';
 
   @override
-  String get ocrSavedToRecipes => 'Saved to recipes';
+  String get ocrSavedToRecipes => 'Salvato nelle ricette';
 
   @override
-  String get ocrReviewTitle => 'Review meal';
+  String get ocrReviewTitle => 'Verifica pasto';
 
   @override
-  String get ocrSaveAsRecipe => 'Save as recipe';
+  String get ocrSaveAsRecipe => 'Salva come ricetta';
 
   @override
-  String get ocrLogToDay => 'Log to day';
+  String get ocrLogToDay => 'Registra per un giorno';
 
   @override
-  String get ocrMealName => 'Meal name';
+  String get ocrMealName => 'Nome del pasto';
 
   @override
   String ocrMatched(String matched, String total) {
-    return '$matched / $total matched';
+    return '$matched / $total associati';
   }
 
   @override
-  String get ocrSwipeHint => 'Swipe → to pick a food, ← to remove.';
+  String get ocrSwipeHint =>
+      'Scorri → per scegliere un alimento, ← per rimuovere.';
 
   @override
   String ocrFromSource(String amount, String name) {
-    return '$amount · from \"$name\"';
+    return '$amount · da \"$name\"';
   }
 
   @override
   String ocrPickHintSub(String amount) {
-    return '$amount · swipe → to pick a food';
+    return '$amount · scorri → per scegliere un alimento';
   }
 
   @override
@@ -531,7 +537,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get ocrSetGrams => 'set g';
+  String get ocrSetGrams => 'imposta g';
 
   @override
   String kcalDotGrams(String kcal, String grams) {
@@ -540,231 +546,232 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String macroPcf(String kcal, String protein, String carb, String fat) {
-    return '$kcal kcal · P $protein  C $carb  F $fat';
+    return '$kcal kcal · P $protein  C $carb  G $fat';
   }
 
   @override
-  String get manualTitle => 'Custom food';
+  String get manualTitle => 'Alimento personalizzato';
 
   @override
-  String get manualNameRequired => 'Name *';
+  String get manualNameRequired => 'Nome *';
 
   @override
-  String get manualBrandOptional => 'Brand (optional)';
+  String get manualBrandOptional => 'Marca (facoltativo)';
 
   @override
   String get manualPer100 => 'Per 100 g';
 
   @override
-  String get manualCalories => 'Calories (kcal) *';
+  String get manualCalories => 'Calorie (kcal) *';
 
   @override
-  String get manualProtein => 'Protein (g)';
+  String get manualProtein => 'Proteine (g)';
 
   @override
-  String get manualCarbs => 'Carbs (g)';
+  String get manualCarbs => 'Carboidrati (g)';
 
   @override
-  String get manualFat => 'Fat (g)';
+  String get manualFat => 'Grassi (g)';
 
   @override
-  String get manualServing => 'Serving size (g, optional)';
+  String get manualServing => 'Dimensione porzione (g, facoltativo)';
 
   @override
-  String get manualSaveFood => 'Save food';
+  String get manualSaveFood => 'Salva alimento';
 
   @override
-  String get manualRequired => 'Required';
+  String get manualRequired => 'Obbligatorio';
 
   @override
-  String get manualInvalidNumber => 'Invalid number';
+  String get manualInvalidNumber => 'Numero non valido';
 
   @override
-  String get addProductTitle => 'Add product';
+  String get addProductTitle => 'Aggiungi prodotto';
 
   @override
-  String get addPhotoOfTable => 'Take a photo of the nutrition table';
+  String get addPhotoOfTable => 'Scatta una foto della tabella nutrizionale';
 
   @override
-  String get addChooseGallery => 'Choose from gallery';
+  String get addChooseGallery => 'Scegli dalla galleria';
 
   @override
   String get addNameEnergyRequired =>
-      'A name and energy (kcal/100 g) are required.';
+      'Sono richiesti un nome e l\'energia (kcal/100 g).';
 
   @override
   String addBarcodeLabel(String code) {
-    return 'Barcode $code';
+    return 'Codice a barre $code';
   }
 
   @override
-  String get addProductName => 'Product name';
+  String get addProductName => 'Nome del prodotto';
 
   @override
-  String get addServingSize => 'Serving size';
+  String get addServingSize => 'Dimensione porzione';
 
   @override
-  String get addNutritionPer100 => 'Nutrition per 100 g';
+  String get addNutritionPer100 => 'Valori nutrizionali per 100 g';
 
   @override
-  String get addScanLabel => 'Scan label';
+  String get addScanLabel => 'Scansiona etichetta';
 
   @override
-  String get addEnergy => 'Energy';
+  String get addEnergy => 'Energia';
 
   @override
-  String get addProtein => 'Protein';
+  String get addProtein => 'Proteine';
 
   @override
-  String get addCarbohydrate => 'Carbohydrate';
+  String get addCarbohydrate => 'Carboidrati';
 
   @override
-  String get addFat => 'Fat';
+  String get addFat => 'Grassi';
 
   @override
-  String get addSugars => 'of which sugars';
+  String get addSugars => 'di cui zuccheri';
 
   @override
-  String get addSaturates => 'of which saturates';
+  String get addSaturates => 'di cui acidi grassi saturi';
 
   @override
   String get addFibre => 'Fibre';
 
   @override
-  String get addSalt => 'Salt';
+  String get addSalt => 'Sale';
 
   @override
-  String get addToOff => 'Add to Open Food Facts';
+  String get addToOff => 'Aggiungi a Open Food Facts';
 
   @override
   String get addToOffNote =>
-      'Opens Open Food Facts so everyone benefits. Your local entry is saved either way.';
+      'Apre Open Food Facts a beneficio di tutti. La tua voce locale viene comunque salvata.';
 
   @override
   String get addFilledFromLabel =>
-      'Filled from the label — please check the values.';
+      'Compilato dall\'etichetta — controlla i valori.';
 
   @override
   String get addCouldntRead =>
-      'Couldn\'t read the table. Enter the values manually.';
+      'Impossibile leggere la tabella. Inserisci i valori manualmente.';
 
   @override
-  String get backupShareSubject => 'Knabberfuchs backup';
+  String get backupShareSubject => 'Backup Knabberfuchs';
 
   @override
-  String get scanRecipeQr => 'Scan recipe QR';
+  String get scanRecipeQr => 'Scansiona QR ricetta';
 
   @override
-  String get splashPreparing => 'Preparing food database…';
+  String get splashPreparing => 'Preparazione del database alimentare…';
 
   @override
-  String get scanEnterBarcode => 'Enter barcode';
+  String get scanEnterBarcode => 'Inserisci codice a barre';
 
   @override
-  String get scanExampleHint => 'e.g. 3017620422003';
+  String get scanExampleHint => 'es. 3017620422003';
 
   @override
-  String get scanLookUp => 'Look up';
+  String get scanLookUp => 'Cerca';
 
   @override
-  String get scanEnterManually => 'Enter manually';
+  String get scanEnterManually => 'Inserisci manualmente';
 
   @override
   String get scanCameraOnlyDevice =>
-      'Camera scanning is only available on a device.';
+      'La scansione con fotocamera è disponibile solo su un dispositivo.';
 
   @override
-  String get scanCameraFailed => 'Couldn\'t start the camera.';
+  String get scanCameraFailed => 'Impossibile avviare la fotocamera.';
 
   @override
-  String get scanEnterManuallyButton => 'Enter barcode manually';
+  String get scanEnterManuallyButton =>
+      'Inserisci il codice a barre manualmente';
 
   @override
   String splitTitle(String name) {
-    return 'Split \"$name\"';
+    return 'Distribuisci \"$name\"';
   }
 
   @override
   String get splitDescription =>
-      'Divide this meal into equal portions, one per day. The original is replaced.';
+      'Dividi questo pasto in porzioni uguali, una al giorno. L\'originale viene sostituito.';
 
   @override
   String splitKcalEach(String kcal) {
-    return '$kcal kcal each';
+    return '$kcal kcal ciascuna';
   }
 
   @override
   String splitInto(String n) {
-    return 'Split into $n days';
+    return 'Distribuisci su $n giorni';
   }
 
   @override
-  String get cropTitle => 'Crop to the table';
+  String get cropTitle => 'Ritaglia sulla tabella';
 
   @override
-  String get cropDone => 'Done';
+  String get cropDone => 'Fatto';
 
   @override
   String get offlineReminderText =>
-      'Looked up online — download your region for faster, offline scans.';
+      'Cercato online — scarica la tua regione per scansioni offline più veloci.';
 
   @override
-  String get offlineReminderAction => 'Regions';
+  String get offlineReminderAction => 'Regioni';
 
   @override
   String regionDownloaded(String name) {
-    return '$name downloaded';
+    return '$name scaricato';
   }
 
   @override
   String regionDownloadFailed(String error) {
-    return 'Download failed: $error';
+    return 'Download non riuscito: $error';
   }
 
   @override
   String regionRemoved(String name) {
-    return '$name removed';
+    return '$name rimosso';
   }
 
   @override
-  String get regionLoadError => 'Could not load the region list.';
+  String get regionLoadError => 'Impossibile caricare l\'elenco delle regioni.';
 
   @override
-  String get actionRetry => 'Retry';
+  String get actionRetry => 'Riprova';
 
   @override
   String get regionIntro =>
-      'Download a country to search its packaged products offline. You can download several.';
+      'Scarica un paese per cercarne i prodotti confezionati offline. Puoi scaricarne diversi.';
 
   @override
-  String get regionSearchHint => 'Search countries';
+  String get regionSearchHint => 'Cerca paesi';
 
   @override
   String regionNoMatch(String query) {
-    return 'No countries match \"$query\".';
+    return 'Nessun paese corrisponde a \"$query\".';
   }
 
   @override
-  String get regionTooltipDownload => 'Download';
+  String get regionTooltipDownload => 'Scarica';
 
   @override
-  String get regionTooltipRemove => 'Remove';
+  String get regionTooltipRemove => 'Rimuovi';
 
   @override
-  String get regionUpdate => 'Update';
+  String get regionUpdate => 'Aggiorna';
 
   @override
   String regionSubtitle(String products, String size) {
-    return '${products}k products · $size download';
+    return '${products}k prodotti · $size da scaricare';
   }
 
   @override
   String regionSubtitleInstalled(String base) {
-    return '$base · installed';
+    return '$base · installato';
   }
 
   @override
   String regionSubtitleUpdatable(String base) {
-    return '$base · update available';
+    return '$base · aggiornamento disponibile';
   }
 }

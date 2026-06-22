@@ -234,9 +234,12 @@ Strategy:
     80 tests pass, builds + runs on emulator. Still deferred to the naming question: meal-type
     words (Breakfast/…) + relative date title (Today/Yesterday) — they double as persisted
     auto-name tokens.
-  - **11c — Translate.** Fill `app_de.arb` / `app_fr.arb` / `app_it.arb`. Review by a
-    native/fluent speaker (the user is Swiss — DE/FR at least) since machine translations
-    of UI microcopy are often stilted.
+  - **11c — Translate. ✅ MACHINE PASS DONE (awaiting human review).** All ~216 keys filled
+    in `app_de.arb` / `app_fr.arb` / `app_it.arb` (gen-l10n reports zero untranslated). DE
+    verified on emulator (nav, macros, empty-state, FAB). Macro letters localized in `macroPcf`
+    (DE P/K/F, FR P/G/L, IT P/C/G). Brand/product names kept (Knabberfuchs, Health Connect,
+    Open Food Facts, USDA). **TODO:** the user (Swiss, DE/FR) should review microcopy — machine
+    translations of UI strings can be stilted; IT especially is unreviewed.
   - **11d — Locale-aware numbers (nice-to-have).** Display/parse decimals per locale
     (German/French use "1,5"). The app already tolerates comma input; this makes
     *display* consistent too (via `intl` NumberFormat). Dates already go through `intl`.
