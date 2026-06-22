@@ -58,7 +58,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get languageMachineNote =>
-      'Nur Englisch ist von Hand geschrieben. Deutsch, Französisch und Italienisch sind maschinell übersetzt und können holprig klingen.';
+      'Andere Sprachen als Englisch wurden maschinell übersetzt und können holprig klingen.';
 
   @override
   String get dateToday => 'Heute';

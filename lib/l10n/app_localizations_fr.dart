@@ -58,7 +58,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get languageMachineNote =>
-      'Seul l\'anglais est rédigé par un humain. L\'allemand, le français et l\'italien sont traduits automatiquement et peuvent sembler maladroits.';
+      'Les langues autres que l\'anglais ont été traduites automatiquement et peuvent sembler maladroites.';
 
   @override
   String get dateToday => 'Aujourd\'hui';

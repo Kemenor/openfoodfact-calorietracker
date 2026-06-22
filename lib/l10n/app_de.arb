@@ -20,7 +20,7 @@
   "languageGerman": "Deutsch",
   "languageFrench": "Français",
   "languageItalian": "Italiano",
-  "languageMachineNote": "Nur Englisch ist von Hand geschrieben. Deutsch, Französisch und Italienisch sind maschinell übersetzt und können holprig klingen.",
+  "languageMachineNote": "Andere Sprachen als Englisch wurden maschinell übersetzt und können holprig klingen.",
 
   "dateToday": "Heute",
   "dateYesterday": "Gestern",

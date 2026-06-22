@@ -201,7 +201,7 @@ abstract class AppLocalizations {
   /// Footnote under the language picker disclosing that non-English locales are machine translations
   ///
   /// In en, this message translates to:
-  /// **'Only English is human-written. German, French and Italian are machine-translated and may read awkwardly.'**
+  /// **'Languages other than English have been machine-translated and may read awkwardly.'**
   String get languageMachineNote;
 
   /// No description provided for @dateToday.

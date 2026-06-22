@@ -58,7 +58,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get languageMachineNote =>
-      'Solo l\'inglese è scritto da una persona. Tedesco, francese e italiano sono tradotti automaticamente e possono risultare poco naturali.';
+      'Le lingue diverse dall\'inglese sono state tradotte automaticamente e possono risultare poco naturali.';
 
   @override
   String get dateToday => 'Oggi';
