@@ -17,7 +17,17 @@ import '../../providers.dart';
 class FoodSearchList extends ConsumerStatefulWidget {
   final ValueChanged<Food> onPick;
   final VoidCallback? onCreateCustom;
-  const FoodSearchList({super.key, required this.onPick, this.onCreateCustom});
+
+  /// When set, a "Quick add" tile appears while typing — passes the current
+  /// query so the free-add sheet can pre-fill the name. Only wired in logging
+  /// contexts (not when picking a food for a recipe/OCR match).
+  final ValueChanged<String>? onQuickAdd;
+  const FoodSearchList({
+    super.key,
+    required this.onPick,
+    this.onCreateCustom,
+    this.onQuickAdd,
+  });
 
   @override
   ConsumerState<FoodSearchList> createState() => _FoodSearchListState();
@@ -123,6 +133,14 @@ class _FoodSearchListState extends ConsumerState<FoodSearchList> {
             ),
           ),
         ),
+        if (widget.onQuickAdd != null && _query.trim().isNotEmpty)
+          ListTile(
+            leading: const Icon(Icons.bolt),
+            title: Text(l10n.quickAddNamed(_query.trim()),
+                maxLines: 1, overflow: TextOverflow.ellipsis),
+            subtitle: Text(l10n.quickAddSubtitle),
+            onTap: () => widget.onQuickAdd!(_query.trim()),
+          ),
         if (_query.isEmpty && results.isNotEmpty)
           Align(
             alignment: Alignment.centerLeft,

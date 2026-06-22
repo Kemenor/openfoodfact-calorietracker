@@ -395,6 +395,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sourceContributed => 'Added by you';
 
   @override
+  String get quickAdd => 'Quick add';
+
+  @override
+  String quickAddNamed(String name) {
+    return 'Quick add \"$name\"';
+  }
+
+  @override
+  String get quickAddSubtitle => 'Log just a name and calories';
+
+  @override
+  String get quickAddName => 'Name';
+
+  @override
+  String get quickAddCalories => 'Calories';
+
+  @override
+  String get quickAddMacros => 'Add macros (optional)';
+
+  @override
   String get scanBarcode => 'Scan barcode';
 
   @override

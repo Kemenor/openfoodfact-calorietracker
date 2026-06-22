@@ -136,6 +136,12 @@
   "sourceSwiss": "Base suisse",
   "sourceContributed": "Ajouté par vous",
 
+  "quickAdd": "Ajout rapide",
+  "quickAddNamed": "Ajout rapide « {name} »",
+  "quickAddSubtitle": "Enregistrer juste un nom et des calories",
+  "quickAddName": "Nom",
+  "quickAddCalories": "Calories",
+  "quickAddMacros": "Ajouter les macros (facultatif)",
   "scanBarcode": "Scanner un code-barres",
   "selectFood": "Sélectionner un aliment",
 

@@ -10,6 +10,7 @@ import '../food/food_search_list.dart';
 import '../food/offline_reminder.dart';
 import '../food/log_food_sheet.dart';
 import '../food/manual_food_screen.dart';
+import '../food/quick_add_sheet.dart';
 import '../scan/scan_screen.dart';
 
 /// Search + add a food to [day]/[meal].
@@ -62,6 +63,12 @@ class AddFoodScreen extends ConsumerWidget {
     if (food != null && context.mounted) await _pick(context, ref, food);
   }
 
+  Future<void> _quickAdd(BuildContext context, WidgetRef ref, String name) async {
+    final added = await showQuickAddSheet(context, ref,
+        day: day, meal: meal, resolveGroup: resolveGroup, initialName: name);
+    if (added == true && context.mounted) Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
@@ -79,6 +86,7 @@ class AddFoodScreen extends ConsumerWidget {
       body: FoodSearchList(
         onPick: (food) => _pick(context, ref, food),
         onCreateCustom: () => _createCustom(context, ref),
+        onQuickAdd: (name) => _quickAdd(context, ref, name),
       ),
     );
   }

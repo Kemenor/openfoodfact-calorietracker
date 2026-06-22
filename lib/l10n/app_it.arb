@@ -136,6 +136,12 @@
   "sourceSwiss": "Banca dati CH",
   "sourceContributed": "Aggiunto da te",
 
+  "quickAdd": "Aggiunta rapida",
+  "quickAddNamed": "Aggiunta rapida \"{name}\"",
+  "quickAddSubtitle": "Registra solo nome e calorie",
+  "quickAddName": "Nome",
+  "quickAddCalories": "Calorie",
+  "quickAddMacros": "Aggiungi macro (facoltativo)",
   "scanBarcode": "Scansiona codice a barre",
   "selectFood": "Seleziona alimento",
 

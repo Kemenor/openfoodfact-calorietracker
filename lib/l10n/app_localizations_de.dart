@@ -399,6 +399,26 @@ class AppLocalizationsDe extends AppLocalizations {
   String get sourceContributed => 'Von dir hinzugefügt';
 
   @override
+  String get quickAdd => 'Schnell hinzufügen';
+
+  @override
+  String quickAddNamed(String name) {
+    return '„$name“ schnell hinzufügen';
+  }
+
+  @override
+  String get quickAddSubtitle => 'Nur Name und Kalorien erfassen';
+
+  @override
+  String get quickAddName => 'Name';
+
+  @override
+  String get quickAddCalories => 'Kalorien';
+
+  @override
+  String get quickAddMacros => 'Makros hinzufügen (optional)';
+
+  @override
   String get scanBarcode => 'Barcode scannen';
 
   @override

@@ -774,6 +774,42 @@ abstract class AppLocalizations {
   /// **'Added by you'**
   String get sourceContributed;
 
+  /// No description provided for @quickAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick add'**
+  String get quickAdd;
+
+  /// No description provided for @quickAddNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick add \"{name}\"'**
+  String quickAddNamed(String name);
+
+  /// No description provided for @quickAddSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Log just a name and calories'**
+  String get quickAddSubtitle;
+
+  /// No description provided for @quickAddName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get quickAddName;
+
+  /// No description provided for @quickAddCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories'**
+  String get quickAddCalories;
+
+  /// No description provided for @quickAddMacros.
+  ///
+  /// In en, this message translates to:
+  /// **'Add macros (optional)'**
+  String get quickAddMacros;
+
   /// No description provided for @scanBarcode.
   ///
   /// In en, this message translates to:

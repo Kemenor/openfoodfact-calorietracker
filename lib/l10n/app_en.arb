@@ -162,6 +162,13 @@
   "sourceSwiss": "Swiss DB",
   "sourceContributed": "Added by you",
 
+  "quickAdd": "Quick add",
+  "quickAddNamed": "Quick add \"{name}\"",
+  "@quickAddNamed": { "placeholders": { "name": { "type": "String" } } },
+  "quickAddSubtitle": "Log just a name and calories",
+  "quickAddName": "Name",
+  "quickAddCalories": "Calories",
+  "quickAddMacros": "Add macros (optional)",
   "scanBarcode": "Scan barcode",
   "selectFood": "Select food",
 

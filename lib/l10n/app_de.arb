@@ -136,6 +136,12 @@
   "sourceSwiss": "Schweizer DB",
   "sourceContributed": "Von dir hinzugefügt",
 
+  "quickAdd": "Schnell hinzufügen",
+  "quickAddNamed": "„{name}“ schnell hinzufügen",
+  "quickAddSubtitle": "Nur Name und Kalorien erfassen",
+  "quickAddName": "Name",
+  "quickAddCalories": "Kalorien",
+  "quickAddMacros": "Makros hinzufügen (optional)",
   "scanBarcode": "Barcode scannen",
   "selectFood": "Lebensmittel auswählen",
 

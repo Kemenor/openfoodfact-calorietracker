@@ -300,6 +300,34 @@ Strategy:
     no runtime cost, asset grows modestly. Scope is small because OFF (the big dataset) is
     already multilingual.
 
+- **Free add — ✅ DONE (2026-06-22).** Quick-log an arbitrary item by name + calories
+  (e.g. "Lasagna 816 kcal") without searching the catalog or creating a persistent food.
+  A "⚡ Quick add \"<query>\"" tile appears in the Add-food search as you type → opens
+  `quick_add_sheet.dart` (name prefilled, calories, optional P/C/F) → logs via
+  `diaryRepository.logSnapshot` as a per-100 g snapshot with grams=100 (so the entered
+  totals are exactly what the diary shows). Flows into the current meal group like any add.
+  Localized (de/fr/it). Verified on emulator (DB: `Lasagna | 100 g | 816 kcal/100g = 816`).
+
+- **Phase 13 — Image recognition (photo → kcal):** 📋 PLANNED. Take a photo of a meal → ML
+  guesses what it is → pre-fills the **Free add** sheet (name + estimated kcal) for the user to
+  confirm/edit. Builds directly on Free add (the output format) and reuses the existing camera /
+  `image_picker` / `crop_screen` infra from the OCR label scanner.
+  - **Core tension:** the app is **keyless + serverless + offline-first**. A cloud multimodal
+    model would be most accurate but needs a key/server → violates that. So:
+  - **13a — On-device classifier (recommended default).** Bundle a TFLite food-classification
+    model (Food-101  class set, ~5–20 MB) → top-K dish guesses → map the label to a kcal
+    estimate for a default portion (a small curated dish→kcal table, and/or match the label
+    against the Swiss FCDB / OFF catalog we already ship) → prefill Free add. Fully offline,
+    keyless. Accuracy is moderate (≈80% top-5 on Food-101) and portion is a guess → **never
+    auto-log; always show the guess as editable in the Free add sheet.** Show the top few
+    candidates as chips so the user picks the right one.
+  - **13b — Optional cloud/LLM path (power-user, opt-in, own key).** A multimodal LLM
+    ("what's in this photo + estimate kcal") gives far better accuracy + portion sizing, but
+    requires a user-supplied API key (same pattern as the deferred optional-USDA-key idea) so
+    the app ships no key. Strictly opt-in; the on-device path stays the keyless default.
+  - **Caveats:** calorie-from-photo is inherently rough (portion size, hidden oils) — frame it
+    as an *estimate to confirm*, not a measurement. Model licensing + size to vet before 13a.
+
 ## Phase 5 design — Offline OFF regional packs (planned 2026-06-17)
 
 **Decisions:** build on **GitHub Actions** → host on **Hugging Face** dataset; **per-country**
