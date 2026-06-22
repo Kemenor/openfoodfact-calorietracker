@@ -840,6 +840,24 @@ abstract class AppLocalizations {
   /// **'Couldn\'t recognize the food. Add it manually.'**
   String get recognizeNoGuess;
 
+  /// No description provided for @dayCaptureTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Add from a photo'**
+  String get dayCaptureTooltip;
+
+  /// No description provided for @captureScanAi.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan a meal with AI'**
+  String get captureScanAi;
+
+  /// No description provided for @captureScanAiSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Photograph a dish — we\'ll guess it and the calories'**
+  String get captureScanAiSub;
+
   /// No description provided for @scanBarcode.
   ///
   /// In en, this message translates to:

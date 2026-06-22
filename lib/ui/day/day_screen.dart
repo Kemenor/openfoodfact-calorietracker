@@ -15,6 +15,7 @@ import '../../l10n/app_localizations.dart';
 import '../../providers.dart';
 import '../add/add_food_screen.dart';
 import '../food/log_food_sheet.dart';
+import '../food/recognize_food_flow.dart';
 import '../recipes/ocr_meal_screen.dart';
 import 'split_meal_sheet.dart';
 
@@ -98,10 +99,10 @@ class _DayScreenState extends ConsumerState<DayScreen>
         mainAxisSize: MainAxisSize.min,
         children: [
           FloatingActionButton.small(
-            heroTag: 'dayFromList',
-            tooltip: l10n.dayMealFromList,
-            onPressed: () => startOcrMealFlow(context, ref),
-            child: const Icon(Icons.document_scanner_outlined),
+            heroTag: 'dayCapture',
+            tooltip: l10n.dayCaptureTooltip,
+            onPressed: () => _showCaptureMenu(context, ref, day),
+            child: const Icon(Icons.add_a_photo_outlined),
           ),
           const SizedBox(width: 12),
           FloatingActionButton.extended(
@@ -111,6 +112,40 @@ class _DayScreenState extends ConsumerState<DayScreen>
             label: Text(l10n.dayAddFood),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Photo-based capture menu: AI dish recognition or an ingredient-list OCR.
+  void _showCaptureMenu(BuildContext context, WidgetRef ref, String day) {
+    final l10n = AppLocalizations.of(context);
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheetCtx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.center_focus_weak),
+              title: Text(l10n.captureScanAi),
+              subtitle: Text(l10n.captureScanAiSub),
+              onTap: () {
+                Navigator.pop(sheetCtx);
+                recognizeFoodByDay(context, ref, day);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.document_scanner_outlined),
+              title: Text(l10n.createFromList),
+              subtitle: Text(l10n.createFromListSub),
+              onTap: () {
+                Navigator.pop(sheetCtx);
+                startOcrMealFlow(context, ref);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -144,6 +179,18 @@ void addFoodByDay(BuildContext context, WidgetRef ref, String day) {
       ),
     ),
   );
+}
+
+/// AI photo recognition that logs into [day]'s active (or new) meal group.
+Future<void> recognizeFoodByDay(
+    BuildContext context, WidgetRef ref, String day) async {
+  final meal = (ref.read(mealTimesProvider).asData?.value ?? MealTimes.defaults)
+      .inferNow();
+  await startRecognizeFoodFlow(context, ref,
+      day: day,
+      meal: meal,
+      resolveGroup: () =>
+          ref.read(activeGroupProvider.notifier).ensureGroup(day));
 }
 
 class _DayBody extends ConsumerWidget {

@@ -320,7 +320,8 @@ Strategy:
     `recognize_food_flow.dart`: camera/gallery → classify → "Looks like…" candidate sheet (with
     confidence %) → `FoodRepository.estimateKcalForLabel` (catalog match, head-noun fallback,
     300 g plate default) → prefills the **Free add** sheet (name + kcal), always editable, never
-    auto-logged. Entry point = a "recognize" icon in the Add-food app bar. Verified on emulator:
+    auto-logged. Entry point = the Day-screen secondary FAB's **capture menu** ("Scan a meal
+    with AI" / "From an ingredient list"), mirroring the Recipes create-menu. Verified on emulator:
     pizza photo → "Neapolitan pizza" 98% → Free add prefilled "Neapolitan pizza", 585 kcal.
     Model provenance/license in `tool/foodmodel/README.md`; credited in Settings → About.
     Gradle needed `kotlin.jvm.target.validation.mode=warning` (tflite_flutter target mismatch).

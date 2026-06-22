@@ -147,6 +147,9 @@
   "recognizeLooksLike": "Sembra…",
   "recognizeNoneManual": "Nessuno di questi – inserisci manualmente",
   "recognizeNoGuess": "Alimento non riconosciuto. Aggiungilo manualmente.",
+  "dayCaptureTooltip": "Aggiungi da una foto",
+  "captureScanAi": "Scansiona un pasto con l'IA",
+  "captureScanAiSub": "Fotografa un piatto — indoviniamo piatto e calorie",
   "scanBarcode": "Scansiona codice a barre",
   "selectFood": "Seleziona alimento",
 

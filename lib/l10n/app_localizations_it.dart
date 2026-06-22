@@ -435,6 +435,16 @@ class AppLocalizationsIt extends AppLocalizations {
       'Alimento non riconosciuto. Aggiungilo manualmente.';
 
   @override
+  String get dayCaptureTooltip => 'Aggiungi da una foto';
+
+  @override
+  String get captureScanAi => 'Scansiona un pasto con l\'IA';
+
+  @override
+  String get captureScanAiSub =>
+      'Fotografa un piatto — indoviniamo piatto e calorie';
+
+  @override
   String get scanBarcode => 'Scansiona codice a barre';
 
   @override
