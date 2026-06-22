@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/date_label.dart';
 import '../../core/date_x.dart';
 import '../../core/format.dart';
 import '../../core/snackbar.dart';
@@ -237,8 +238,9 @@ class _OcrMealScreenState extends ConsumerState<OcrMealScreen> {
       firstDate: DateTime(2020),
       lastDate: DateTime(2100),
     );
-    if (picked == null) return;
+    if (picked == null || !mounted) return;
     final day = DayKey.of(picked);
+    final dayLbl = dayLabel(context, day);
     final db = ref.read(dbProvider);
     final diary = ref.read(diaryRepositoryProvider);
     final gid = await db.createEntryGroup(day,
@@ -260,7 +262,7 @@ class _OcrMealScreenState extends ConsumerState<OcrMealScreen> {
     }
     if (mounted) Navigator.of(context).pop();
     messenger
-        .showAutoSnackBar(SnackBar(content: Text(l10n.loggedTo(DayKey.label(day)))));
+        .showAutoSnackBar(SnackBar(content: Text(l10n.loggedTo(dayLbl))));
   }
 
   @override

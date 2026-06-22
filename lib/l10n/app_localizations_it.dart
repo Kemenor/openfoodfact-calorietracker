@@ -61,6 +61,15 @@ class AppLocalizationsIt extends AppLocalizations {
       'Solo l\'inglese è scritto da una persona. Tedesco, francese e italiano sono tradotti automaticamente e possono risultare poco naturali.';
 
   @override
+  String get dateToday => 'Oggi';
+
+  @override
+  String get dateYesterday => 'Ieri';
+
+  @override
+  String get dateTomorrow => 'Domani';
+
+  @override
   String get dayPreviousDay => 'Giorno precedente';
 
   @override

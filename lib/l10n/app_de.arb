@@ -22,6 +22,9 @@
   "languageItalian": "Italiano",
   "languageMachineNote": "Nur Englisch ist von Hand geschrieben. Deutsch, Französisch und Italienisch sind maschinell übersetzt und können holprig klingen.",
 
+  "dateToday": "Heute",
+  "dateYesterday": "Gestern",
+  "dateTomorrow": "Morgen",
   "dayPreviousDay": "Vorheriger Tag",
   "dayNextDay": "Nächster Tag",
   "dayAddFood": "Essen hinzufügen",

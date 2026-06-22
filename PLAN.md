@@ -17,8 +17,12 @@ recipe sharing, ZIP backup/restore.
 - ✅ **Locale-aware number display** (Phase 11d): DONE 2026-06-22 — `core/format.dart` renders a
   decimal comma in de/fr/it + thousands grouping on kcal, via a number-locale set from the app
   (separate from `Intl.defaultLocale` so dates are untouched). CSV export uses raw period decimals.
-- 🗓️ **Localized dates** (related gap, not started): `date_x.dart` `DateFormat('EEE, d MMM')` and the
-  Today/Yesterday title are still English regardless of locale.
+- ✅ **Localized dates + meal-type words** (the two deferred i18n bits): DONE 2026-06-22.
+  `core/date_label.dart` `dayLabel(context, key)` → localized Today/Yesterday/Tomorrow + locale
+  date format ("Sa., 20 Juni"); `initializeDateFormatting()` added in `main`. Meal-type words via
+  `domain/meal_type_i18n.dart` (a locale map, NOT the ARB, so the no-context provider can build
+  the auto-name): auto-name localized **at creation** ("Abendessen 20:57"), display chips/rows
+  localized, CSV pinned to English. Verified on emulator in German; 82 tests pass.
 - 🍽️ **Per-food density / piece weights** (units follow-up): volume→grams still assumes ~1 g/ml;
   no per-piece weights yet.
 - 💤 **Phase 5b offline-pack deltas**: PARKED INDEFINITELY (packs are tiny; full re-download is fine).
@@ -250,9 +254,10 @@ Strategy:
     food search + picker, add-product, manual-food, OCR review, recipe edit/detail/share,
     offline regions, scan, crop, split-meal, offline reminder, splash. Parameters/plurals
     handled (`{products}k products`, `{kcal} kcal`, `{n} days`, etc.). Verified: analyze clean,
-    80 tests pass, builds + runs on emulator. Still deferred to the naming question: meal-type
-    words (Breakfast/…) + relative date title (Today/Yesterday) — they double as persisted
-    auto-name tokens.
+    builds + runs on emulator. (Meal-type words + relative date title were initially deferred as
+    "persisted auto-name tokens" — now DONE, see 2026-06-22 reminders block: dates are pure
+    display; meal-type uses a domain locale map so the no-context provider localizes the auto-name
+    at creation.)
   - **11c — Translate. ✅ MACHINE PASS DONE (awaiting human review).** All ~216 keys filled
     in `app_de.arb` / `app_fr.arb` / `app_it.arb` (gen-l10n reports zero untranslated). DE
     verified on emulator (nav, macros, empty-state, FAB). Macro letters localized in `macroPcf`

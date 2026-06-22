@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/snackbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/date_label.dart';
 import '../../core/date_x.dart';
 import '../../core/format.dart';
 import '../../data/db/database.dart';
@@ -205,7 +206,7 @@ class _LogPortionSheetState extends ConsumerState<_LogPortionSheet> {
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.calendar_today),
-            title: Text(DayKey.label(_day)),
+            title: Text(dayLabel(context, _day)),
             trailing: const Icon(Icons.edit),
             onTap: _pickDay,
           ),
@@ -238,7 +239,7 @@ class _LogPortionSheetState extends ConsumerState<_LogPortionSheet> {
             width: double.infinity,
             child: FilledButton(
               onPressed: grams <= 0 ? null : _log,
-              child: Text(l10n.recipeLogToDay(DayKey.label(_day))),
+              child: Text(l10n.recipeLogToDay(dayLabel(context, _day))),
             ),
           ),
         ],
@@ -262,7 +263,7 @@ class _LogPortionSheetState extends ConsumerState<_LogPortionSheet> {
     final grams = _oneServingGrams * _portions;
     final messenger = ScaffoldMessenger.of(context);
     final l10n = AppLocalizations.of(context);
-    final label = DayKey.label(_day);
+    final label = dayLabel(context, _day);
     // Log the portion as its own meal group named after the recipe.
     final groupId =
         await ref.read(dbProvider).createEntryGroup(_day, widget.share.name);

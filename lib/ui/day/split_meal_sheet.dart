@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/snackbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/date_label.dart';
 import '../../core/date_x.dart';
 import '../../core/format.dart';
 import '../../domain/day_summary.dart';
@@ -120,7 +121,7 @@ class _SplitSheetState extends ConsumerState<_SplitSheet> {
               dense: true,
               contentPadding: EdgeInsets.zero,
               leading: const Icon(Icons.calendar_today, size: 20),
-              title: Text(DayKey.label(_days[i])),
+              title: Text(dayLabel(context, _days[i])),
               trailing: const Icon(Icons.edit, size: 18),
               onTap: () => _pickDay(i),
             ),

@@ -204,6 +204,24 @@ abstract class AppLocalizations {
   /// **'Only English is human-written. German, French and Italian are machine-translated and may read awkwardly.'**
   String get languageMachineNote;
 
+  /// No description provided for @dateToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get dateToday;
+
+  /// No description provided for @dateYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get dateYesterday;
+
+  /// No description provided for @dateTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get dateTomorrow;
+
   /// No description provided for @dayPreviousDay.
   ///
   /// In en, this message translates to:

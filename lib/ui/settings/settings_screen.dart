@@ -10,6 +10,7 @@ import '../../core/date_x.dart';
 import '../../data/db/database.dart';
 import '../../domain/enums.dart';
 import '../../domain/meal_times.dart';
+import '../../domain/meal_type_i18n.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers.dart';
 import 'offline_regions_screen.dart';
@@ -310,7 +311,9 @@ class _MealTimeRow extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
       child: Row(
         children: [
-          Expanded(child: Text(meal.label)),
+          Expanded(
+              child: Text(mealTypeLabel(
+                  meal, Localizations.localeOf(context).languageCode))),
           OutlinedButton(
               onPressed: () => pick(true), child: Text(_fmtMins(start))),
           const Padding(

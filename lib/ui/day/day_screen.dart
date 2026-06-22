@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import '../../core/snackbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/date_label.dart';
 import '../../core/date_x.dart';
 import '../../core/format.dart';
 import '../../domain/day_summary.dart';
 import '../../domain/enums.dart';
+import '../../domain/meal_type_i18n.dart';
 import '../../domain/meal_times.dart';
 import '../../domain/nutrition.dart';
 import '../../domain/recipe_share.dart';
@@ -68,7 +70,7 @@ class _DayScreenState extends ConsumerState<DayScreen>
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(DayKey.label(day)),
+              Text(dayLabel(context, day)),
               const SizedBox(width: 4),
               const Icon(Icons.arrow_drop_down, size: 22),
             ],
@@ -451,7 +453,9 @@ class _EditMealSheetState extends ConsumerState<_EditMealSheet> {
 
   String get _timeLabel =>
       '${_when.hour.toString().padLeft(2, '0')}:${_when.minute.toString().padLeft(2, '0')}';
-  String get _autoName => '${_meal.title} $_timeLabel';
+  String get _autoName =>
+      '${mealTypeTitle(_meal, Localizations.localeOf(context).languageCode)} '
+      '$_timeLabel';
 
   @override
   void dispose() {
@@ -548,7 +552,8 @@ class _EditMealSheetState extends ConsumerState<_EditMealSheet> {
               children: [
                 for (final m in MealType.values)
                   ChoiceChip(
-                    label: Text(m.title),
+                    label: Text(mealTypeTitle(
+                        m, Localizations.localeOf(context).languageCode)),
                     selected: _meal == m,
                     onSelected: (_) => _reclassify(m),
                   ),
@@ -562,7 +567,7 @@ class _EditMealSheetState extends ConsumerState<_EditMealSheet> {
                 Expanded(
                   child: OutlinedButton.icon(
                     icon: const Icon(Icons.calendar_today, size: 18),
-                    label: Text(DayKey.label(DayKey.of(_when))),
+                    label: Text(dayLabel(context, DayKey.of(_when))),
                     onPressed: _pickDate,
                   ),
                 ),

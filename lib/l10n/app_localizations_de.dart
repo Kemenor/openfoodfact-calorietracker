@@ -61,6 +61,15 @@ class AppLocalizationsDe extends AppLocalizations {
       'Nur Englisch ist von Hand geschrieben. Deutsch, Französisch und Italienisch sind maschinell übersetzt und können holprig klingen.';
 
   @override
+  String get dateToday => 'Heute';
+
+  @override
+  String get dateYesterday => 'Gestern';
+
+  @override
+  String get dateTomorrow => 'Morgen';
+
+  @override
   String get dayPreviousDay => 'Vorheriger Tag';
 
   @override

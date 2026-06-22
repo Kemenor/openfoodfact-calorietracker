@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 
 import '../core/format.dart';
 import '../domain/enums.dart';
+import '../domain/meal_type_i18n.dart';
 import '../domain/nutrition.dart';
 import 'db/database.dart';
 
@@ -128,7 +129,7 @@ String buildEntriesCsv(List<Entry> entries) {
     );
     rows.add([
       e.day,
-      e.mealType.label,
+      mealTypeLabel(e.mealType, 'en'), // stable English for CSV portability
       esc(e.sName),
       gramsCsv(e.grams),
       kcalCsv(n.kcal),

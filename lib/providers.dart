@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import 'core/date_x.dart';
+import 'core/locale.dart';
 import 'data/db/database.dart';
 import 'data/repositories/diary_repository.dart';
 import 'data/repositories/food_repository.dart';
@@ -15,8 +16,8 @@ import 'data/offline/region_pack_store.dart';
 import 'data/sources/off_api.dart';
 import 'data/sources/swiss_seed.dart';
 import 'domain/day_summary.dart';
-import 'domain/enums.dart';
 import 'domain/meal_times.dart';
+import 'domain/meal_type_i18n.dart';
 import 'domain/offline_manifest.dart';
 
 // ---------------- Infrastructure ----------------
@@ -170,9 +171,15 @@ class ActiveGroupNotifier extends Notifier<int?> {
       }
     }
     final now = DateTime.now();
-    final mt = MealTimes.fromSettings(
-        {for (final s in await _db.watchAllSettings().first) s.key: s.value});
-    final name = '${mt.inferAt(now).title} ${DateFormat('HH:mm').format(now)}';
+    final settings = {
+      for (final s in await _db.watchAllSettings().first) s.key: s.value
+    };
+    final mt = MealTimes.fromSettings(settings);
+    // Localize the auto-name at creation in the active UI language (no
+    // BuildContext here, so resolve the locale code directly).
+    final locale = resolveUiLocale(settings['appLocale']);
+    final name = '${mealTypeTitle(mt.inferAt(now), locale)} '
+        '${DateFormat('HH:mm').format(now)}';
     final id = await _db.createEntryGroup(day, name);
     await _setActive(id);
     return id;
