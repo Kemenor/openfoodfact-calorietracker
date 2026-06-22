@@ -885,7 +885,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiKeyDesc.
   ///
   /// In en, this message translates to:
-  /// **'Meal photos are recognised on your phone by default. Add a free Google Gemini API key for sharper results and portion estimates. With a key, your photo is sent to Google — and on the free tier Google may use it to improve their models.'**
+  /// **'Meal photos are recognised on your phone by default. Add a Google Gemini API key for sharper results and portion estimates. Your photo is then sent to Google. Gemini\'s free tier is plenty for personal use; if you\'ve enabled billing on your Google account, heavy use may incur charges. On the free tier, Google may use your photos to improve their models.'**
   String get aiKeyDesc;
 
   /// No description provided for @aiKeyLabel.
@@ -897,7 +897,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiKeyGet.
   ///
   /// In en, this message translates to:
-  /// **'Get a free key'**
+  /// **'Get an API key'**
   String get aiKeyGet;
 
   /// No description provided for @geminiFailed.

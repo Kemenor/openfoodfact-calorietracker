@@ -460,13 +460,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get aiKeyDesc =>
-      'Le foto vengono riconosciute sul telefono per impostazione predefinita. Aggiungi una chiave API Google Gemini gratuita per risultati più precisi e stime delle porzioni. Con una chiave, la foto viene inviata a Google — e nel piano gratuito Google può usarla per migliorare i propri modelli.';
+      'Le foto vengono riconosciute sul telefono per impostazione predefinita. Aggiungi una chiave API Google Gemini per risultati più precisi e stime delle porzioni. La foto viene quindi inviata a Google. Il piano gratuito di Gemini è sufficiente per l\'uso personale; se hai attivato la fatturazione sul tuo account Google, un uso intenso può comportare costi. Nel piano gratuito Google può usare le tue foto per migliorare i propri modelli.';
 
   @override
   String get aiKeyLabel => 'Chiave API Gemini';
 
   @override
-  String get aiKeyGet => 'Ottieni una chiave gratuita';
+  String get aiKeyGet => 'Ottieni una chiave API';
 
   @override
   String get geminiFailed =>

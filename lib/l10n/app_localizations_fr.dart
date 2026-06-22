@@ -460,13 +460,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get aiKeyDesc =>
-      'Les photos sont reconnues sur votre téléphone par défaut. Ajoutez une clé API Google Gemini gratuite pour des résultats plus précis et des estimations de portions. Avec une clé, votre photo est envoyée à Google — et dans l\'offre gratuite, Google peut l\'utiliser pour améliorer ses modèles.';
+      'Les photos sont reconnues sur votre téléphone par défaut. Ajoutez une clé API Google Gemini pour des résultats plus précis et des estimations de portions. Votre photo est alors envoyée à Google. L\'offre gratuite de Gemini suffit pour un usage personnel ; si vous avez activé la facturation sur votre compte Google, une utilisation intensive peut entraîner des frais. Dans l\'offre gratuite, Google peut utiliser vos photos pour améliorer ses modèles.';
 
   @override
   String get aiKeyLabel => 'Clé API Gemini';
 
   @override
-  String get aiKeyGet => 'Obtenir une clé gratuite';
+  String get aiKeyGet => 'Obtenir une clé API';
 
   @override
   String get geminiFailed =>

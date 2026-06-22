@@ -456,13 +456,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aiKeyDesc =>
-      'Meal photos are recognised on your phone by default. Add a free Google Gemini API key for sharper results and portion estimates. With a key, your photo is sent to Google — and on the free tier Google may use it to improve their models.';
+      'Meal photos are recognised on your phone by default. Add a Google Gemini API key for sharper results and portion estimates. Your photo is then sent to Google. Gemini\'s free tier is plenty for personal use; if you\'ve enabled billing on your Google account, heavy use may incur charges. On the free tier, Google may use your photos to improve their models.';
 
   @override
   String get aiKeyLabel => 'Gemini API key';
 
   @override
-  String get aiKeyGet => 'Get a free key';
+  String get aiKeyGet => 'Get an API key';
 
   @override
   String get geminiFailed =>
