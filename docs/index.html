@@ -4,10 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Knabberfuchs — an honest calorie tracker</title>
-<meta name="description" content="Ad-free, no subscriptions, no popups. A fast offline calorie tracker built on Open Food Facts + USDA. Your data stays on your phone." />
+<meta name="description" content="Ad-free, no subscriptions, no popups. A fast, offline calorie tracker with barcode scan, AI meal photos, recipes and curated food data. Your data stays on your phone." />
 <link rel="icon" href="favicon.png" type="image/png" />
 <meta property="og:title" content="Knabberfuchs — an honest calorie tracker" />
-<meta property="og:description" content="Ad-free, no subscriptions, no popups. Fast, offline, built on Open Food Facts. Your data stays on your phone." />
+<meta property="og:description" content="Ad-free, no subscriptions, no popups. Fast and offline, with barcode scan, AI meal photos and recipes. Your data stays on your phone." />
 <meta property="og:image" content="screenshots/day.png" />
 <style>
   :root{
@@ -25,7 +25,7 @@
   header img.logo{width:104px;height:104px}
   h1{font-size:2.7rem;margin:.4rem 0 .2rem;letter-spacing:-.02em}
   .tagline{font-size:1.35rem;color:var(--green-d);font-weight:600;margin:0}
-  .sub{font-size:1.1rem;color:var(--muted);max-width:620px;margin:18px auto 0}
+  .sub{font-size:1.1rem;color:var(--muted);max-width:640px;margin:18px auto 0}
 
   .badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:26px 0 8px}
   .badge{background:var(--card);border:1px solid var(--line);border-radius:999px;
@@ -35,7 +35,7 @@
   h2{font-size:1.6rem;text-align:center;margin:0 0 28px;letter-spacing:-.01em}
 
   .shots{display:flex;gap:22px;justify-content:center;flex-wrap:wrap}
-  .shots figure{margin:0;width:240px}
+  .shots figure{margin:0;width:230px}
   .shots img{width:100%;border-radius:22px;border:1px solid var(--line);
              box-shadow:0 10px 30px rgba(60,80,40,.12);display:block}
   .shots figcaption{text-align:center;color:var(--muted);font-size:.92rem;margin-top:10px}
@@ -64,12 +64,14 @@
     <img class="logo" src="fox.png" alt="Knabberfuchs fox" />
     <h1>Knabberfuchs</h1>
     <p class="tagline">An honest calorie tracker.</p>
-    <p class="sub">Scan a barcode or search, type the grams, done. No ads, no subscription,
-      no popups, no account. Works offline, and your data never leaves your phone.</p>
+    <p class="sub">Scan a barcode, search, snap a photo of your meal, or just type a name and
+      the calories. No ads, no subscription, no popups, no account. Works offline, and your
+      data never leaves your phone.</p>
     <div class="badges">
       <span class="badge">Ad-free</span>
       <span class="badge">No subscription</span>
       <span class="badge">No popups</span>
+      <span class="badge">No account</span>
       <span class="badge">Works offline</span>
       <span class="badge">Your data stays local</span>
     </div>
@@ -80,11 +82,17 @@
   <div class="wrap">
     <div class="shots">
       <figure><img src="screenshots/day.png" alt="The day view" />
-        <figcaption>See your day, meal by meal</figcaption></figure>
+        <figcaption>Your whole day at a glance</figcaption></figure>
+      <figure><img src="screenshots/recognize.png" alt="AI meal recognition" />
+        <figcaption>Snap a meal — AI names it &amp; estimates the calories</figcaption></figure>
       <figure><img src="screenshots/search.png" alt="Food search" />
-        <figcaption>Search Open Food Facts + USDA</figcaption></figure>
+        <figcaption>Search Open Food Facts + the Swiss food database</figcaption></figure>
+      <figure><img src="screenshots/recipe.png" alt="A recipe" />
+        <figcaption>Recipes, logged as their real ingredients</figcaption></figure>
       <figure><img src="screenshots/regions.png" alt="Offline regions" />
         <figcaption>Download any country, search offline</figcaption></figure>
+      <figure><img src="screenshots/language.png" alt="Languages" />
+        <figcaption>English, German, French &amp; Italian</figcaption></figure>
     </div>
   </div>
 </section>
@@ -94,23 +102,35 @@
     <h2>What it does</h2>
     <div class="grid">
       <div class="feat"><span class="em">📷</span><h3>Scan barcodes</h3>
-        <p>Packaged products from Open Food Facts; whole foods from a bundled USDA dataset.</p></div>
+        <p>Packaged products from Open Food Facts. Not in the database? Add it yourself — scan
+          the nutrition label and it's saved for next time.</p></div>
       <div class="feat"><span class="em">🔎</span><h3>Fast local search</h3>
-        <p>Hundreds of thousands of foods, with smart synonyms and ranking — no waiting.</p></div>
+        <p>Hundreds of thousands of foods from Open Food Facts, plus the curated Swiss Food
+          Composition Database — instant, with smart ranking.</p></div>
+      <div class="feat"><span class="em">📸</span><h3>Recognise a meal</h3>
+        <p>Snap a photo and on-device AI guesses the dish and estimates the calories. No cloud,
+          no account — it runs entirely on your phone.</p></div>
+      <div class="feat"><span class="em">⚡</span><h3>Quick add</h3>
+        <p>Already know the number? Log “Lasagna · 816&nbsp;kcal” in a couple of taps, with
+          optional macros.</p></div>
+      <div class="feat"><span class="em">📖</span><h3>Recipes</h3>
+        <p>Build recipes once, then log a portion to any day — broken back into its real
+          ingredients. Share by QR or image, import by QR or text.</p></div>
+      <div class="feat"><span class="em">🖼️</span><h3>Meal from a photo</h3>
+        <p>Photograph a printed ingredient list; on-device OCR turns it into a meal you can
+          match and log.</p></div>
+      <div class="feat"><span class="em">🍽️</span><h3>Effortless meals</h3>
+        <p>Everything you add flows into the current meal automatically. Rename it, split it
+          across days, or save it as a recipe.</p></div>
       <div class="feat"><span class="em">🌍</span><h3>Offline, worldwide</h3>
         <p>Download any of 106 country databases and scan + search with no connection.</p></div>
-      <div class="feat"><span class="em">🍽️</span><h3>Track your way</h3>
-        <p>Auto-grouped meals as you add, or classic Breakfast / Lunch / Dinner / Snacks.</p></div>
-      <div class="feat"><span class="em">📖</span><h3>Recipes &amp; sharing</h3>
-        <p>Build recipes, log a portion to any day, and share by QR — no server involved.</p></div>
-      <div class="feat"><span class="em">🖼️</span><h3>Meal from a photo</h3>
-        <p>Snap a recipe's ingredient list; on-device OCR turns it into a meal to match.</p></div>
-      <div class="feat"><span class="em">➕</span><h3>Add missing products</h3>
-        <p>Barcode not found? Add it (OCR the label), and optionally contribute it to OFF.</p></div>
+      <div class="feat"><span class="em">🗣️</span><h3>Speaks your language</h3>
+        <p>Available in English, German, French and Italian.</p></div>
       <div class="feat"><span class="em">❤️</span><h3>Health Connect</h3>
         <p>Optionally sync your logged calories &amp; macros to Android Health Connect.</p></div>
       <div class="feat"><span class="em">💾</span><h3>Your data, a zip</h3>
-        <p>Export everything to a backup zip (JSON + CSV) and restore it any time.</p></div>
+        <p>Export everything to a backup zip (JSON + CSV) and restore it any time. No cloud,
+          no lock-in.</p></div>
     </div>
   </div>
 </section>
@@ -128,7 +148,8 @@
 
 <footer>
   <div class="wrap">
-    Knabberfuchs · made in Switzerland 🇨🇭 · product data © Open Food Facts contributors (ODbL)
+    Knabberfuchs · made in Switzerland 🇨🇭 · food data © Open Food Facts contributors (ODbL)
+    &amp; the Swiss Food Composition Database (FSVO)
   </div>
 </footer>
 
