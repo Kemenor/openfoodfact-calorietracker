@@ -1,6 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
 
@@ -41,8 +42,12 @@ class GeminiService {
       '(not per 100 g): calories in kcal, and protein, carbohydrate and fat in '
       'grams. If the image is not food, set is_food to false.';
 
-  final http.Client _client;
-  GeminiService({http.Client? client}) : _client = client ?? http.Client();
+  /// Optional injected client (for tests). When null, each request gets a
+  /// FRESH client that is closed afterwards — reusing one long-lived client
+  /// let a stale pooled connection from a slow first request silently break
+  /// every later call (the "works once, then always local" bug).
+  final http.Client? _injected;
+  GeminiService({http.Client? client}) : _injected = client;
 
   Future<GeminiFoodResult?> recognizeFood(Uint8List bytes, String apiKey) async {
     final b64 = base64Encode(_downscaleJpeg(bytes));
@@ -76,12 +81,40 @@ class GeminiService {
         },
       },
     });
-    final resp = await _client
-        .post(uri,
-            headers: {'Content-Type': 'application/json'}, body: body)
-        .timeout(const Duration(seconds: 30));
-    if (resp.statusCode != 200) return null;
-    return parseGeminiResponse(resp.body);
+    // Up to two attempts, each with its own client. Retry once on a transient
+    // overload (503) or timeout; any other failure falls straight through to
+    // the on-device classifier.
+    for (var attempt = 1; attempt <= 2; attempt++) {
+      final client = _injected ?? http.Client();
+      try {
+        final resp = await client
+            .post(uri,
+                headers: {'Content-Type': 'application/json'}, body: body)
+            .timeout(const Duration(seconds: 60));
+        if (resp.statusCode == 503 && attempt == 1) {
+          debugPrint('[gemini] 503 overloaded, retrying');
+          continue;
+        }
+        if (resp.statusCode != 200) {
+          debugPrint('[gemini] HTTP ${resp.statusCode}: '
+              '${resp.body.length > 300 ? resp.body.substring(0, 300) : resp.body}');
+          return null;
+        }
+        final r = parseGeminiResponse(resp.body);
+        debugPrint('[gemini] ok=${r != null} name=${r?.name}');
+        return r;
+      } on TimeoutException {
+        debugPrint('[gemini] timeout (attempt $attempt)');
+        if (attempt == 1) continue;
+        return null;
+      } catch (e) {
+        debugPrint('[gemini] error: $e');
+        return null;
+      } finally {
+        if (_injected == null) client.close();
+      }
+    }
+    return null;
   }
 
   /// Shrink the photo (longest side ≤ 768 px, JPEG q85) to keep the upload
@@ -100,7 +133,9 @@ class GeminiService {
     return img.encodeJpg(im, quality: 85);
   }
 
-  void dispose() => _client.close();
+  /// Request clients are created and closed per call; only an injected client
+  /// (owned by the caller) would need closing, and the caller handles that.
+  void dispose() {}
 }
 
 /// Parse Gemini's `generateContent` response into a [GeminiFoodResult].
