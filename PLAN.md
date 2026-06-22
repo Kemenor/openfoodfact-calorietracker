@@ -6,6 +6,12 @@ recipe sharing, ZIP backup/restore.
 
 ## Open reminders / TODO (updated 2026-06-22)
 
+- 📦 **Phone builds: arm64-only.** Sideload to the phone (arm64-v8a) with
+  `flutter build apk --release --target-platform android-arm64` → ~113 MB vs ~157 MB universal
+  (drops armeabi-v7a + the emulator-only x86_64). The size is dominated by on-device ML (ML Kit
+  OCR/barcode native libs ~bigger than the 21 MB AIY food model) + the Flutter engine. For a
+  Store release, use `flutter build appbundle` (Play splits per-device automatically).
+
 - ⏳ **Italian food data** (Phase 12): the Swiss FCDB Italian export wasn't on the Wayback
   Machine and `naehrwertdaten.ch` was down on 2026-06-22. When it's reachable again, fetch
   `it.xlsx` into `tool/swiss_fcdb/` (see that README for the URL), re-run `build.py`, bump
