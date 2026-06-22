@@ -4,8 +4,17 @@ An ad-free, no-subscription, no-popup calorie tracker. Android-first (Flutter, s
 iOS stays possible). Local-first data, optional Health Connect sync, serverless
 recipe sharing, ZIP backup/restore.
 
-## Open reminders / TODO (updated 2026-06-22)
+## Open reminders / TODO (updated 2026-06-23)
 
+- ✅ **Shipped 2026-06-23 (food-flow + AI batch):** **Free add** (quick name+kcal log, in the
+  search list and the Day bolt menu); **AI meal recognition** — on-device (Phase 13a) + optional
+  **Gemini** cloud with the user's own free key (13b); merged add-product + custom-food into one
+  **`FoodFormScreen`** (barcode is an editable field with an inline scan icon); collapsed
+  `FoodSource` to `{ openFoodFacts, custom, swissFcdb }` (schema **v8** renumber migration);
+  recipe "log a portion" now logs **per-ingredient** (scaled), recipes-list **swipe** to log/
+  delete, recipe **Save**-as-FAB, share QR **as image**, **import from text**; shared
+  camera/gallery picker across all image features; scan-barcode moved to a FAB; FAB hero-tag fix;
+  release builds are arm64-only (~113 MB). Landing page (`docs/`) refreshed + republished.
 - 📦 **Phone builds: arm64-only.** Sideload to the phone (arm64-v8a) with
   `flutter build apk --release --target-platform android-arm64` → ~113 MB vs ~157 MB universal
   (drops armeabi-v7a + the emulator-only x86_64). The size is dominated by on-device ML (ML Kit
@@ -314,29 +323,29 @@ Strategy:
   totals are exactly what the diary shows). Flows into the current meal group like any add.
   Localized (de/fr/it). Verified on emulator (DB: `Lasagna | 100 g | 816 kcal/100g = 816`).
 
-- **Phase 13 — Image recognition (photo → kcal):** 📋 PLANNED. Take a photo of a meal → ML
-  guesses what it is → pre-fills the **Free add** sheet (name + estimated kcal) for the user to
-  confirm/edit. Builds directly on Free add (the output format) and reuses the existing camera /
-  `image_picker` / `crop_screen` infra from the OCR label scanner.
-  - **Core tension:** the app is **keyless + serverless + offline-first**. A cloud multimodal
-    model would be most accurate but needs a key/server → violates that. So:
-  - **13a — On-device classifier. ✅ DONE (2026-06-22).** Bundles **Google AIY food_V1**
+- **Phase 13 — Image recognition (photo → kcal):** ✅ DONE (2026-06-23). Take a photo of a meal →
+  ML guesses it → pre-fills the **Free add** sheet (name + kcal [+ macros]) to confirm/edit.
+  Two tiers: keyless on-device by default, optional cloud LLM with the user's own key.
+  - **13a — On-device classifier. ✅ DONE.** Bundles **Google AIY food_V1**
     (`assets/foodmodel/food_V1.tflite`, Apache-2.0, ~20 MB, 2024 dish classes, 192×192 uint8)
-    via `tflite_flutter`. `food_classifier.dart` → top-K guesses (skip `__background__`);
-    `recognize_food_flow.dart`: camera/gallery → classify → "Looks like…" candidate sheet (with
-    confidence %) → `FoodRepository.estimateKcalForLabel` (catalog match, head-noun fallback,
-    300 g plate default) → prefills the **Free add** sheet (name + kcal), always editable, never
-    auto-logged. Entry point = the Day-screen secondary FAB's **capture menu** ("Scan a meal
-    with AI" / "From an ingredient list"), mirroring the Recipes create-menu. Verified on emulator:
-    pizza photo → "Neapolitan pizza" 98% → Free add prefilled "Neapolitan pizza", 585 kcal.
-    Model provenance/license in `tool/foodmodel/README.md`; credited in Settings → About.
-    Gradle needed `kotlin.jvm.target.validation.mode=warning` (tflite_flutter target mismatch).
-  - **13b — Optional cloud/LLM path (power-user, opt-in, own key).** A multimodal LLM
-    ("what's in this photo + estimate kcal") gives far better accuracy + portion sizing, but
-    requires a user-supplied API key (same pattern as the deferred optional-USDA-key idea) so
-    the app ships no key. Strictly opt-in; the on-device path stays the keyless default.
-  - **Caveats:** calorie-from-photo is inherently rough (portion size, hidden oils) — frame it
-    as an *estimate to confirm*, not a measurement. Model licensing + size to vet before 13a.
+    via `tflite_flutter`. `food_classifier.dart` centre-crops to square then top-K (skip
+    `__background__`); `recognize_food_flow.dart`: camera/gallery → classify → "Looks like…"
+    candidate sheet → `FoodRepository.estimateKcalForLabel` (catalog match, head-noun fallback,
+    300 g default) → Free add, always editable, never auto-logged. Entry = the Day-screen bolt
+    **capture menu**. Verified: pizza → "Neapolitan pizza" 98%. Provenance in
+    `tool/foodmodel/README.md`; credited in About. Gradle:
+    `kotlin.jvm.target.validation.mode=warning` (tflite_flutter target mismatch).
+  - **13b — Optional Gemini cloud path. ✅ DONE (2026-06-23).** `gemini_service.dart`: downscale
+    photo → Gemini `generateContent` with a JSON response schema → dish + grams + portion totals
+    (kcal + macros) → Free add prefilled (macros section auto-expands). Uses the **user's own
+    free-tier Gemini key** (`gemini-3.5-flash`; free tier verified: 1500 req/day, image input, no
+    card) stored in the `geminiApiKey` setting; Settings → AI recognition has a masked key field,
+    "Get an API key" link, and an honest disclosure (photo goes to Google; free tier may train on
+    it; billing-enabled accounts may incur charges). On **any** failure (no key/network/bad key/
+    404) it falls back to the on-device classifier. Pure `parseGeminiResponse()` is unit-tested;
+    **live path verified end-to-end** with a real key (pizza → "Pizza Margherita", 850 kcal,
+    P32/C105/F28). The on-device path stays the keyless default.
+  - **Caveat:** calorie-from-photo is inherently rough → always framed as an *estimate to confirm*.
 
 ## Phase 5 design — Offline OFF regional packs (planned 2026-06-17)
 
