@@ -14,7 +14,11 @@ recipe sharing, ZIP backup/restore.
 - 📝 **Translation review** (Phase 11c): DE/FR/IT UI strings are a machine-translation first
   pass. Kemenor (Swiss, DE/FR) to review microcopy; **IT entirely unreviewed**. Disclosed in-app
   under the language picker.
-- 🔢 **Locale-aware number display** (Phase 11d, nice-to-have): show/parse "1,5" per locale.
+- ✅ **Locale-aware number display** (Phase 11d): DONE 2026-06-22 — `core/format.dart` renders a
+  decimal comma in de/fr/it + thousands grouping on kcal, via a number-locale set from the app
+  (separate from `Intl.defaultLocale` so dates are untouched). CSV export uses raw period decimals.
+- 🗓️ **Localized dates** (related gap, not started): `date_x.dart` `DateFormat('EEE, d MMM')` and the
+  Today/Yesterday title are still English regardless of locale.
 - 🍽️ **Per-food density / piece weights** (units follow-up): volume→grams still assumes ~1 g/ml;
   no per-piece weights yet.
 - 💤 **Phase 5b offline-pack deltas**: PARKED INDEFINITELY (packs are tiny; full re-download is fine).

@@ -130,11 +130,11 @@ String buildEntriesCsv(List<Entry> entries) {
       e.day,
       e.mealType.label,
       esc(e.sName),
-      gramsStr(e.grams),
-      kcalStr(n.kcal),
-      macroStr(n.protein),
-      macroStr(n.carb),
-      macroStr(n.fat),
+      gramsCsv(e.grams),
+      kcalCsv(n.kcal),
+      macroCsv(n.protein),
+      macroCsv(n.carb),
+      macroCsv(n.fat),
     ].join(','));
   }
   return rows.join('\n');

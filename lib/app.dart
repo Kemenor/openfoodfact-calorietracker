@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/format.dart';
 import 'core/theme.dart';
 import 'l10n/app_localizations.dart';
 import 'providers.dart';
@@ -13,6 +14,14 @@ class CalorieApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // null until the setting stream resolves → falls back to the device locale.
     final locale = ref.watch(localeProvider).asData?.value;
+    // Point the number formatters at the resolved UI locale (decimal comma in
+    // de/fr/it). Mirror MaterialApp's basic resolution: device locale if it's a
+    // supported language, else English.
+    final numCode =
+        (locale ?? WidgetsBinding.instance.platformDispatcher.locale)
+            .languageCode;
+    setNumberLocale(
+        const {'de', 'fr', 'it', 'en'}.contains(numCode) ? numCode : 'en');
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
