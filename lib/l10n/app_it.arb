@@ -20,6 +20,7 @@
   "languageGerman": "Deutsch",
   "languageFrench": "Français",
   "languageItalian": "Italiano",
+  "languageMachineNote": "Solo l'inglese è scritto da una persona. Tedesco, francese e italiano sono tradotti automaticamente e possono risultare poco naturali.",
 
   "dayPreviousDay": "Giorno precedente",
   "dayNextDay": "Giorno successivo",

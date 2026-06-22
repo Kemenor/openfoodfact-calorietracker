@@ -361,6 +361,15 @@ class _LanguagePicker extends ConsumerWidget {
             ],
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+          child: Text(
+            l10n.languageMachineNote,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+          ),
+        ),
       ],
     );
   }

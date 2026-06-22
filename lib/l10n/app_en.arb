@@ -27,6 +27,8 @@
   "languageGerman": "Deutsch",
   "languageFrench": "Français",
   "languageItalian": "Italiano",
+  "languageMachineNote": "Only English is human-written. German, French and Italian are machine-translated and may read awkwardly.",
+  "@languageMachineNote": { "description": "Footnote under the language picker disclosing that non-English locales are machine translations" },
 
   "dayPreviousDay": "Previous day",
   "dayNextDay": "Next day",

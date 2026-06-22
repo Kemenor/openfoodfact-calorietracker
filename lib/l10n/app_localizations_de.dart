@@ -57,6 +57,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get languageItalian => 'Italiano';
 
   @override
+  String get languageMachineNote =>
+      'Nur Englisch ist von Hand geschrieben. Deutsch, Französisch und Italienisch sind maschinell übersetzt und können holprig klingen.';
+
+  @override
   String get dayPreviousDay => 'Vorheriger Tag';
 
   @override
