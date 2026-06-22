@@ -73,20 +73,16 @@ class AddFoodScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.dayAddFood),
-        actions: [
-          IconButton(
-            tooltip: l10n.scanBarcode,
-            icon: const Icon(Icons.qr_code_scanner),
-            onPressed: () => _scan(context, ref),
-          ),
-        ],
-      ),
+      appBar: AppBar(title: Text(l10n.dayAddFood)),
       body: FoodSearchList(
         onPick: (food) => _pick(context, ref, food),
         onCreateCustom: () => _createCustom(context, ref),
         onQuickAdd: (name) => _quickAdd(context, ref, name),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _scan(context, ref),
+        icon: const Icon(Icons.qr_code_scanner),
+        label: Text(l10n.scanBarcode),
       ),
     );
   }

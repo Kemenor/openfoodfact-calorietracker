@@ -156,6 +156,8 @@ class _FoodSearchListState extends ConsumerState<FoodSearchList> {
           child: results.isEmpty
               ? _EmptyState(query: _query, onCreate: widget.onCreateCustom)
               : ListView.separated(
+                  // Bottom inset so the last row clears a floating action button.
+                  padding: const EdgeInsets.only(bottom: 88),
                   itemCount: results.length + (widget.onCreateCustom != null ? 1 : 0),
                   separatorBuilder: (_, _) => const Divider(height: 1),
                   itemBuilder: (context, i) {
