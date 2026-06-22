@@ -153,6 +153,11 @@
   "captureScanAiSub": "Fotografiere ein Gericht — wir schätzen es und die Kalorien",
   "foodFormTitle": "Neues Lebensmittel",
   "barcodeField": "Barcode (optional)",
+  "settingsAi": "KI-Erkennung",
+  "aiKeyDesc": "Fotos werden standardmäßig auf deinem Gerät erkannt. Füge einen kostenlosen Google-Gemini-API-Schlüssel hinzu für genauere Ergebnisse und Portionsschätzungen. Mit einem Schlüssel wird dein Foto an Google gesendet – und im kostenlosen Tarif kann Google es zur Verbesserung seiner Modelle verwenden.",
+  "aiKeyLabel": "Gemini-API-Schlüssel",
+  "aiKeyGet": "Kostenlosen Schlüssel holen",
+  "geminiFailed": "Gemini nicht erreichbar – Erkennung auf dem Gerät verwendet.",
   "scanBarcode": "Barcode scannen",
   "selectFood": "Lebensmittel auswählen",
 

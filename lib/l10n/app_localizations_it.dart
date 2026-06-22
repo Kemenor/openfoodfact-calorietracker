@@ -456,6 +456,23 @@ class AppLocalizationsIt extends AppLocalizations {
   String get barcodeField => 'Codice a barre (facoltativo)';
 
   @override
+  String get settingsAi => 'Riconoscimento IA';
+
+  @override
+  String get aiKeyDesc =>
+      'Le foto vengono riconosciute sul telefono per impostazione predefinita. Aggiungi una chiave API Google Gemini gratuita per risultati più precisi e stime delle porzioni. Con una chiave, la foto viene inviata a Google — e nel piano gratuito Google può usarla per migliorare i propri modelli.';
+
+  @override
+  String get aiKeyLabel => 'Chiave API Gemini';
+
+  @override
+  String get aiKeyGet => 'Ottieni una chiave gratuita';
+
+  @override
+  String get geminiFailed =>
+      'Gemini non raggiungibile — usato il riconoscimento sul dispositivo.';
+
+  @override
   String get scanBarcode => 'Scansiona codice a barre';
 
   @override

@@ -452,6 +452,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get barcodeField => 'Barcode (optional)';
 
   @override
+  String get settingsAi => 'AI recognition';
+
+  @override
+  String get aiKeyDesc =>
+      'Meal photos are recognised on your phone by default. Add a free Google Gemini API key for sharper results and portion estimates. With a key, your photo is sent to Google — and on the free tier Google may use it to improve their models.';
+
+  @override
+  String get aiKeyLabel => 'Gemini API key';
+
+  @override
+  String get aiKeyGet => 'Get a free key';
+
+  @override
+  String get geminiFailed =>
+      'Couldn\'t reach Gemini — used on-device recognition.';
+
+  @override
   String get scanBarcode => 'Scan barcode';
 
   @override

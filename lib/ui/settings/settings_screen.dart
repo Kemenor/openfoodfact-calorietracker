@@ -105,6 +105,9 @@ class SettingsScreen extends ConsumerWidget {
                     builder: (_) => const OfflineRegionsScreen())),
               ),
               const Divider(),
+              _SectionHeader(l10n.settingsAi),
+              const _AiKeyTile(),
+              const Divider(),
               _SectionHeader(l10n.settingsHealthConnect),
               SwitchListTile(
                 secondary: const Icon(Icons.favorite_border),
@@ -374,6 +377,87 @@ class _LanguagePicker extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Optional Google Gemini key (the user's own free-tier key) for cloud food
+/// recognition. Empty = the on-device classifier stays the default.
+class _AiKeyTile extends ConsumerStatefulWidget {
+  const _AiKeyTile();
+  @override
+  ConsumerState<_AiKeyTile> createState() => _AiKeyTileState();
+}
+
+class _AiKeyTileState extends ConsumerState<_AiKeyTile> {
+  final _ctrl = TextEditingController();
+  bool _obscure = true;
+  bool _loaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    ref.read(dbProvider).getSetting(geminiKeySetting).then((v) {
+      if (mounted) {
+        setState(() {
+          _ctrl.text = v ?? '';
+          _loaded = true;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l10n.aiKeyDesc,
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.outline)),
+          const SizedBox(height: 12),
+          TextField(
+            controller: _ctrl,
+            obscureText: _obscure,
+            enabled: _loaded,
+            autocorrect: false,
+            enableSuggestions: false,
+            decoration: InputDecoration(
+              labelText: l10n.aiKeyLabel,
+              border: const OutlineInputBorder(),
+              isDense: true,
+              suffixIcon: IconButton(
+                icon: Icon(
+                    _obscure ? Icons.visibility : Icons.visibility_off,
+                    size: 20),
+                onPressed: () => setState(() => _obscure = !_obscure),
+              ),
+            ),
+            onChanged: (v) => ref.read(dbProvider).setSetting(
+                geminiKeySetting, v.trim().isEmpty ? null : v.trim()),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: () => launchUrl(
+                  Uri.parse('https://aistudio.google.com/apikey'),
+                  mode: LaunchMode.externalApplication),
+              icon: const Icon(Icons.open_in_new, size: 16),
+              label: Text(l10n.aiKeyGet),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

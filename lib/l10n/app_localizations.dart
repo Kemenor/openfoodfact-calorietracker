@@ -876,6 +876,36 @@ abstract class AppLocalizations {
   /// **'Barcode (optional)'**
   String get barcodeField;
 
+  /// No description provided for @settingsAi.
+  ///
+  /// In en, this message translates to:
+  /// **'AI recognition'**
+  String get settingsAi;
+
+  /// No description provided for @aiKeyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal photos are recognised on your phone by default. Add a free Google Gemini API key for sharper results and portion estimates. With a key, your photo is sent to Google — and on the free tier Google may use it to improve their models.'**
+  String get aiKeyDesc;
+
+  /// No description provided for @aiKeyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini API key'**
+  String get aiKeyLabel;
+
+  /// No description provided for @aiKeyGet.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a free key'**
+  String get aiKeyGet;
+
+  /// No description provided for @geminiFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach Gemini — used on-device recognition.'**
+  String get geminiFailed;
+
   /// No description provided for @scanBarcode.
   ///
   /// In en, this message translates to:

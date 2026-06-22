@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/format.dart';
 import '../../domain/enums.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers.dart';
@@ -19,6 +20,9 @@ Future<bool?> showQuickAddSheet(
   Future<int?> Function()? resolveGroup,
   String? initialName,
   int? initialKcal,
+  double? initialProtein,
+  double? initialCarb,
+  double? initialFat,
 }) {
   return showModalBottomSheet<bool>(
     context: context,
@@ -30,6 +34,9 @@ Future<bool?> showQuickAddSheet(
       resolveGroup: resolveGroup,
       initialName: initialName,
       initialKcal: initialKcal,
+      initialProtein: initialProtein,
+      initialCarb: initialCarb,
+      initialFat: initialFat,
     ),
   );
 }
@@ -40,12 +47,18 @@ class _QuickAddSheet extends ConsumerStatefulWidget {
   final Future<int?> Function()? resolveGroup;
   final String? initialName;
   final int? initialKcal;
+  final double? initialProtein;
+  final double? initialCarb;
+  final double? initialFat;
   const _QuickAddSheet({
     required this.day,
     required this.meal,
     required this.resolveGroup,
     required this.initialName,
     required this.initialKcal,
+    required this.initialProtein,
+    required this.initialCarb,
+    required this.initialFat,
   });
 
   @override
@@ -56,10 +69,14 @@ class _QuickAddSheetState extends ConsumerState<_QuickAddSheet> {
   late final _name = TextEditingController(text: widget.initialName ?? '');
   late final _kcal =
       TextEditingController(text: widget.initialKcal?.toString() ?? '');
-  final _protein = TextEditingController();
-  final _carb = TextEditingController();
-  final _fat = TextEditingController();
-  bool _showMacros = false;
+  late final _protein = TextEditingController(text: _g(widget.initialProtein));
+  late final _carb = TextEditingController(text: _g(widget.initialCarb));
+  late final _fat = TextEditingController(text: _g(widget.initialFat));
+  late bool _showMacros = widget.initialProtein != null ||
+      widget.initialCarb != null ||
+      widget.initialFat != null;
+
+  static String _g(double? v) => v == null ? '' : gramsStr(v);
 
   @override
   void initState() {

@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../core/snackbar.dart';
 import '../../data/ml/food_classifier.dart';
+import '../../data/ml/gemini_service.dart';
 import '../../domain/enums.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers.dart';
@@ -33,6 +34,42 @@ Future<bool> startRecognizeFoodFlow(
       .pickImage(source: source, maxWidth: 1024, imageQuality: 85);
   if (img == null || !context.mounted) return false;
   final bytes = await img.readAsBytes();
+  if (!context.mounted) return false;
+
+  // Cloud path: if the user configured a (free-tier) Gemini key, use it for a
+  // richer estimate — dish + grams + macros. Falls back to on-device on any
+  // failure so the feature still works offline / when the key is bad.
+  final geminiKey = await ref.read(dbProvider).getSetting(geminiKeySetting);
+  if (geminiKey != null && geminiKey.trim().isNotEmpty) {
+    if (!context.mounted) return false;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+    GeminiFoodResult? r;
+    try {
+      r = await ref
+          .read(geminiServiceProvider)
+          .recognizeFood(bytes, geminiKey.trim());
+    } catch (_) {}
+    if (context.mounted) navigator.pop();
+    if (!context.mounted) return false;
+    if (r != null) {
+      return await showQuickAddSheet(context, ref,
+              day: day,
+              meal: meal,
+              resolveGroup: resolveGroup,
+              initialName: r.name,
+              initialKcal: r.kcal.round(),
+              initialProtein: r.protein,
+              initialCarb: r.carb,
+              initialFat: r.fat) ==
+          true;
+    }
+    messenger.showAutoSnackBar(SnackBar(content: Text(l10n.geminiFailed)));
+    // fall through to the on-device classifier
+  }
   if (!context.mounted) return false;
 
   showDialog(

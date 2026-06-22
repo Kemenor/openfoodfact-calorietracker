@@ -153,6 +153,11 @@
   "captureScanAiSub": "Fotografa un piatto — indoviniamo piatto e calorie",
   "foodFormTitle": "Nuovo alimento",
   "barcodeField": "Codice a barre (facoltativo)",
+  "settingsAi": "Riconoscimento IA",
+  "aiKeyDesc": "Le foto vengono riconosciute sul telefono per impostazione predefinita. Aggiungi una chiave API Google Gemini gratuita per risultati più precisi e stime delle porzioni. Con una chiave, la foto viene inviata a Google — e nel piano gratuito Google può usarla per migliorare i propri modelli.",
+  "aiKeyLabel": "Chiave API Gemini",
+  "aiKeyGet": "Ottieni una chiave gratuita",
+  "geminiFailed": "Gemini non raggiungibile — usato il riconoscimento sul dispositivo.",
   "scanBarcode": "Scansiona codice a barre",
   "selectFood": "Seleziona alimento",
 

@@ -455,6 +455,23 @@ class AppLocalizationsDe extends AppLocalizations {
   String get barcodeField => 'Barcode (optional)';
 
   @override
+  String get settingsAi => 'KI-Erkennung';
+
+  @override
+  String get aiKeyDesc =>
+      'Fotos werden standardmäßig auf deinem Gerät erkannt. Füge einen kostenlosen Google-Gemini-API-Schlüssel hinzu für genauere Ergebnisse und Portionsschätzungen. Mit einem Schlüssel wird dein Foto an Google gesendet – und im kostenlosen Tarif kann Google es zur Verbesserung seiner Modelle verwenden.';
+
+  @override
+  String get aiKeyLabel => 'Gemini-API-Schlüssel';
+
+  @override
+  String get aiKeyGet => 'Kostenlosen Schlüssel holen';
+
+  @override
+  String get geminiFailed =>
+      'Gemini nicht erreichbar – Erkennung auf dem Gerät verwendet.';
+
+  @override
   String get scanBarcode => 'Barcode scannen';
 
   @override

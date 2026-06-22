@@ -11,6 +11,7 @@ import 'data/repositories/recipe_repository.dart';
 import 'data/backup_service.dart';
 import 'data/health/health_service.dart';
 import 'data/ml/food_classifier.dart';
+import 'data/ml/gemini_service.dart';
 import 'data/ocr/ocr_service.dart';
 import 'data/offline/offline_pack_service.dart';
 import 'data/offline/region_pack_store.dart';
@@ -88,6 +89,14 @@ final foodClassifierProvider = Provider<FoodClassifier>((ref) {
   final c = FoodClassifier();
   ref.onDispose(c.dispose);
   return c;
+});
+
+const geminiKeySetting = 'geminiApiKey';
+
+final geminiServiceProvider = Provider<GeminiService>((ref) {
+  final s = GeminiService();
+  ref.onDispose(s.dispose);
+  return s;
 });
 
 final healthSyncEnabledProvider = StreamProvider<bool>((ref) =>
