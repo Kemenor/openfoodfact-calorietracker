@@ -275,6 +275,7 @@ class _OcrMealScreenState extends ConsumerState<OcrMealScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.ocrReviewTitle)),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'ocrAddIngredientFab',
         onPressed: _addIngredient,
         icon: const Icon(Icons.add),
         label: Text(l10n.addIngredient),

@@ -124,6 +124,7 @@ class RecipesScreen extends ConsumerWidget {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'recipesNewFab',
         onPressed: showCreateMenu,
         icon: const Icon(Icons.add),
         label: Text(l10n.recipeNew),

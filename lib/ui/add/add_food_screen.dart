@@ -80,6 +80,7 @@ class AddFoodScreen extends ConsumerWidget {
         onQuickAdd: (name) => _quickAdd(context, ref, name),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'addFoodScanFab',
         onPressed: () => _scan(context, ref),
         icon: const Icon(Icons.qr_code_scanner),
         label: Text(l10n.scanBarcode),

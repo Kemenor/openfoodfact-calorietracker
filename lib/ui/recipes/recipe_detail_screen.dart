@@ -109,6 +109,7 @@ class _RecipeDetailScreenState extends ConsumerState<RecipeDetailScreen> {
       floatingActionButton: share == null
           ? null
           : FloatingActionButton.extended(
+              heroTag: 'recipeLogPortionFab',
               onPressed: () => _showLogPortion(context, share),
               icon: const Icon(Icons.event_available),
               label: Text(l10n.recipeLogPortion),
