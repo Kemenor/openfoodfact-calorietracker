@@ -127,6 +127,21 @@ class _RecipeDetailScreenState extends ConsumerState<RecipeDetailScreen> {
   }
 }
 
+/// Load a [recipe]'s ingredients and open the "log a portion to a day" sheet.
+/// Reused by the recipes-list swipe action.
+Future<void> showLogPortionForRecipe(
+    BuildContext context, WidgetRef ref, Recipe recipe) async {
+  final repo = ref.read(recipeRepositoryProvider);
+  final share = repo.toShare(recipe, await repo.items(recipe.id));
+  if (!context.mounted) return;
+  await showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    showDragHandle: true,
+    builder: (_) => _LogPortionSheet(share: share),
+  );
+}
+
 class _NutritionCard extends StatelessWidget {
   final RecipeShare share;
   const _NutritionCard({required this.share});

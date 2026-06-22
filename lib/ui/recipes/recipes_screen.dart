@@ -108,15 +108,58 @@ class RecipesScreen extends ConsumerWidget {
             separatorBuilder: (_, _) => const Divider(height: 1),
             itemBuilder: (context, i) {
               final r = recipes[i];
-              return ListTile(
-                leading: const Icon(Icons.menu_book_outlined),
-                title: Text(r.name),
-                subtitle: Text(l10n.recipeServings(r.servings
-                    .toStringAsFixed(
-                        r.servings == r.servings.roundToDouble() ? 0 : 1))),
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (_) => RecipeDetailScreen(recipe: r)),
+              final theme = Theme.of(context);
+              return Dismissible(
+                key: ValueKey('recipe-${r.id}'),
+                // Swipe → log a portion; swipe ← delete. Both perform their
+                // action and return false (the recipes stream redraws the list).
+                background: Container(
+                  color: theme.colorScheme.primaryContainer,
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Icon(Icons.event_available,
+                      color: theme.colorScheme.onPrimaryContainer),
+                ),
+                secondaryBackground: Container(
+                  color: theme.colorScheme.errorContainer,
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 20),
+                  child: Icon(Icons.delete_outline,
+                      color: theme.colorScheme.onErrorContainer),
+                ),
+                confirmDismiss: (dir) async {
+                  if (dir == DismissDirection.startToEnd) {
+                    await showLogPortionForRecipe(context, ref, r);
+                    return false;
+                  }
+                  final ok = await showDialog<bool>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: Text(l10n.recipeDeleteConfirm(r.name)),
+                      actions: [
+                        TextButton(
+                            onPressed: () => Navigator.pop(ctx, false),
+                            child: Text(l10n.actionCancel)),
+                        FilledButton(
+                            onPressed: () => Navigator.pop(ctx, true),
+                            child: Text(l10n.actionDelete)),
+                      ],
+                    ),
+                  );
+                  if (ok == true) {
+                    await ref.read(recipeRepositoryProvider).delete(r.id);
+                  }
+                  return false;
+                },
+                child: ListTile(
+                  leading: const Icon(Icons.menu_book_outlined),
+                  title: Text(r.name),
+                  subtitle: Text(l10n.recipeServings(r.servings.toStringAsFixed(
+                      r.servings == r.servings.roundToDouble() ? 0 : 1))),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (_) => RecipeDetailScreen(recipe: r)),
+                  ),
                 ),
               );
             },

@@ -57,6 +57,7 @@
   "editMealType": "Art der Mahlzeit",
   "editMealWhen": "Wann",
 
+  "recipeDeleteConfirm": "„{name}“ löschen?",
   "recipesTitle": "Rezepte",
   "recipesEmpty": "Noch keine Rezepte.\nErstelle eines, um Mahlzeiten wiederzuverwenden, zu teilen oder auf Vorrat zu kochen und auf mehrere Tage aufzuteilen.",
   "recipeNew": "Neues Rezept",

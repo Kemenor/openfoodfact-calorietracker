@@ -57,6 +57,7 @@
   "editMealType": "Type de repas",
   "editMealWhen": "Quand",
 
+  "recipeDeleteConfirm": "Supprimer « {name} » ?",
   "recipesTitle": "Recettes",
   "recipesEmpty": "Aucune recette pour l'instant.\nCréez-en une pour réutiliser des repas, les partager ou cuisiner en grande quantité et répartir sur plusieurs jours.",
   "recipeNew": "Nouvelle recette",

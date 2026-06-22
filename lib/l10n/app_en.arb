@@ -73,6 +73,8 @@
   "editMealType": "Meal type",
   "editMealWhen": "When",
 
+  "recipeDeleteConfirm": "Delete “{name}”?",
+  "@recipeDeleteConfirm": { "placeholders": { "name": { "type": "String" } } },
   "recipesTitle": "Recipes",
   "recipesEmpty": "No recipes yet.\nCreate one to reuse meals, share them, or batch-cook and split across days.",
   "recipeNew": "New recipe",

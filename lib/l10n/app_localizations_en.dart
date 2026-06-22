@@ -166,6 +166,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editMealWhen => 'When';
 
   @override
+  String recipeDeleteConfirm(String name) {
+    return 'Delete “$name”?';
+  }
+
+  @override
   String get recipesTitle => 'Recipes';
 
   @override

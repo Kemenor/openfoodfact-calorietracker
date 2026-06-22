@@ -384,6 +384,12 @@ abstract class AppLocalizations {
   /// **'When'**
   String get editMealWhen;
 
+  /// No description provided for @recipeDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete “{name}”?'**
+  String recipeDeleteConfirm(String name);
+
   /// No description provided for @recipesTitle.
   ///
   /// In en, this message translates to:

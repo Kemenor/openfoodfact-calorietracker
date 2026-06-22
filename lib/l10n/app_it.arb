@@ -57,6 +57,7 @@
   "editMealType": "Tipo di pasto",
   "editMealWhen": "Quando",
 
+  "recipeDeleteConfirm": "Eliminare “{name}”?",
   "recipesTitle": "Ricette",
   "recipesEmpty": "Ancora nessuna ricetta.\nCreane una per riutilizzare i pasti, condividerli o cucinare in grandi quantità e distribuire su più giorni.",
   "recipeNew": "Nuova ricetta",
