@@ -423,7 +423,7 @@ abstract class AppLocalizations {
   /// No description provided for @qrNotRecipe.
   ///
   /// In en, this message translates to:
-  /// **'That QR code is not a recipe.'**
+  /// **'That\'s not a valid recipe.'**
   String get qrNotRecipe;
 
   /// No description provided for @createBuildManually.
@@ -1025,6 +1025,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan this in another phone’s \"Import from QR\".'**
   String get shareScanHint;
+
+  /// No description provided for @shareAsImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Share image'**
+  String get shareAsImage;
+
+  /// No description provided for @createFromText.
+  ///
+  /// In en, this message translates to:
+  /// **'Import from text'**
+  String get createFromText;
+
+  /// No description provided for @createFromTextSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste a recipe you received'**
+  String get createFromTextSub;
+
+  /// No description provided for @importTextTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste recipe'**
+  String get importTextTitle;
+
+  /// No description provided for @importTextHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe code…'**
+  String get importTextHint;
 
   /// No description provided for @shareAsText.
   ///

@@ -63,7 +63,7 @@
   "recipeNew": "Neues Rezept",
   "recipeServings": "{count} Portionen",
   "recipeImported": "\"{name}\" importiert",
-  "qrNotRecipe": "Dieser QR-Code ist kein Rezept.",
+  "qrNotRecipe": "Das ist kein gültiges Rezept.",
 
   "createBuildManually": "Manuell erstellen",
   "createBuildManuallySub": "Zutaten einzeln hinzufügen",
@@ -182,6 +182,11 @@
 
   "shareTitle": "\"{name}\" teilen",
   "shareScanHint": "Scanne dies auf einem anderen Handy unter \"Aus QR importieren\".",
+  "shareAsImage": "Bild teilen",
+  "createFromText": "Aus Text importieren",
+  "createFromTextSub": "Ein erhaltenes Rezept einfügen",
+  "importTextTitle": "Rezept einfügen",
+  "importTextHint": "Rezept-Code…",
   "shareAsText": "Als Text teilen",
   "shareMeta": "{ingredients} Zutaten · {servings} Portionen · {bytes} Bytes",
   "shareSubject": "Rezept: {name}",

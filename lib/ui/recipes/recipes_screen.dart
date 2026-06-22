@@ -19,6 +19,19 @@ class RecipesScreen extends ConsumerWidget {
     final recipesAsync = ref.watch(recipesProvider);
     final l10n = AppLocalizations.of(context);
 
+    // Decode a shared payload (from QR or pasted text) and import it.
+    // [messenger] is captured before the await so there's no context-after-gap.
+    Future<void> applyImport(ScaffoldMessengerState messenger, String? text) async {
+      final share = text == null ? null : RecipeCodec.decode(text.trim());
+      if (share == null) {
+        messenger.showAutoSnackBar(SnackBar(content: Text(l10n.qrNotRecipe)));
+        return;
+      }
+      await ref.read(recipeRepositoryProvider).importShare(share);
+      messenger.showAutoSnackBar(
+          SnackBar(content: Text(l10n.recipeImported(share.name))));
+    }
+
     Future<void> importFromQr() async {
       final messenger = ScaffoldMessenger.of(context);
       final text = await Navigator.of(context).push<String>(
@@ -31,15 +44,37 @@ class RecipesScreen extends ConsumerWidget {
         ),
       );
       if (text == null) return;
-      final share = RecipeCodec.decode(text);
-      if (share == null) {
-        messenger.showAutoSnackBar(
-            SnackBar(content: Text(l10n.qrNotRecipe)));
-        return;
-      }
-      await ref.read(recipeRepositoryProvider).importShare(share);
-      messenger.showAutoSnackBar(
-          SnackBar(content: Text(l10n.recipeImported(share.name))));
+      await applyImport(messenger, text);
+    }
+
+    Future<void> importFromText() async {
+      final messenger = ScaffoldMessenger.of(context);
+      final controller = TextEditingController();
+      final text = await showDialog<String>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(l10n.importTextTitle),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            minLines: 2,
+            maxLines: 5,
+            decoration: InputDecoration(
+                hintText: l10n.importTextHint,
+                border: const OutlineInputBorder()),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: Text(l10n.actionCancel)),
+            FilledButton(
+                onPressed: () => Navigator.pop(ctx, controller.text),
+                child: Text(l10n.actionImport)),
+          ],
+        ),
+      );
+      if (text == null || text.trim().isEmpty) return;
+      await applyImport(messenger, text);
     }
 
     // One menu for every way to create a recipe, replacing the old bare FAB +
@@ -78,6 +113,15 @@ class RecipesScreen extends ConsumerWidget {
                 onTap: () {
                   Navigator.pop(sheetCtx);
                   importFromQr();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.content_paste),
+                title: Text(l10n.createFromText),
+                subtitle: Text(l10n.createFromTextSub),
+                onTap: () {
+                  Navigator.pop(sheetCtx);
+                  importFromText();
                 },
               ),
             ],

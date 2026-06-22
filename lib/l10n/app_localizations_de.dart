@@ -191,7 +191,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get qrNotRecipe => 'Dieser QR-Code ist kein Rezept.';
+  String get qrNotRecipe => 'Das ist kein gültiges Rezept.';
 
   @override
   String get createBuildManually => 'Manuell erstellen';
@@ -545,6 +545,21 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get shareScanHint =>
       'Scanne dies auf einem anderen Handy unter \"Aus QR importieren\".';
+
+  @override
+  String get shareAsImage => 'Bild teilen';
+
+  @override
+  String get createFromText => 'Aus Text importieren';
+
+  @override
+  String get createFromTextSub => 'Ein erhaltenes Rezept einfügen';
+
+  @override
+  String get importTextTitle => 'Rezept einfügen';
+
+  @override
+  String get importTextHint => 'Rezept-Code…';
 
   @override
   String get shareAsText => 'Als Text teilen';

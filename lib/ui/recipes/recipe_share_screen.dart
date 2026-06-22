@@ -1,18 +1,45 @@
+import 'dart:io';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../domain/recipe_share.dart';
 import '../../l10n/app_localizations.dart';
 
-/// Shows a scannable QR for the recipe plus a text/file share fallback.
+/// Shows a scannable QR for the recipe plus share-as-image and share-as-text.
 /// Fully serverless — the QR/payload is self-contained (calories + macros).
-class RecipeShareScreen extends StatelessWidget {
+class RecipeShareScreen extends StatefulWidget {
   final RecipeShare share;
   const RecipeShareScreen({super.key, required this.share});
 
   @override
+  State<RecipeShareScreen> createState() => _RecipeShareScreenState();
+}
+
+class _RecipeShareScreenState extends State<RecipeShareScreen> {
+  final _qrKey = GlobalKey();
+
+  Future<void> _shareImage(String subject) async {
+    final boundary =
+        _qrKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+    if (boundary == null) return;
+    final image = await boundary.toImage(pixelRatio: 3);
+    final data = await image.toByteData(format: ui.ImageByteFormat.png);
+    if (data == null) return;
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/recipe_qr.png');
+    await file.writeAsBytes(data.buffer.asUint8List());
+    await SharePlus.instance
+        .share(ShareParams(files: [XFile(file.path)], subject: subject));
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final share = widget.share;
     final payload = RecipeCodec.encode(share);
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
@@ -25,18 +52,21 @@ class RecipeShareScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: QrImageView(
-                  data: payload,
-                  version: QrVersions.auto,
-                  size: 260,
-                  // ignore: deprecated_member_use
-                  backgroundColor: Colors.white,
+              RepaintBoundary(
+                key: _qrKey,
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: QrImageView(
+                    data: payload,
+                    version: QrVersions.auto,
+                    size: 260,
+                    // ignore: deprecated_member_use
+                    backgroundColor: Colors.white,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -56,15 +86,30 @@ class RecipeShareScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
-              FilledButton.tonalIcon(
-                onPressed: () => SharePlus.instance.share(
-                  ShareParams(
-                    text: payload,
-                    subject: l10n.shareSubject(share.name),
+              Row(
+                children: [
+                  Expanded(
+                    child: FilledButton.tonalIcon(
+                      onPressed: () =>
+                          _shareImage(l10n.shareSubject(share.name)),
+                      icon: const Icon(Icons.image_outlined),
+                      label: Text(l10n.shareAsImage),
+                    ),
                   ),
-                ),
-                icon: const Icon(Icons.share),
-                label: Text(l10n.shareAsText),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: FilledButton.tonalIcon(
+                      onPressed: () => SharePlus.instance.share(
+                        ShareParams(
+                          text: payload,
+                          subject: l10n.shareSubject(share.name),
+                        ),
+                      ),
+                      icon: const Icon(Icons.notes),
+                      label: Text(l10n.shareAsText),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
