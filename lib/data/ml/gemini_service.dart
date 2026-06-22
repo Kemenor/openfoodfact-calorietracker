@@ -49,7 +49,13 @@ class GeminiService {
   final http.Client? _injected;
   GeminiService({http.Client? client}) : _injected = client;
 
-  Future<GeminiFoodResult?> recognizeFood(Uint8List bytes, String apiKey) async {
+  /// [onAttempt] fires at the start of each network attempt with its 1-based
+  /// number, so the UI can surface a live retry counter.
+  Future<GeminiFoodResult?> recognizeFood(
+    Uint8List bytes,
+    String apiKey, {
+    void Function(int attempt)? onAttempt,
+  }) async {
     final b64 = base64Encode(_downscaleJpeg(bytes));
     final uri = Uri.parse('$_base/$_model:generateContent?key=$apiKey');
     final body = jsonEncode({
@@ -85,6 +91,7 @@ class GeminiService {
     // overload (503) or timeout; any other failure falls straight through to
     // the on-device classifier.
     for (var attempt = 1; attempt <= 2; attempt++) {
+      onAttempt?.call(attempt);
       final client = _injected ?? http.Client();
       try {
         final resp = await client

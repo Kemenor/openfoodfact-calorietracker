@@ -1,5 +1,6 @@
-import 'dart:typed_data';
+import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -42,18 +43,22 @@ Future<bool> startRecognizeFoodFlow(
   final geminiKey = await ref.read(dbProvider).getSetting(geminiKeySetting);
   if (geminiKey != null && geminiKey.trim().isNotEmpty) {
     if (!context.mounted) return false;
+    final attempt = ValueNotifier<int>(1);
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
+      builder: (_) => _GeminiLoadingDialog(attempt: attempt),
     );
     GeminiFoodResult? r;
     try {
-      r = await ref
-          .read(geminiServiceProvider)
-          .recognizeFood(bytes, geminiKey.trim());
+      r = await ref.read(geminiServiceProvider).recognizeFood(
+            bytes,
+            geminiKey.trim(),
+            onAttempt: (n) => attempt.value = n,
+          );
     } catch (_) {}
     if (context.mounted) navigator.pop();
+    attempt.dispose();
     if (!context.mounted) return false;
     if (r != null) {
       return await showQuickAddSheet(context, ref,
@@ -112,6 +117,84 @@ Future<bool> startRecognizeFoodFlow(
       initialName: name,
       initialKcal: kcal);
   return added == true;
+}
+
+/// Loading dialog shown while polling Gemini. Cycles through reassuring status
+/// lines so a slow request doesn't look frozen, and shows a live retry counter
+/// (driven by [attempt]) when the request is retried after a transient error.
+class _GeminiLoadingDialog extends StatefulWidget {
+  final ValueListenable<int> attempt;
+  const _GeminiLoadingDialog({required this.attempt});
+
+  @override
+  State<_GeminiLoadingDialog> createState() => _GeminiLoadingDialogState();
+}
+
+class _GeminiLoadingDialogState extends State<_GeminiLoadingDialog> {
+  Timer? _timer;
+  int _step = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(milliseconds: 2200), (_) {
+      if (mounted) setState(() => _step++);
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+    final messages = [
+      l10n.geminiThinking1,
+      l10n.geminiThinking2,
+      l10n.geminiThinking3,
+      l10n.geminiThinking4,
+    ];
+    final msg = messages[_step % messages.length];
+    return Dialog(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(height: 22),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Text(
+                msg,
+                key: ValueKey(msg),
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyLarge,
+              ),
+            ),
+            ValueListenableBuilder<int>(
+              valueListenable: widget.attempt,
+              builder: (context, n, _) => n > 1
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Text(
+                        l10n.geminiRetrying(n),
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodySmall
+                            ?.copyWith(color: theme.colorScheme.error),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _GuessSheet extends StatelessWidget {

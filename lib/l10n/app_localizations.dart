@@ -906,6 +906,36 @@ abstract class AppLocalizations {
   /// **'Couldn\'t reach Gemini — used on-device recognition.'**
   String get geminiFailed;
 
+  /// No description provided for @geminiThinking1.
+  ///
+  /// In en, this message translates to:
+  /// **'Asking Gemini for calories…'**
+  String get geminiThinking1;
+
+  /// No description provided for @geminiThinking2.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimating calories from your photo…'**
+  String get geminiThinking2;
+
+  /// No description provided for @geminiThinking3.
+  ///
+  /// In en, this message translates to:
+  /// **'Identifying the dish…'**
+  String get geminiThinking3;
+
+  /// No description provided for @geminiThinking4.
+  ///
+  /// In en, this message translates to:
+  /// **'Working out the portion size…'**
+  String get geminiThinking4;
+
+  /// No description provided for @geminiRetrying.
+  ///
+  /// In en, this message translates to:
+  /// **'Server busy — retrying (attempt {n})…'**
+  String geminiRetrying(int n);
+
   /// No description provided for @scanBarcode.
   ///
   /// In en, this message translates to:

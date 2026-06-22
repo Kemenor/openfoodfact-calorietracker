@@ -469,6 +469,23 @@ class AppLocalizationsEn extends AppLocalizations {
       'Couldn\'t reach Gemini — used on-device recognition.';
 
   @override
+  String get geminiThinking1 => 'Asking Gemini for calories…';
+
+  @override
+  String get geminiThinking2 => 'Estimating calories from your photo…';
+
+  @override
+  String get geminiThinking3 => 'Identifying the dish…';
+
+  @override
+  String get geminiThinking4 => 'Working out the portion size…';
+
+  @override
+  String geminiRetrying(int n) {
+    return 'Server busy — retrying (attempt $n)…';
+  }
+
+  @override
   String get scanBarcode => 'Scan barcode';
 
   @override

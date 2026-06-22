@@ -472,6 +472,23 @@ class AppLocalizationsDe extends AppLocalizations {
       'Gemini nicht erreichbar – Erkennung auf dem Gerät verwendet.';
 
   @override
+  String get geminiThinking1 => 'Gemini wird nach Kalorien gefragt…';
+
+  @override
+  String get geminiThinking2 => 'Kalorien werden aus deinem Foto geschätzt…';
+
+  @override
+  String get geminiThinking3 => 'Gericht wird erkannt…';
+
+  @override
+  String get geminiThinking4 => 'Portionsgröße wird ermittelt…';
+
+  @override
+  String geminiRetrying(int n) {
+    return 'Server ausgelastet – neuer Versuch (Versuch $n)…';
+  }
+
+  @override
   String get scanBarcode => 'Barcode scannen';
 
   @override

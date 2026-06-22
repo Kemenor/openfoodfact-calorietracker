@@ -158,6 +158,14 @@
   "aiKeyLabel": "Gemini-API-Schlüssel",
   "aiKeyGet": "API-Schlüssel holen",
   "geminiFailed": "Gemini nicht erreichbar – Erkennung auf dem Gerät verwendet.",
+  "geminiThinking1": "Gemini wird nach Kalorien gefragt…",
+  "geminiThinking2": "Kalorien werden aus deinem Foto geschätzt…",
+  "geminiThinking3": "Gericht wird erkannt…",
+  "geminiThinking4": "Portionsgröße wird ermittelt…",
+  "geminiRetrying": "Server ausgelastet – neuer Versuch (Versuch {n})…",
+  "@geminiRetrying": {
+    "placeholders": { "n": { "type": "int" } }
+  },
   "scanBarcode": "Barcode scannen",
   "selectFood": "Lebensmittel auswählen",
 

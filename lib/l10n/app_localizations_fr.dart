@@ -473,6 +473,23 @@ class AppLocalizationsFr extends AppLocalizations {
       'Gemini injoignable — reconnaissance sur l\'appareil utilisée.';
 
   @override
+  String get geminiThinking1 => 'Demande des calories à Gemini…';
+
+  @override
+  String get geminiThinking2 => 'Estimation des calories d\'après votre photo…';
+
+  @override
+  String get geminiThinking3 => 'Identification du plat…';
+
+  @override
+  String get geminiThinking4 => 'Évaluation de la portion…';
+
+  @override
+  String geminiRetrying(int n) {
+    return 'Serveur occupé — nouvelle tentative ($n)…';
+  }
+
+  @override
   String get scanBarcode => 'Scanner un code-barres';
 
   @override

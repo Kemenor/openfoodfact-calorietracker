@@ -186,6 +186,14 @@
   "aiKeyLabel": "Gemini API key",
   "aiKeyGet": "Get an API key",
   "geminiFailed": "Couldn't reach Gemini — used on-device recognition.",
+  "geminiThinking1": "Asking Gemini for calories…",
+  "geminiThinking2": "Estimating calories from your photo…",
+  "geminiThinking3": "Identifying the dish…",
+  "geminiThinking4": "Working out the portion size…",
+  "geminiRetrying": "Server busy — retrying (attempt {n})…",
+  "@geminiRetrying": {
+    "placeholders": { "n": { "type": "int" } }
+  },
   "scanBarcode": "Scan barcode",
   "selectFood": "Select food",
 

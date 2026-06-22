@@ -158,6 +158,14 @@
   "aiKeyLabel": "Chiave API Gemini",
   "aiKeyGet": "Ottieni una chiave API",
   "geminiFailed": "Gemini non raggiungibile — usato il riconoscimento sul dispositivo.",
+  "geminiThinking1": "Richiesta delle calorie a Gemini…",
+  "geminiThinking2": "Stima delle calorie dalla tua foto…",
+  "geminiThinking3": "Identificazione del piatto…",
+  "geminiThinking4": "Calcolo della porzione…",
+  "geminiRetrying": "Server occupato — nuovo tentativo ({n})…",
+  "@geminiRetrying": {
+    "placeholders": { "n": { "type": "int" } }
+  },
   "scanBarcode": "Scansiona codice a barre",
   "selectFood": "Seleziona alimento",
 
