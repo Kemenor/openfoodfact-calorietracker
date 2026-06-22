@@ -147,10 +147,15 @@ class _RecipeEditScreenState extends ConsumerState<RecipeEditScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.recipe == null ? l10n.recipeNew : l10n.recipeEdit),
-        actions: [TextButton(onPressed: _save, child: Text(l10n.actionSave))],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'recipeSaveFab',
+        onPressed: _save,
+        icon: const Icon(Icons.check),
+        label: Text(l10n.actionSave),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 88),
         children: [
           TextField(
             controller: _name,
