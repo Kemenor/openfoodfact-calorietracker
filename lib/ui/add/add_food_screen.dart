@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/db/database.dart';
 import '../../domain/enums.dart';
+import '../../l10n/app_localizations.dart';
 import '../../providers.dart';
 import '../food/add_product_screen.dart';
 import '../food/food_search_list.dart';
@@ -63,12 +64,13 @@ class AddFoodScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add food'),
+        title: Text(l10n.dayAddFood),
         actions: [
           IconButton(
-            tooltip: 'Scan barcode',
+            tooltip: l10n.scanBarcode,
             icon: const Icon(Icons.qr_code_scanner),
             onPressed: () => _scan(context, ref),
           ),

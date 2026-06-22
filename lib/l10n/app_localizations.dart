@@ -431,6 +431,330 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan a shared recipe'**
   String get createFromQrSub;
+
+  /// No description provided for @genericError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String genericError(String error);
+
+  /// No description provided for @settingsTargets.
+  ///
+  /// In en, this message translates to:
+  /// **'Calorie targets'**
+  String get settingsTargets;
+
+  /// No description provided for @settingsTargetsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a minimum, a maximum, or both. A minimum helps if you need to make sure you eat enough. Leave blank to use the default.'**
+  String get settingsTargetsHelp;
+
+  /// No description provided for @settingsTargetDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get settingsTargetDefault;
+
+  /// No description provided for @settingsCustomizePerDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize per day'**
+  String get settingsCustomizePerDay;
+
+  /// No description provided for @settingsCustomizePerDaySub.
+  ///
+  /// In en, this message translates to:
+  /// **'Training days and weekends can differ'**
+  String get settingsCustomizePerDaySub;
+
+  /// No description provided for @settingsLogging.
+  ///
+  /// In en, this message translates to:
+  /// **'Logging'**
+  String get settingsLogging;
+
+  /// No description provided for @settingsMealTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal times'**
+  String get settingsMealTimes;
+
+  /// No description provided for @settingsMealTimesSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Names each meal by the time you log it'**
+  String get settingsMealTimesSub;
+
+  /// No description provided for @settingsMealTimesHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A new meal is named after the window its first item falls in (e.g. \"Breakfast 08:23\"). Anything outside these windows is a snack. You can always rename a meal.'**
+  String get settingsMealTimesHelp;
+
+  /// No description provided for @settingsFoodData.
+  ///
+  /// In en, this message translates to:
+  /// **'Food data'**
+  String get settingsFoodData;
+
+  /// No description provided for @settingsOfflineRegions.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline regions'**
+  String get settingsOfflineRegions;
+
+  /// No description provided for @settingsOfflineRegionsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Download country product databases for offline search'**
+  String get settingsOfflineRegionsSub;
+
+  /// No description provided for @settingsHealthConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Health Connect'**
+  String get settingsHealthConnect;
+
+  /// No description provided for @settingsHealthSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync to Health Connect'**
+  String get settingsHealthSync;
+
+  /// No description provided for @settingsHealthSyncSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Write logged calories & macros to Health Connect'**
+  String get settingsHealthSyncSub;
+
+  /// No description provided for @settingsHealthTimeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Entries sync at the time you logged them'**
+  String get settingsHealthTimeNote;
+
+  /// No description provided for @settingsHealthTimeNoteSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Back-date a meal from its ⋮ menu to change its time.'**
+  String get settingsHealthTimeNoteSub;
+
+  /// No description provided for @settingsDataBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Data & backup'**
+  String get settingsDataBackup;
+
+  /// No description provided for @settingsExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export backup'**
+  String get settingsExport;
+
+  /// No description provided for @settingsExportSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Share a .zip (JSON + CSV)'**
+  String get settingsExportSub;
+
+  /// No description provided for @settingsImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Import backup'**
+  String get settingsImport;
+
+  /// No description provided for @settingsImportSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from a .zip (replaces all data)'**
+  String get settingsImportSub;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get settingsAbout;
+
+  /// No description provided for @settingsAboutBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Ad-free, no subscriptions. Data from Open Food Facts and USDA FoodData Central.'**
+  String get settingsAboutBody;
+
+  /// No description provided for @offThanksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks to Open Food Facts'**
+  String get offThanksTitle;
+
+  /// No description provided for @offThanksBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Knabberfuchs is built on Open Food Facts — a free, open, crowdsourced food database kept alive by volunteers around the world. Without their work, this app simply would not exist.\n\nIf Knabberfuchs is useful to you, please consider supporting them.'**
+  String get offThanksBody;
+
+  /// No description provided for @offDonate.
+  ///
+  /// In en, this message translates to:
+  /// **'Donate to Open Food Facts'**
+  String get offDonate;
+
+  /// No description provided for @healthSyncOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Health Connect sync turned off.'**
+  String get healthSyncOff;
+
+  /// No description provided for @healthUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Health Connect is not available on this device.'**
+  String get healthUnavailable;
+
+  /// No description provided for @healthNoPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Health Connect permission was not granted.'**
+  String get healthNoPermission;
+
+  /// No description provided for @healthSyncOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Health Connect sync on — today pushed.'**
+  String get healthSyncOn;
+
+  /// No description provided for @backupExportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Export failed: {error}'**
+  String backupExportFailed(String error);
+
+  /// No description provided for @backupReplaceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace all data?'**
+  String get backupReplaceTitle;
+
+  /// No description provided for @backupReplaceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Importing will replace your current entries, custom foods, recipes, targets, and settings with the backup contents.'**
+  String get backupReplaceBody;
+
+  /// No description provided for @backupRestored.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup restored.'**
+  String get backupRestored;
+
+  /// No description provided for @backupImportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Import failed: {error}'**
+  String backupImportFailed(String error);
+
+  /// No description provided for @amountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amountLabel;
+
+  /// No description provided for @editEntryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit entry'**
+  String get editEntryTitle;
+
+  /// No description provided for @kcalPer100.
+  ///
+  /// In en, this message translates to:
+  /// **'{kcal} kcal / 100 g'**
+  String kcalPer100(String kcal);
+
+  /// No description provided for @volumeApprox.
+  ///
+  /// In en, this message translates to:
+  /// **'≈ {grams} g (assumes ~1 g/ml)'**
+  String volumeApprox(String grams);
+
+  /// No description provided for @oneServing.
+  ///
+  /// In en, this message translates to:
+  /// **'1 serving ({grams} g)'**
+  String oneServing(String grams);
+
+  /// No description provided for @searchFoodsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search foods…'**
+  String get searchFoodsHint;
+
+  /// No description provided for @searchRecentlyUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently used'**
+  String get searchRecentlyUsed;
+
+  /// No description provided for @createCustomFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Create custom food'**
+  String get createCustomFood;
+
+  /// No description provided for @searchEmptyPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for a food, scan a barcode,\nor create your own.'**
+  String get searchEmptyPrompt;
+
+  /// No description provided for @searchNoMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'No matches for \"{query}\".'**
+  String searchNoMatches(String query);
+
+  /// No description provided for @kcalPer100Short.
+  ///
+  /// In en, this message translates to:
+  /// **'{kcal} kcal\n/100 g'**
+  String kcalPer100Short(String kcal);
+
+  /// No description provided for @sourceOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Food Facts'**
+  String get sourceOff;
+
+  /// No description provided for @sourceUsda.
+  ///
+  /// In en, this message translates to:
+  /// **'USDA'**
+  String get sourceUsda;
+
+  /// No description provided for @sourceCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get sourceCustom;
+
+  /// No description provided for @sourceContributed.
+  ///
+  /// In en, this message translates to:
+  /// **'Added by you'**
+  String get sourceContributed;
+
+  /// No description provided for @scanBarcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan barcode'**
+  String get scanBarcode;
+
+  /// No description provided for @selectFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Select food'**
+  String get selectFood;
 }
 
 class _AppLocalizationsDelegate

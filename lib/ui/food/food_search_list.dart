@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/format.dart';
 import '../../data/db/database.dart';
 import '../../domain/enums.dart';
+import '../../l10n/app_localizations.dart';
 import '../../providers.dart';
 
 /// Reusable food search: instant local cache results as you type, plus a
@@ -88,6 +89,7 @@ class _FoodSearchListState extends ConsumerState<FoodSearchList> {
   @override
   Widget build(BuildContext context) {
     final results = _merged;
+    final l10n = AppLocalizations.of(context);
     return Column(
       children: [
         Padding(
@@ -97,7 +99,7 @@ class _FoodSearchListState extends ConsumerState<FoodSearchList> {
             autofocus: true,
             onChanged: _onChanged,
             decoration: InputDecoration(
-              hintText: 'Search foods…',
+              hintText: l10n.searchFoodsHint,
               prefixIcon: const Icon(Icons.search),
               suffixIcon: _searchingOnline
                   ? const Padding(
@@ -125,7 +127,7 @@ class _FoodSearchListState extends ConsumerState<FoodSearchList> {
             alignment: Alignment.centerLeft,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
-              child: Text('Recently used',
+              child: Text(l10n.searchRecentlyUsed,
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         color: Theme.of(context).colorScheme.outline,
                       )),
@@ -141,7 +143,7 @@ class _FoodSearchListState extends ConsumerState<FoodSearchList> {
                     if (i == results.length) {
                       return ListTile(
                         leading: const Icon(Icons.add),
-                        title: const Text('Create custom food'),
+                        title: Text(l10n.createCustomFood),
                         onTap: widget.onCreateCustom,
                       );
                     }
@@ -162,19 +164,20 @@ class _FoodTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final parts = <String>[
       if (food.brand != null && food.brand!.isNotEmpty) food.brand!,
       switch (food.source) {
-        FoodSource.openFoodFacts => 'Open Food Facts',
-        FoodSource.usda => 'USDA',
-        FoodSource.custom => 'Custom',
-        FoodSource.userContributed => 'Added by you',
+        FoodSource.openFoodFacts => l10n.sourceOff,
+        FoodSource.usda => l10n.sourceUsda,
+        FoodSource.custom => l10n.sourceCustom,
+        FoodSource.userContributed => l10n.sourceContributed,
       },
     ];
     return ListTile(
       title: Text(food.name, maxLines: 1, overflow: TextOverflow.ellipsis),
       subtitle: Text(parts.join(' · ')),
-      trailing: Text('${kcalStr(food.kcal100)} kcal\n/100 g',
+      trailing: Text(l10n.kcalPer100Short(kcalStr(food.kcal100)),
           textAlign: TextAlign.right,
           style: Theme.of(context).textTheme.bodySmall),
       onTap: onTap,
@@ -189,6 +192,7 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -198,8 +202,8 @@ class _EmptyState extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             query.isEmpty
-                ? 'Search for a food, scan a barcode,\nor create your own.'
-                : 'No matches for "$query".',
+                ? l10n.searchEmptyPrompt
+                : l10n.searchNoMatches(query),
             textAlign: TextAlign.center,
           ),
           if (onCreate != null) ...[
@@ -207,7 +211,7 @@ class _EmptyState extends StatelessWidget {
             FilledButton.tonalIcon(
               onPressed: onCreate,
               icon: const Icon(Icons.add),
-              label: const Text('Create custom food'),
+              label: Text(l10n.createCustomFood),
             ),
           ],
         ],

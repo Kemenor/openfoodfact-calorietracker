@@ -26,11 +26,12 @@ class SettingsScreen extends ConsumerWidget {
     final healthSync =
         ref.watch(healthSyncEnabledProvider).asData?.value ?? false;
 
+    final l10nTop = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l10nTop.navSettings)),
       body: targetsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => Center(child: Text(l10nTop.genericError('$e'))),
         data: (targets) {
           final l10n = AppLocalizations.of(context);
           Target rowFor(int wd) => targets.firstWhere((t) => t.weekday == wd);
@@ -39,16 +40,13 @@ class SettingsScreen extends ConsumerWidget {
               _SectionHeader(l10n.settingsSectionLanguage),
               const _LanguagePicker(),
               const Divider(),
-              const _SectionHeader('Calorie targets'),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
-                child: Text(
-                  'Set a minimum, a maximum, or both. A minimum helps if you '
-                  'need to make sure you eat enough. Leave blank to use the default.',
-                ),
+              _SectionHeader(l10n.settingsTargets),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: Text(l10n.settingsTargetsHelp),
               ),
               _TargetRow(
-                label: 'Default',
+                label: l10n.settingsTargetDefault,
                 keyPrefix: 'default',
                 initialMin: defaultMin,
                 initialMax: defaultMax,
@@ -60,8 +58,8 @@ class SettingsScreen extends ConsumerWidget {
               const SizedBox(height: 8),
               ExpansionTile(
                 leading: const Icon(Icons.event_repeat),
-                title: const Text('Customize per day'),
-                subtitle: const Text('Training days and weekends can differ'),
+                title: Text(l10n.settingsCustomizePerDay),
+                subtitle: Text(l10n.settingsCustomizePerDaySub),
                 childrenPadding: const EdgeInsets.only(bottom: 8),
                 children: [
                   for (var wd = 0; wd < 7; wd++)
@@ -80,79 +78,72 @@ class SettingsScreen extends ConsumerWidget {
                 ],
               ),
               const Divider(),
-              const _SectionHeader('Logging'),
+              _SectionHeader(l10n.settingsLogging),
               ExpansionTile(
                 leading: const Icon(Icons.schedule),
-                title: const Text('Meal times'),
-                subtitle: const Text('Names each meal by the time you log it'),
+                title: Text(l10n.settingsMealTimes),
+                subtitle: Text(l10n.settingsMealTimesSub),
                 childrenPadding: const EdgeInsets.only(bottom: 8),
-                children: const [
+                children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
-                    child: Text(
-                        'A new meal is named after the window its first item '
-                        'falls in (e.g. "Breakfast 08:23"). Anything outside '
-                        'these windows is a snack. You can always rename a meal.'),
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                    child: Text(l10n.settingsMealTimesHelp),
                   ),
-                  _MealTimeRow(meal: MealType.breakfast),
-                  _MealTimeRow(meal: MealType.lunch),
-                  _MealTimeRow(meal: MealType.dinner),
+                  const _MealTimeRow(meal: MealType.breakfast),
+                  const _MealTimeRow(meal: MealType.lunch),
+                  const _MealTimeRow(meal: MealType.dinner),
                 ],
               ),
               const Divider(),
-              const _SectionHeader('Food data'),
+              _SectionHeader(l10n.settingsFoodData),
               ListTile(
                 leading: const Icon(Icons.public),
-                title: const Text('Offline regions'),
-                subtitle: const Text(
-                    'Download country product databases for offline search'),
+                title: Text(l10n.settingsOfflineRegions),
+                subtitle: Text(l10n.settingsOfflineRegionsSub),
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => const OfflineRegionsScreen())),
               ),
               const Divider(),
-              const _SectionHeader('Health Connect'),
+              _SectionHeader(l10n.settingsHealthConnect),
               SwitchListTile(
                 secondary: const Icon(Icons.favorite_border),
-                title: const Text('Sync to Health Connect'),
-                subtitle: const Text(
-                    'Write logged calories & macros to Health Connect'),
+                title: Text(l10n.settingsHealthSync),
+                subtitle: Text(l10n.settingsHealthSyncSub),
                 value: healthSync,
                 onChanged: (v) => _toggleHealthSync(context, ref, v),
               ),
               if (healthSync)
-                const ListTile(
-                  leading: Icon(Icons.info_outline),
+                ListTile(
+                  leading: const Icon(Icons.info_outline),
                   dense: true,
-                  title: Text('Entries sync at the time you logged them'),
-                  subtitle: Text(
-                      'Back-date a meal from its ⋮ menu to change its time.'),
+                  title: Text(l10n.settingsHealthTimeNote),
+                  subtitle: Text(l10n.settingsHealthTimeNoteSub),
                 ),
               const Divider(),
-              const _SectionHeader('Data & backup'),
+              _SectionHeader(l10n.settingsDataBackup),
               ListTile(
                 leading: const Icon(Icons.upload_outlined),
-                title: const Text('Export backup'),
-                subtitle: const Text('Share a .zip (JSON + CSV)'),
+                title: Text(l10n.settingsExport),
+                subtitle: Text(l10n.settingsExportSub),
                 onTap: () => _exportBackup(context, ref),
               ),
               ListTile(
                 leading: const Icon(Icons.download_outlined),
-                title: const Text('Import backup'),
-                subtitle: const Text('Restore from a .zip (replaces all data)'),
+                title: Text(l10n.settingsImport),
+                subtitle: Text(l10n.settingsImportSub),
                 onTap: () => _importBackup(context, ref),
               ),
               const Divider(),
-              const _SectionHeader('About'),
-              const AboutListTile(
-                icon: Icon(Icons.info_outline),
+              _SectionHeader(l10n.settingsAbout),
+              AboutListTile(
+                icon: const Icon(Icons.info_outline),
                 applicationName: 'Knabberfuchs',
                 applicationVersion: '0.1.0',
                 aboutBoxChildren: [
-                  SizedBox(height: 4),
-                  Text('Ad-free, no subscriptions. Data from Open Food Facts '
-                      'and USDA FoodData Central.'),
-                  SizedBox(height: 20),
-                  _OpenFoodFactsThanks(),
+                  const SizedBox(height: 4),
+                  Text(l10n.settingsAboutBody),
+                  const SizedBox(height: 20),
+                  const _OpenFoodFactsThanks(),
                 ],
               ),
             ],
@@ -166,6 +157,7 @@ class SettingsScreen extends ConsumerWidget {
 Future<void> _toggleHealthSync(
     BuildContext context, WidgetRef ref, bool value) async {
   final messenger = ScaffoldMessenger.of(context);
+  final l10n = AppLocalizations.of(context);
   final db = ref.read(dbProvider);
   final health = ref.read(healthServiceProvider);
 
@@ -173,19 +165,19 @@ Future<void> _toggleHealthSync(
     await db.setSetting('healthSync', 'false');
     await health.refreshEnabled(db);
     messenger.showAutoSnackBar(
-        const SnackBar(content: Text('Health Connect sync turned off.')));
+        SnackBar(content: Text(l10n.healthSyncOff)));
     return;
   }
 
   if (!await health.isAvailable()) {
-    messenger.showAutoSnackBar(const SnackBar(
-        content: Text('Health Connect is not available on this device.')));
+    messenger.showAutoSnackBar(
+        SnackBar(content: Text(l10n.healthUnavailable)));
     return;
   }
   final granted = await health.requestPermissions();
   if (!granted) {
-    messenger.showAutoSnackBar(const SnackBar(
-        content: Text('Health Connect permission was not granted.')));
+    messenger.showAutoSnackBar(
+        SnackBar(content: Text(l10n.healthNoPermission)));
     return;
   }
   await db.setSetting('healthSync', 'true');
@@ -193,21 +185,23 @@ Future<void> _toggleHealthSync(
   // Sync the selected day immediately so the user sees data right away.
   final day = ref.read(selectedDayProvider);
   await health.syncDay(day, await db.watchDay(day).first);
-  messenger.showAutoSnackBar(const SnackBar(
-      content: Text('Health Connect sync on — today pushed.')));
+  messenger.showAutoSnackBar(SnackBar(content: Text(l10n.healthSyncOn)));
 }
 
 Future<void> _exportBackup(BuildContext context, WidgetRef ref) async {
   final messenger = ScaffoldMessenger.of(context);
+  final l10n = AppLocalizations.of(context);
   try {
     await ref.read(backupServiceProvider).shareBackup();
   } catch (e) {
-    messenger.showAutoSnackBar(SnackBar(content: Text('Export failed: $e')));
+    messenger
+        .showAutoSnackBar(SnackBar(content: Text(l10n.backupExportFailed('$e'))));
   }
 }
 
 Future<void> _importBackup(BuildContext context, WidgetRef ref) async {
   final messenger = ScaffoldMessenger.of(context);
+  final l10n = AppLocalizations.of(context);
   final file = await openFile(
     acceptedTypeGroups: [
       const XTypeGroup(label: 'Backup', extensions: ['zip']),
@@ -218,17 +212,15 @@ Future<void> _importBackup(BuildContext context, WidgetRef ref) async {
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (ctx) => AlertDialog(
-      title: const Text('Replace all data?'),
-      content: const Text(
-          'Importing will replace your current entries, custom foods, '
-          'recipes, targets, and settings with the backup contents.'),
+      title: Text(l10n.backupReplaceTitle),
+      content: Text(l10n.backupReplaceBody),
       actions: [
         TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel')),
+            child: Text(l10n.actionCancel)),
         FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Import')),
+            child: Text(l10n.actionImport)),
       ],
     ),
   );
@@ -236,9 +228,11 @@ Future<void> _importBackup(BuildContext context, WidgetRef ref) async {
 
   try {
     await ref.read(backupServiceProvider).restoreFromZip(file.path);
-    messenger.showAutoSnackBar(const SnackBar(content: Text('Backup restored.')));
+    messenger
+        .showAutoSnackBar(SnackBar(content: Text(l10n.backupRestored)));
   } catch (e) {
-    messenger.showAutoSnackBar(SnackBar(content: Text('Import failed: $e')));
+    messenger
+        .showAutoSnackBar(SnackBar(content: Text(l10n.backupImportFailed('$e'))));
   }
 }
 
@@ -253,6 +247,7 @@ class _OpenFoodFactsThanks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -260,18 +255,13 @@ class _OpenFoodFactsThanks extends StatelessWidget {
           children: [
             Icon(Icons.favorite, size: 18, color: theme.colorScheme.primary),
             const SizedBox(width: 6),
-            Text('Thanks to Open Food Facts',
+            Text(l10n.offThanksTitle,
                 style: theme.textTheme.titleSmall
                     ?.copyWith(fontWeight: FontWeight.bold)),
           ],
         ),
         const SizedBox(height: 6),
-        const Text(
-          'Knabberfuchs is built on Open Food Facts — a free, open, '
-          'crowdsourced food database kept alive by volunteers around the '
-          'world. Without their work, this app simply would not exist.\n\n'
-          'If Knabberfuchs is useful to you, please consider supporting them.',
-        ),
+        Text(l10n.offThanksBody),
         const SizedBox(height: 8),
         Align(
           alignment: Alignment.centerLeft,
@@ -279,7 +269,7 @@ class _OpenFoodFactsThanks extends StatelessWidget {
             onPressed: () =>
                 launchUrl(_donateUrl, mode: LaunchMode.externalApplication),
             icon: const Icon(Icons.favorite_border, size: 18),
-            label: const Text('Donate to Open Food Facts'),
+            label: Text(l10n.offDonate),
           ),
         ),
       ],

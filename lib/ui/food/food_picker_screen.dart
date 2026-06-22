@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../data/db/database.dart';
+import '../../l10n/app_localizations.dart';
 import '../../providers.dart';
 import '../scan/scan_screen.dart';
 import 'add_product_screen.dart';
@@ -13,8 +14,8 @@ import 'offline_reminder.dart';
 /// Search / scan / create a single food and pop it. Used to match an OCR
 /// ingredient or add a recipe ingredient.
 class FoodPickerScreen extends ConsumerWidget {
-  final String title;
-  const FoodPickerScreen({super.key, this.title = 'Select food'});
+  final String? title;
+  const FoodPickerScreen({super.key, this.title});
 
   Future<void> _scan(BuildContext context, WidgetRef ref) async {
     final barcode = await Navigator.of(context).push<String>(MaterialPageRoute(
@@ -48,12 +49,13 @@ class FoodPickerScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(title ?? l10n.selectFood),
         actions: [
           IconButton(
-            tooltip: 'Scan barcode',
+            tooltip: l10n.scanBarcode,
             icon: const Icon(Icons.qr_code_scanner),
             onPressed: () => _scan(context, ref),
           ),

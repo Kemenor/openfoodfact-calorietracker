@@ -6,6 +6,7 @@ import '../../core/format.dart';
 import '../../data/db/database.dart';
 import '../../domain/enums.dart';
 import '../../domain/units.dart';
+import '../../l10n/app_localizations.dart';
 import '../../providers.dart';
 
 /// Sheet to log a catalog [food] into [day]. [meal] is the inferred meal tag
@@ -23,8 +24,8 @@ Future<bool?> showLogFoodSheet(
     isScrollControlled: true,
     showDragHandle: true,
     builder: (_) => _LogSheet(
-      title: 'Add food',
-      submitLabel: 'Add',
+      title: AppLocalizations.of(context).dayAddFood,
+      submitLabel: AppLocalizations.of(context).actionAdd,
       name: food.name,
       brand: food.brand,
       kcal100: food.kcal100,
@@ -58,7 +59,7 @@ Future<double?> showAmountSheet(
   double? servingG,
   String? servingLabel,
   double? initialGrams,
-  String submitLabel = 'Add',
+  String? submitLabel,
 }) async {
   double? result;
   final ok = await showModalBottomSheet<bool>(
@@ -66,8 +67,8 @@ Future<double?> showAmountSheet(
     isScrollControlled: true,
     showDragHandle: true,
     builder: (_) => _LogSheet(
-      title: 'Amount',
-      submitLabel: submitLabel,
+      title: AppLocalizations.of(context).amountLabel,
+      submitLabel: submitLabel ?? AppLocalizations.of(context).actionAdd,
       name: name,
       brand: brand,
       kcal100: kcal100,
@@ -91,8 +92,8 @@ void showEditEntrySheet(BuildContext context, WidgetRef ref, Entry entry) {
     isScrollControlled: true,
     showDragHandle: true,
     builder: (_) => _LogSheet(
-      title: 'Edit entry',
-      submitLabel: 'Save',
+      title: AppLocalizations.of(context).editEntryTitle,
+      submitLabel: AppLocalizations.of(context).actionSave,
       name: entry.sName,
       brand: null,
       kcal100: entry.sKcal100,
@@ -179,6 +180,7 @@ class _LogSheetState extends State<_LogSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final grams = _grams;
     final kcal = widget.kcal100 * grams / 100;
 
@@ -200,7 +202,7 @@ class _LogSheetState extends State<_LogSheet> {
           if (widget.brand != null)
             Text(widget.brand!, style: theme.textTheme.bodySmall),
           const SizedBox(height: 4),
-          Text('${kcalStr(widget.kcal100)} kcal / 100 g',
+          Text(l10n.kcalPer100(kcalStr(widget.kcal100)),
               style: theme.textTheme.bodySmall),
           const SizedBox(height: 16),
           Row(
@@ -215,7 +217,7 @@ class _LogSheetState extends State<_LogSheet> {
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
                   ],
                   decoration: InputDecoration(
-                    labelText: 'Amount',
+                    labelText: l10n.amountLabel,
                     suffixText: _unit.label,
                     border: const OutlineInputBorder(),
                   ),
@@ -229,7 +231,7 @@ class _LogSheetState extends State<_LogSheet> {
                   Text(kcalStr(kcal),
                       style: theme.textTheme.headlineSmall
                           ?.copyWith(fontWeight: FontWeight.bold)),
-                  Text('kcal', style: theme.textTheme.bodySmall),
+                  Text(l10n.unitKcal, style: theme.textTheme.bodySmall),
                 ],
               ),
             ],
@@ -253,7 +255,7 @@ class _LogSheetState extends State<_LogSheet> {
           if (_unit.isVolume)
             Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: Text('≈ ${gramsStr(grams)} g (assumes ~1 g/ml)',
+              child: Text(l10n.volumeApprox(gramsStr(grams)),
                   style: theme.textTheme.bodySmall),
             ),
           const SizedBox(height: 12),
@@ -267,7 +269,7 @@ class _LogSheetState extends State<_LogSheet> {
                 ),
               if (_unit == AmountUnit.grams && widget.servingG != null)
                 ActionChip(
-                  label: Text('1 serving (${gramsStr(widget.servingG!)} g)'),
+                  label: Text(l10n.oneServing(gramsStr(widget.servingG!))),
                   onPressed: () => _setGrams(widget.servingG!),
                 ),
             ],
@@ -282,7 +284,7 @@ class _LogSheetState extends State<_LogSheet> {
                     if (context.mounted) Navigator.of(context).pop();
                   },
                   icon: const Icon(Icons.delete_outline),
-                  label: const Text('Delete'),
+                  label: Text(l10n.actionDelete),
                   style: TextButton.styleFrom(
                       foregroundColor: theme.colorScheme.error),
                 ),

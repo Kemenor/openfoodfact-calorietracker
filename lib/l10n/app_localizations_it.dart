@@ -193,4 +193,194 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get createFromQrSub => 'Scan a shared recipe';
+
+  @override
+  String genericError(String error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get settingsTargets => 'Calorie targets';
+
+  @override
+  String get settingsTargetsHelp =>
+      'Set a minimum, a maximum, or both. A minimum helps if you need to make sure you eat enough. Leave blank to use the default.';
+
+  @override
+  String get settingsTargetDefault => 'Default';
+
+  @override
+  String get settingsCustomizePerDay => 'Customize per day';
+
+  @override
+  String get settingsCustomizePerDaySub =>
+      'Training days and weekends can differ';
+
+  @override
+  String get settingsLogging => 'Logging';
+
+  @override
+  String get settingsMealTimes => 'Meal times';
+
+  @override
+  String get settingsMealTimesSub => 'Names each meal by the time you log it';
+
+  @override
+  String get settingsMealTimesHelp =>
+      'A new meal is named after the window its first item falls in (e.g. \"Breakfast 08:23\"). Anything outside these windows is a snack. You can always rename a meal.';
+
+  @override
+  String get settingsFoodData => 'Food data';
+
+  @override
+  String get settingsOfflineRegions => 'Offline regions';
+
+  @override
+  String get settingsOfflineRegionsSub =>
+      'Download country product databases for offline search';
+
+  @override
+  String get settingsHealthConnect => 'Health Connect';
+
+  @override
+  String get settingsHealthSync => 'Sync to Health Connect';
+
+  @override
+  String get settingsHealthSyncSub =>
+      'Write logged calories & macros to Health Connect';
+
+  @override
+  String get settingsHealthTimeNote =>
+      'Entries sync at the time you logged them';
+
+  @override
+  String get settingsHealthTimeNoteSub =>
+      'Back-date a meal from its ⋮ menu to change its time.';
+
+  @override
+  String get settingsDataBackup => 'Data & backup';
+
+  @override
+  String get settingsExport => 'Export backup';
+
+  @override
+  String get settingsExportSub => 'Share a .zip (JSON + CSV)';
+
+  @override
+  String get settingsImport => 'Import backup';
+
+  @override
+  String get settingsImportSub => 'Restore from a .zip (replaces all data)';
+
+  @override
+  String get settingsAbout => 'About';
+
+  @override
+  String get settingsAboutBody =>
+      'Ad-free, no subscriptions. Data from Open Food Facts and USDA FoodData Central.';
+
+  @override
+  String get offThanksTitle => 'Thanks to Open Food Facts';
+
+  @override
+  String get offThanksBody =>
+      'Knabberfuchs is built on Open Food Facts — a free, open, crowdsourced food database kept alive by volunteers around the world. Without their work, this app simply would not exist.\n\nIf Knabberfuchs is useful to you, please consider supporting them.';
+
+  @override
+  String get offDonate => 'Donate to Open Food Facts';
+
+  @override
+  String get healthSyncOff => 'Health Connect sync turned off.';
+
+  @override
+  String get healthUnavailable =>
+      'Health Connect is not available on this device.';
+
+  @override
+  String get healthNoPermission => 'Health Connect permission was not granted.';
+
+  @override
+  String get healthSyncOn => 'Health Connect sync on — today pushed.';
+
+  @override
+  String backupExportFailed(String error) {
+    return 'Export failed: $error';
+  }
+
+  @override
+  String get backupReplaceTitle => 'Replace all data?';
+
+  @override
+  String get backupReplaceBody =>
+      'Importing will replace your current entries, custom foods, recipes, targets, and settings with the backup contents.';
+
+  @override
+  String get backupRestored => 'Backup restored.';
+
+  @override
+  String backupImportFailed(String error) {
+    return 'Import failed: $error';
+  }
+
+  @override
+  String get amountLabel => 'Amount';
+
+  @override
+  String get editEntryTitle => 'Edit entry';
+
+  @override
+  String kcalPer100(String kcal) {
+    return '$kcal kcal / 100 g';
+  }
+
+  @override
+  String volumeApprox(String grams) {
+    return '≈ $grams g (assumes ~1 g/ml)';
+  }
+
+  @override
+  String oneServing(String grams) {
+    return '1 serving ($grams g)';
+  }
+
+  @override
+  String get searchFoodsHint => 'Search foods…';
+
+  @override
+  String get searchRecentlyUsed => 'Recently used';
+
+  @override
+  String get createCustomFood => 'Create custom food';
+
+  @override
+  String get searchEmptyPrompt =>
+      'Search for a food, scan a barcode,\nor create your own.';
+
+  @override
+  String searchNoMatches(String query) {
+    return 'No matches for \"$query\".';
+  }
+
+  @override
+  String kcalPer100Short(String kcal) {
+    return '$kcal kcal\n/100 g';
+  }
+
+  @override
+  String get sourceOff => 'Open Food Facts';
+
+  @override
+  String get sourceUsda => 'USDA';
+
+  @override
+  String get sourceCustom => 'Custom';
+
+  @override
+  String get sourceContributed => 'Added by you';
+
+  @override
+  String get scanBarcode => 'Scan barcode';
+
+  @override
+  String get selectFood => 'Select food';
 }

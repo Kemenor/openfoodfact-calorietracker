@@ -82,5 +82,80 @@
   "createFromList": "From an ingredient list",
   "createFromListSub": "Photograph a printed list — save it or log it as a meal",
   "createFromQr": "Import from QR code",
-  "createFromQrSub": "Scan a shared recipe"
+  "createFromQrSub": "Scan a shared recipe",
+
+  "genericError": "Error: {error}",
+  "@genericError": { "placeholders": { "error": { "type": "String" } } },
+
+  "settingsTargets": "Calorie targets",
+  "settingsTargetsHelp": "Set a minimum, a maximum, or both. A minimum helps if you need to make sure you eat enough. Leave blank to use the default.",
+  "settingsTargetDefault": "Default",
+  "settingsCustomizePerDay": "Customize per day",
+  "settingsCustomizePerDaySub": "Training days and weekends can differ",
+
+  "settingsLogging": "Logging",
+  "settingsMealTimes": "Meal times",
+  "settingsMealTimesSub": "Names each meal by the time you log it",
+  "settingsMealTimesHelp": "A new meal is named after the window its first item falls in (e.g. \"Breakfast 08:23\"). Anything outside these windows is a snack. You can always rename a meal.",
+
+  "settingsFoodData": "Food data",
+  "settingsOfflineRegions": "Offline regions",
+  "settingsOfflineRegionsSub": "Download country product databases for offline search",
+
+  "settingsHealthConnect": "Health Connect",
+  "settingsHealthSync": "Sync to Health Connect",
+  "settingsHealthSyncSub": "Write logged calories & macros to Health Connect",
+  "settingsHealthTimeNote": "Entries sync at the time you logged them",
+  "settingsHealthTimeNoteSub": "Back-date a meal from its ⋮ menu to change its time.",
+
+  "settingsDataBackup": "Data & backup",
+  "settingsExport": "Export backup",
+  "settingsExportSub": "Share a .zip (JSON + CSV)",
+  "settingsImport": "Import backup",
+  "settingsImportSub": "Restore from a .zip (replaces all data)",
+
+  "settingsAbout": "About",
+  "settingsAboutBody": "Ad-free, no subscriptions. Data from Open Food Facts and USDA FoodData Central.",
+  "offThanksTitle": "Thanks to Open Food Facts",
+  "offThanksBody": "Knabberfuchs is built on Open Food Facts — a free, open, crowdsourced food database kept alive by volunteers around the world. Without their work, this app simply would not exist.\n\nIf Knabberfuchs is useful to you, please consider supporting them.",
+  "offDonate": "Donate to Open Food Facts",
+
+  "healthSyncOff": "Health Connect sync turned off.",
+  "healthUnavailable": "Health Connect is not available on this device.",
+  "healthNoPermission": "Health Connect permission was not granted.",
+  "healthSyncOn": "Health Connect sync on — today pushed.",
+
+  "backupExportFailed": "Export failed: {error}",
+  "@backupExportFailed": { "placeholders": { "error": { "type": "String" } } },
+  "backupReplaceTitle": "Replace all data?",
+  "backupReplaceBody": "Importing will replace your current entries, custom foods, recipes, targets, and settings with the backup contents.",
+  "backupRestored": "Backup restored.",
+  "backupImportFailed": "Import failed: {error}",
+  "@backupImportFailed": { "placeholders": { "error": { "type": "String" } } },
+
+  "amountLabel": "Amount",
+  "editEntryTitle": "Edit entry",
+  "kcalPer100": "{kcal} kcal / 100 g",
+  "@kcalPer100": { "placeholders": { "kcal": { "type": "String" } } },
+  "volumeApprox": "≈ {grams} g (assumes ~1 g/ml)",
+  "@volumeApprox": { "placeholders": { "grams": { "type": "String" } } },
+  "oneServing": "1 serving ({grams} g)",
+  "@oneServing": { "placeholders": { "grams": { "type": "String" } } },
+
+  "searchFoodsHint": "Search foods…",
+  "searchRecentlyUsed": "Recently used",
+  "createCustomFood": "Create custom food",
+  "searchEmptyPrompt": "Search for a food, scan a barcode,\nor create your own.",
+  "searchNoMatches": "No matches for \"{query}\".",
+  "@searchNoMatches": { "placeholders": { "query": { "type": "String" } } },
+  "kcalPer100Short": "{kcal} kcal\n/100 g",
+  "@kcalPer100Short": { "placeholders": { "kcal": { "type": "String" } } },
+
+  "sourceOff": "Open Food Facts",
+  "sourceUsda": "USDA",
+  "sourceCustom": "Custom",
+  "sourceContributed": "Added by you",
+
+  "scanBarcode": "Scan barcode",
+  "selectFood": "Select food"
 }
