@@ -143,6 +143,17 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, Food> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _densityGPerMlMeta = const VerificationMeta(
+    'densityGPerMl',
+  );
+  @override
+  late final GeneratedColumn<double> densityGPerMl = GeneratedColumn<double>(
+    'density_g_per_ml',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _kcal100Meta = const VerificationMeta(
     'kcal100',
   );
@@ -316,6 +327,7 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, Food> {
     searchText,
     servingG,
     servingLabel,
+    densityGPerMl,
     kcal100,
     protein100,
     carb100,
@@ -414,6 +426,15 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, Food> {
         servingLabel.isAcceptableOrUnknown(
           data['serving_label']!,
           _servingLabelMeta,
+        ),
+      );
+    }
+    if (data.containsKey('density_g_per_ml')) {
+      context.handle(
+        _densityGPerMlMeta,
+        densityGPerMl.isAcceptableOrUnknown(
+          data['density_g_per_ml']!,
+          _densityGPerMlMeta,
         ),
       );
     }
@@ -576,6 +597,10 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, Food> {
         DriftSqlType.string,
         data['${effectivePrefix}serving_label'],
       ),
+      densityGPerMl: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}density_g_per_ml'],
+      ),
       kcal100: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}kcal100'],
@@ -668,6 +693,10 @@ class Food extends DataClass implements Insertable<Food> {
   /// Optional serving size for the "1 serving = N g" quick-pick chips.
   final double? servingG;
   final String? servingLabel;
+
+  /// Density in g/ml for liquids, so volume units (ml/cup/tbsp) convert
+  /// accurately (e.g. oil 0.92, honey 1.42). Null = assume ~1 g/ml (water).
+  final double? densityGPerMl;
   final double kcal100;
   final double? protein100;
   final double? carb100;
@@ -700,6 +729,7 @@ class Food extends DataClass implements Insertable<Food> {
     this.searchText,
     this.servingG,
     this.servingLabel,
+    this.densityGPerMl,
     required this.kcal100,
     this.protein100,
     this.carb100,
@@ -752,6 +782,9 @@ class Food extends DataClass implements Insertable<Food> {
     }
     if (!nullToAbsent || servingLabel != null) {
       map['serving_label'] = Variable<String>(servingLabel);
+    }
+    if (!nullToAbsent || densityGPerMl != null) {
+      map['density_g_per_ml'] = Variable<double>(densityGPerMl);
     }
     map['kcal100'] = Variable<double>(kcal100);
     if (!nullToAbsent || protein100 != null) {
@@ -825,6 +858,9 @@ class Food extends DataClass implements Insertable<Food> {
       servingLabel: servingLabel == null && nullToAbsent
           ? const Value.absent()
           : Value(servingLabel),
+      densityGPerMl: densityGPerMl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(densityGPerMl),
       kcal100: Value(kcal100),
       protein100: protein100 == null && nullToAbsent
           ? const Value.absent()
@@ -883,6 +919,7 @@ class Food extends DataClass implements Insertable<Food> {
       searchText: serializer.fromJson<String?>(json['searchText']),
       servingG: serializer.fromJson<double?>(json['servingG']),
       servingLabel: serializer.fromJson<String?>(json['servingLabel']),
+      densityGPerMl: serializer.fromJson<double?>(json['densityGPerMl']),
       kcal100: serializer.fromJson<double>(json['kcal100']),
       protein100: serializer.fromJson<double?>(json['protein100']),
       carb100: serializer.fromJson<double?>(json['carb100']),
@@ -918,6 +955,7 @@ class Food extends DataClass implements Insertable<Food> {
       'searchText': serializer.toJson<String?>(searchText),
       'servingG': serializer.toJson<double?>(servingG),
       'servingLabel': serializer.toJson<String?>(servingLabel),
+      'densityGPerMl': serializer.toJson<double?>(densityGPerMl),
       'kcal100': serializer.toJson<double>(kcal100),
       'protein100': serializer.toJson<double?>(protein100),
       'carb100': serializer.toJson<double?>(carb100),
@@ -949,6 +987,7 @@ class Food extends DataClass implements Insertable<Food> {
     Value<String?> searchText = const Value.absent(),
     Value<double?> servingG = const Value.absent(),
     Value<String?> servingLabel = const Value.absent(),
+    Value<double?> densityGPerMl = const Value.absent(),
     double? kcal100,
     Value<double?> protein100 = const Value.absent(),
     Value<double?> carb100 = const Value.absent(),
@@ -977,6 +1016,9 @@ class Food extends DataClass implements Insertable<Food> {
     searchText: searchText.present ? searchText.value : this.searchText,
     servingG: servingG.present ? servingG.value : this.servingG,
     servingLabel: servingLabel.present ? servingLabel.value : this.servingLabel,
+    densityGPerMl: densityGPerMl.present
+        ? densityGPerMl.value
+        : this.densityGPerMl,
     kcal100: kcal100 ?? this.kcal100,
     protein100: protein100.present ? protein100.value : this.protein100,
     carb100: carb100.present ? carb100.value : this.carb100,
@@ -1013,6 +1055,9 @@ class Food extends DataClass implements Insertable<Food> {
       servingLabel: data.servingLabel.present
           ? data.servingLabel.value
           : this.servingLabel,
+      densityGPerMl: data.densityGPerMl.present
+          ? data.densityGPerMl.value
+          : this.densityGPerMl,
       kcal100: data.kcal100.present ? data.kcal100.value : this.kcal100,
       protein100: data.protein100.present
           ? data.protein100.value
@@ -1058,6 +1103,7 @@ class Food extends DataClass implements Insertable<Food> {
           ..write('searchText: $searchText, ')
           ..write('servingG: $servingG, ')
           ..write('servingLabel: $servingLabel, ')
+          ..write('densityGPerMl: $densityGPerMl, ')
           ..write('kcal100: $kcal100, ')
           ..write('protein100: $protein100, ')
           ..write('carb100: $carb100, ')
@@ -1091,6 +1137,7 @@ class Food extends DataClass implements Insertable<Food> {
     searchText,
     servingG,
     servingLabel,
+    densityGPerMl,
     kcal100,
     protein100,
     carb100,
@@ -1123,6 +1170,7 @@ class Food extends DataClass implements Insertable<Food> {
           other.searchText == this.searchText &&
           other.servingG == this.servingG &&
           other.servingLabel == this.servingLabel &&
+          other.densityGPerMl == this.densityGPerMl &&
           other.kcal100 == this.kcal100 &&
           other.protein100 == this.protein100 &&
           other.carb100 == this.carb100 &&
@@ -1153,6 +1201,7 @@ class FoodsCompanion extends UpdateCompanion<Food> {
   final Value<String?> searchText;
   final Value<double?> servingG;
   final Value<String?> servingLabel;
+  final Value<double?> densityGPerMl;
   final Value<double> kcal100;
   final Value<double?> protein100;
   final Value<double?> carb100;
@@ -1181,6 +1230,7 @@ class FoodsCompanion extends UpdateCompanion<Food> {
     this.searchText = const Value.absent(),
     this.servingG = const Value.absent(),
     this.servingLabel = const Value.absent(),
+    this.densityGPerMl = const Value.absent(),
     this.kcal100 = const Value.absent(),
     this.protein100 = const Value.absent(),
     this.carb100 = const Value.absent(),
@@ -1210,6 +1260,7 @@ class FoodsCompanion extends UpdateCompanion<Food> {
     this.searchText = const Value.absent(),
     this.servingG = const Value.absent(),
     this.servingLabel = const Value.absent(),
+    this.densityGPerMl = const Value.absent(),
     required double kcal100,
     this.protein100 = const Value.absent(),
     this.carb100 = const Value.absent(),
@@ -1241,6 +1292,7 @@ class FoodsCompanion extends UpdateCompanion<Food> {
     Expression<String>? searchText,
     Expression<double>? servingG,
     Expression<String>? servingLabel,
+    Expression<double>? densityGPerMl,
     Expression<double>? kcal100,
     Expression<double>? protein100,
     Expression<double>? carb100,
@@ -1270,6 +1322,7 @@ class FoodsCompanion extends UpdateCompanion<Food> {
       if (searchText != null) 'search_text': searchText,
       if (servingG != null) 'serving_g': servingG,
       if (servingLabel != null) 'serving_label': servingLabel,
+      if (densityGPerMl != null) 'density_g_per_ml': densityGPerMl,
       if (kcal100 != null) 'kcal100': kcal100,
       if (protein100 != null) 'protein100': protein100,
       if (carb100 != null) 'carb100': carb100,
@@ -1301,6 +1354,7 @@ class FoodsCompanion extends UpdateCompanion<Food> {
     Value<String?>? searchText,
     Value<double?>? servingG,
     Value<String?>? servingLabel,
+    Value<double?>? densityGPerMl,
     Value<double>? kcal100,
     Value<double?>? protein100,
     Value<double?>? carb100,
@@ -1330,6 +1384,7 @@ class FoodsCompanion extends UpdateCompanion<Food> {
       searchText: searchText ?? this.searchText,
       servingG: servingG ?? this.servingG,
       servingLabel: servingLabel ?? this.servingLabel,
+      densityGPerMl: densityGPerMl ?? this.densityGPerMl,
       kcal100: kcal100 ?? this.kcal100,
       protein100: protein100 ?? this.protein100,
       carb100: carb100 ?? this.carb100,
@@ -1390,6 +1445,9 @@ class FoodsCompanion extends UpdateCompanion<Food> {
     }
     if (servingLabel.present) {
       map['serving_label'] = Variable<String>(servingLabel.value);
+    }
+    if (densityGPerMl.present) {
+      map['density_g_per_ml'] = Variable<double>(densityGPerMl.value);
     }
     if (kcal100.present) {
       map['kcal100'] = Variable<double>(kcal100.value);
@@ -1452,6 +1510,7 @@ class FoodsCompanion extends UpdateCompanion<Food> {
           ..write('searchText: $searchText, ')
           ..write('servingG: $servingG, ')
           ..write('servingLabel: $servingLabel, ')
+          ..write('densityGPerMl: $densityGPerMl, ')
           ..write('kcal100: $kcal100, ')
           ..write('protein100: $protein100, ')
           ..write('carb100: $carb100, ')
@@ -4951,6 +5010,7 @@ typedef $$FoodsTableCreateCompanionBuilder =
       Value<String?> searchText,
       Value<double?> servingG,
       Value<String?> servingLabel,
+      Value<double?> densityGPerMl,
       required double kcal100,
       Value<double?> protein100,
       Value<double?> carb100,
@@ -4981,6 +5041,7 @@ typedef $$FoodsTableUpdateCompanionBuilder =
       Value<String?> searchText,
       Value<double?> servingG,
       Value<String?> servingLabel,
+      Value<double?> densityGPerMl,
       Value<double> kcal100,
       Value<double?> protein100,
       Value<double?> carb100,
@@ -5110,6 +5171,11 @@ class $$FoodsTableFilterComposer extends Composer<_$AppDatabase, $FoodsTable> {
 
   ColumnFilters<String> get servingLabel => $composableBuilder(
     column: $table.servingLabel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get densityGPerMl => $composableBuilder(
+    column: $table.densityGPerMl,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5308,6 +5374,11 @@ class $$FoodsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get densityGPerMl => $composableBuilder(
+    column: $table.densityGPerMl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<double> get kcal100 => $composableBuilder(
     column: $table.kcal100,
     builder: (column) => ColumnOrderings(column),
@@ -5430,6 +5501,11 @@ class $$FoodsTableAnnotationComposer
 
   GeneratedColumn<String> get servingLabel => $composableBuilder(
     column: $table.servingLabel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get densityGPerMl => $composableBuilder(
+    column: $table.densityGPerMl,
     builder: (column) => column,
   );
 
@@ -5579,6 +5655,7 @@ class $$FoodsTableTableManager
                 Value<String?> searchText = const Value.absent(),
                 Value<double?> servingG = const Value.absent(),
                 Value<String?> servingLabel = const Value.absent(),
+                Value<double?> densityGPerMl = const Value.absent(),
                 Value<double> kcal100 = const Value.absent(),
                 Value<double?> protein100 = const Value.absent(),
                 Value<double?> carb100 = const Value.absent(),
@@ -5607,6 +5684,7 @@ class $$FoodsTableTableManager
                 searchText: searchText,
                 servingG: servingG,
                 servingLabel: servingLabel,
+                densityGPerMl: densityGPerMl,
                 kcal100: kcal100,
                 protein100: protein100,
                 carb100: carb100,
@@ -5637,6 +5715,7 @@ class $$FoodsTableTableManager
                 Value<String?> searchText = const Value.absent(),
                 Value<double?> servingG = const Value.absent(),
                 Value<String?> servingLabel = const Value.absent(),
+                Value<double?> densityGPerMl = const Value.absent(),
                 required double kcal100,
                 Value<double?> protein100 = const Value.absent(),
                 Value<double?> carb100 = const Value.absent(),
@@ -5665,6 +5744,7 @@ class $$FoodsTableTableManager
                 searchText: searchText,
                 servingG: servingG,
                 servingLabel: servingLabel,
+                densityGPerMl: densityGPerMl,
                 kcal100: kcal100,
                 protein100: protein100,
                 carb100: carb100,

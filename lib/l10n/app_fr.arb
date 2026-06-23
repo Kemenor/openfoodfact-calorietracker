@@ -122,6 +122,7 @@
   "editEntryTitle": "Modifier l'entrée",
   "kcalPer100": "{kcal} kcal / 100 g",
   "volumeApprox": "≈ {grams} g (suppose ~1 g/ml)",
+  "volumeDensity": "≈ {grams} g · {density} g/ml",
   "oneServing": "1 portion ({grams} g)",
   "portionChip": "1 {unit} · {grams} g",
   "portionUnitPiece": "pièce",
@@ -130,6 +131,7 @@
   "portionUnitClove": "gousse",
   "portionUnitStalk": "branche",
   "portionUnitHandful": "poignée",
+  "portionUnitCob": "épi",
 
   "searchFoodsHint": "Rechercher des aliments…",
   "searchRecentlyUsed": "Récemment utilisés",

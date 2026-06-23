@@ -357,6 +357,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String volumeDensity(String grams, String density) {
+    return '≈ $grams g · $density g/ml';
+  }
+
+  @override
   String oneServing(String grams) {
     return '1 serving ($grams g)';
   }
@@ -383,6 +388,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get portionUnitHandful => 'handful';
+
+  @override
+  String get portionUnitCob => 'cob';
 
   @override
   String get searchFoodsHint => 'Search foods…';

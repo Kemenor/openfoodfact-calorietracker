@@ -37,5 +37,16 @@ Add rows to `portions.csv` (use names exactly as they appear in the catalog —
 in `swiss_seed.dart`. To introduce a new `unit`, add it to `portionUnitLabel`
 and the `portionUnit*` ARB keys (en/de/fr/it).
 
-This is an initial set (~44 foods: produce, eggs, nuts, bread). Densities for
-liquids (volume → grams) are a planned follow-up.
+## Liquid densities
+
+`densities.csv` maps an exact English name to a density in g/ml, so volume
+units (ml/cup/tbsp) convert accurately — e.g. olive oil 0.92, honey 1.42, milk
+1.03. `build.py` joins it on as a `density` column; `swiss_seed.dart` loads it
+into `Foods.densityGPerMl`, and the log sheet feeds it to
+`AmountUnit.toGrams`. Foods without a density fall back to ~1 g/ml (water).
+
+## Coverage
+
+~69 foods with a natural portion (produce, eggs, nuts, bread, Swiss sausages,
+baked goods) and ~42 with a liquid density (oils, syrups, milk, juices,
+vinegar, soy sauce). Extend either CSV and bump `swissDatasetVersion`.

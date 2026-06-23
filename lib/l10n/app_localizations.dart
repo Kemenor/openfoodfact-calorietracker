@@ -708,6 +708,12 @@ abstract class AppLocalizations {
   /// **'≈ {grams} g (assumes ~1 g/ml)'**
   String volumeApprox(String grams);
 
+  /// No description provided for @volumeDensity.
+  ///
+  /// In en, this message translates to:
+  /// **'≈ {grams} g · {density} g/ml'**
+  String volumeDensity(String grams, String density);
+
   /// No description provided for @oneServing.
   ///
   /// In en, this message translates to:
@@ -755,6 +761,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'handful'**
   String get portionUnitHandful;
+
+  /// No description provided for @portionUnitCob.
+  ///
+  /// In en, this message translates to:
+  /// **'cob'**
+  String get portionUnitCob;
 
   /// No description provided for @searchFoodsHint.
   ///

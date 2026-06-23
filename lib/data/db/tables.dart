@@ -30,6 +30,10 @@ class Foods extends Table {
   RealColumn get servingG => real().nullable()();
   TextColumn get servingLabel => text().nullable()();
 
+  /// Density in g/ml for liquids, so volume units (ml/cup/tbsp) convert
+  /// accurately (e.g. oil 0.92, honey 1.42). Null = assume ~1 g/ml (water).
+  RealColumn get densityGPerMl => real().nullable()();
+
   RealColumn get kcal100 => real()();
   RealColumn get protein100 => real().nullable()();
   RealColumn get carb100 => real().nullable()();

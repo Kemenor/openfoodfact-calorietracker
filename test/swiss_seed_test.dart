@@ -34,18 +34,20 @@ void main() {
       expect(rows.single.name.value, 'Good');
     });
 
-    test('reads natural-portion columns when present', () {
+    test('reads natural-portion and density columns when present', () {
       const csv =
-          'id,name_en,name_de,name_fr,name_it,kcal100,protein100,carb100,fat100,fiber100,sugar100,satfat100,sodium_mg100,search_text,serving_g,serving_unit\n'
-          '10,"Cucumber, raw",Gurke,Concombre,Cetriolo,12,0.6,2,0.2,,,,,cucumber gurke,300,medium\n'
-          '11,Custom,Eigen,,,50,,,,,,,,custom,,\n';
+          'id,name_en,name_de,name_fr,name_it,kcal100,protein100,carb100,fat100,fiber100,sugar100,satfat100,sodium_mg100,search_text,serving_g,serving_unit,density\n'
+          '10,"Cucumber, raw",Gurke,Concombre,Cetriolo,12,0.6,2,0.2,,,,,cucumber gurke,300,medium,\n'
+          '12,"Olive oil",Olivenoel,,,884,,,,,,,,olive oil,,,0.92\n'
+          '11,Custom,Eigen,,,50,,,,,,,,custom,,,\n';
       final rows = parseSwissCsv(csv);
-      final cuke = rows[0];
-      expect(cuke.servingG.value, 300);
-      expect(cuke.servingLabel.value, 'medium');
-      // empty serving columns stay null
-      expect(rows[1].servingG.value, isNull);
-      expect(rows[1].servingLabel.value, isNull);
+      expect(rows[0].servingG.value, 300);
+      expect(rows[0].servingLabel.value, 'medium');
+      expect(rows[0].densityGPerMl.value, isNull);
+      expect(rows[1].densityGPerMl.value, 0.92); // olive oil
+      // empty trailing columns stay null
+      expect(rows[2].servingG.value, isNull);
+      expect(rows[2].densityGPerMl.value, isNull);
     });
 
     test('older 14-column rows (no portion columns) still parse', () {

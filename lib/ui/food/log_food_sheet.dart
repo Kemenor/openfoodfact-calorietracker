@@ -37,6 +37,7 @@ Future<bool?> showLogFoodSheet(
       fat100: food.fat100,
       servingG: food.servingG,
       servingLabel: food.servingLabel,
+      density: food.densityGPerMl,
       initialGrams: food.servingG ?? 100,
       meal: meal,
       onSubmit: (g, m) async {
@@ -133,6 +134,7 @@ class _LogSheet extends StatefulWidget {
   final double? fat100;
   final double? servingG;
   final String? servingLabel;
+  final double? density;
   final double initialGrams;
   final MealType meal;
   final Future<void> Function(double grams, MealType meal) onSubmit;
@@ -152,6 +154,7 @@ class _LogSheet extends StatefulWidget {
     required this.initialGrams,
     required this.meal,
     required this.onSubmit,
+    this.density,
     this.onDelete,
   });
 
@@ -166,7 +169,7 @@ class _LogSheetState extends State<_LogSheet> {
 
   double get _amount =>
       double.tryParse(_amountCtrl.text.replaceAll(',', '.')) ?? 0;
-  double get _grams => _unit.toGrams(_amount);
+  double get _grams => _unit.toGrams(_amount, density: widget.density ?? 1.0);
 
   @override
   void dispose() {
@@ -263,7 +266,11 @@ class _LogSheetState extends State<_LogSheet> {
           if (_unit.isVolume)
             Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: Text(l10n.volumeApprox(gramsStr(grams)),
+              child: Text(
+                  widget.density != null
+                      ? l10n.volumeDensity(
+                          gramsStr(grams), widget.density!.toString())
+                      : l10n.volumeApprox(gramsStr(grams)),
                   style: theme.textTheme.bodySmall),
             ),
           const SizedBox(height: 12),

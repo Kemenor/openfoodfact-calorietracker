@@ -17,6 +17,8 @@ String portionUnitLabel(AppLocalizations l10n, String key) {
       return l10n.portionUnitStalk;
     case 'handful':
       return l10n.portionUnitHandful;
+    case 'cob':
+      return l10n.portionUnitCob;
     default:
       return key;
   }

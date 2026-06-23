@@ -122,6 +122,7 @@
   "editEntryTitle": "Eintrag bearbeiten",
   "kcalPer100": "{kcal} kcal / 100 g",
   "volumeApprox": "≈ {grams} g (angenommen ~1 g/ml)",
+  "volumeDensity": "≈ {grams} g · {density} g/ml",
   "oneServing": "1 Portion ({grams} g)",
   "portionChip": "1 {unit} · {grams} g",
   "portionUnitPiece": "Stück",
@@ -130,6 +131,7 @@
   "portionUnitClove": "Zehe",
   "portionUnitStalk": "Stange",
   "portionUnitHandful": "Handvoll",
+  "portionUnitCob": "Kolben",
 
   "searchFoodsHint": "Lebensmittel suchen…",
   "searchRecentlyUsed": "Zuletzt verwendet",

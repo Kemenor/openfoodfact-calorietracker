@@ -122,6 +122,7 @@
   "editEntryTitle": "Modifica voce",
   "kcalPer100": "{kcal} kcal / 100 g",
   "volumeApprox": "≈ {grams} g (assume ~1 g/ml)",
+  "volumeDensity": "≈ {grams} g · {density} g/ml",
   "oneServing": "1 porzione ({grams} g)",
   "portionChip": "1 {unit} · {grams} g",
   "portionUnitPiece": "pezzo",
@@ -130,6 +131,7 @@
   "portionUnitClove": "spicchio",
   "portionUnitStalk": "gambo",
   "portionUnitHandful": "manciata",
+  "portionUnitCob": "pannocchia",
 
   "searchFoodsHint": "Cerca alimenti…",
   "searchRecentlyUsed": "Usati di recente",

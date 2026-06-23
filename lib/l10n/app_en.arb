@@ -146,6 +146,8 @@
   "@kcalPer100": { "placeholders": { "kcal": { "type": "String" } } },
   "volumeApprox": "≈ {grams} g (assumes ~1 g/ml)",
   "@volumeApprox": { "placeholders": { "grams": { "type": "String" } } },
+  "volumeDensity": "≈ {grams} g · {density} g/ml",
+  "@volumeDensity": { "placeholders": { "grams": { "type": "String" }, "density": { "type": "String" } } },
   "oneServing": "1 serving ({grams} g)",
   "@oneServing": { "placeholders": { "grams": { "type": "String" } } },
   "portionChip": "1 {unit} · {grams} g",
@@ -156,6 +158,7 @@
   "portionUnitClove": "clove",
   "portionUnitStalk": "stalk",
   "portionUnitHandful": "handful",
+  "portionUnitCob": "cob",
 
   "searchFoodsHint": "Search foods…",
   "searchRecentlyUsed": "Recently used",
