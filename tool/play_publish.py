@@ -106,10 +106,21 @@ def main():
                     print('  shots    %-6s  %d uploaded' % (loc, len(files)))
 
         if args.commit:
-            svc.edits().commit(
-                packageName=PKG, editId=edit_id,
-                changesNotSentForReview=True).execute()
-            print('[COMMIT] saved as draft — review & publish in the Console')
+            try:
+                svc.edits().commit(
+                    packageName=PKG, editId=edit_id,
+                    changesNotSentForReview=True).execute()
+            except HttpError as e:
+                # A never-published app auto-sends changes for review and
+                # rejects the flag; commit plainly in that case.
+                if e.resp.status == 400 and 'changesNotSentForReview' in str(
+                        e._get_reason()):
+                    svc.edits().commit(
+                        packageName=PKG, editId=edit_id).execute()
+                else:
+                    raise
+            print('[COMMIT] listing saved — app stays in Draft until you '
+                  'publish it in the Console')
         else:
             svc.edits().delete(packageName=PKG, editId=edit_id).execute()
             print('[DRY RUN] edit discarded — nothing saved. '
