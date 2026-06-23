@@ -66,6 +66,10 @@ recipe sharing, ZIP backup/restore.
   lightweight secondary classifier or heuristics for the weak categories; improve the
   label→catalog kcal mapping for recognized items. The opt-in **Gemini** cloud path already
   handles these well, so this is specifically about closing the on-device gap.
+- 🧭 **UI consistency: barcode scan as a bottom-right FAB** (fix): in the *"from an ingredient
+  list" → add-food* flow the barcode-scan action should sit as a lower-right FAB, matching the
+  rest of the app (add food / new recipe / scan all use a bottom-right FAB). Keeps the primary
+  action in the same place everywhere so it doesn't feel off.
 - 💤 **Phase 5b offline-pack deltas**: PARKED INDEFINITELY (packs are tiny; full re-download is fine).
 
 ## Status (2026-06-17)
