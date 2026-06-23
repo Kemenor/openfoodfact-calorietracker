@@ -1,0 +1,1 @@
+La scansione foto IA ora stima porzioni più realistiche, così le calorie non vengono gonfiate da una porzione sovrastimata.

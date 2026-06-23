@@ -1,0 +1,1 @@
+Der KI-Fotoscan schätzt jetzt realistischere Portionsgrössen, damit die Kalorienschätzung nicht durch eine zu grosse Portionsannahme aufgebläht wird.

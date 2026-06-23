@@ -38,10 +38,13 @@ class GeminiService {
 
   static const _prompt =
       'You are a nutrition assistant. Identify the food in this photo and '
-      'estimate the nutrition for the portion shown. Return the dish name, the '
-      'estimated edible weight in grams, and the TOTALS for the whole portion '
-      '(not per 100 g): calories in kcal, and protein, carbohydrate and fat in '
-      'grams. If the image is not food, set is_food to false.';
+      'estimate the nutrition for ONE realistic serving as shown. Estimate the '
+      'edible weight in grams realistically — most plated dishes are 200-500 g, '
+      'drinks 200-400 ml, snacks 30-150 g; only exceed this if the photo '
+      'clearly shows an unusually large portion. Return the dish name and the '
+      'TOTALS for that serving (not per 100 g): calories in kcal, and protein, '
+      'carbohydrate and fat in grams. If the image is not food, set is_food to '
+      'false.';
 
   /// Optional injected client (for tests). When null, each request gets a
   /// FRESH client that is closed afterwards — reusing one long-lived client
