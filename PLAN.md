@@ -40,6 +40,14 @@ recipe sharing, ZIP backup/restore.
   localized, CSV pinned to English. Verified on emulator in German; 82 tests pass.
 - 🍽️ **Per-food density / piece weights** (units follow-up): volume→grams still assumes ~1 g/ml;
   no per-piece weights yet.
+- ⚖️ **Quick add + Gemini: optional weight (grams)** (backlog): Free add / Quick add stores the
+  typed kcal+macros as a per-100 g snapshot with `grams = 100` (the numbers are portion totals),
+  and Gemini recognition prefills that same sheet with portion totals. Add an optional **weight in
+  grams** field so the logged entry carries a real gram amount — lets the user edit/scale the
+  portion later and keeps it consistent with catalog foods (per-100 g × grams). Gemini already
+  returns an estimated `grams` per portion (in `GeminiFoodResult.grams`), so it can pre-fill the
+  weight; the sheet would then divide the entered totals by the weight to derive the per-100 g
+  snapshot instead of hard-coding 100.
 - 💤 **Phase 5b offline-pack deltas**: PARKED INDEFINITELY (packs are tiny; full re-download is fine).
 
 ## Status (2026-06-17)
