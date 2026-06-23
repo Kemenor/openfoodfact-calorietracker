@@ -1,0 +1,1 @@
+Première version de Knabberfuchs. Suivi des calories et des macros sans publicité : scan de codes-barres, photos de repas par IA, recettes, bases de données hors ligne et Health Connect. Pas de compte, pas de pub – vos données restent sur votre téléphone.

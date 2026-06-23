@@ -1,0 +1,35 @@
+default_platform(:android)
+
+# Knabberfuchs — Play Store metadata & releases.
+# All lanes upload as a DRAFT (changes_not_sent_for_review) so nothing goes
+# live without you pressing "send for review" in the Play Console.
+
+platform :android do
+  desc "Validate the metadata locally — no upload, catches length/format errors"
+  lane :validate do
+    upload_to_play_store(
+      validate_only: true,
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+    )
+  end
+
+  desc "Push store listing text + screenshots only (no binary) as a draft"
+  lane :listing do
+    upload_to_play_store(
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_changelogs: false,
+      changes_not_sent_for_review: true,
+    )
+  end
+
+  desc "Upload the release AAB to the internal testing track as a draft"
+  lane :internal do
+    upload_to_play_store(
+      track: "internal",
+      aab: "build/app/outputs/bundle/release/app-release.aab",
+      changes_not_sent_for_review: true,
+    )
+  end
+end
