@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'core/date_x.dart';
 import 'core/locale.dart';
@@ -84,6 +85,12 @@ final ocrServiceProvider = Provider<OcrService>((ref) {
 });
 
 final healthServiceProvider = Provider<HealthService>((ref) => HealthService());
+
+/// App version string for the About screen, e.g. "1.0.3 (4)".
+final appVersionProvider = FutureProvider<String>((ref) async {
+  final info = await PackageInfo.fromPlatform();
+  return '${info.version} (${info.buildNumber})';
+});
 
 final foodClassifierProvider = Provider<FoodClassifier>((ref) {
   final c = FoodClassifier();

@@ -1,0 +1,1 @@
+Settings → About now shows the real app version. Plus the natural-portion chips and recent fixes.

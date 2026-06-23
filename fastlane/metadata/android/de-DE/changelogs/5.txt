@@ -1,0 +1,1 @@
+Einstellungen → Info zeigt jetzt die echte App-Version. Ausserdem die natürlichen Portions-Chips und letzte Korrekturen.
