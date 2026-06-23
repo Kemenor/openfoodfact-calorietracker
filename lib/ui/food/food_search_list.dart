@@ -22,11 +22,17 @@ class FoodSearchList extends ConsumerStatefulWidget {
   /// query so the free-add sheet can pre-fill the name. Only wired in logging
   /// contexts (not when picking a food for a recipe/OCR match).
   final ValueChanged<String>? onQuickAdd;
+
+  /// Pre-fill the search box and run the search immediately (e.g. an OCR
+  /// ingredient name). The text starts selected so it's one keystroke to
+  /// refine a messy/over-specific match.
+  final String? initialQuery;
   const FoodSearchList({
     super.key,
     required this.onPick,
     this.onCreateCustom,
     this.onQuickAdd,
+    this.initialQuery,
   });
 
   @override
@@ -45,7 +51,18 @@ class _FoodSearchListState extends ConsumerState<FoodSearchList> {
   @override
   void initState() {
     super.initState();
-    _runLocal('');
+    final q = widget.initialQuery?.trim() ?? '';
+    if (q.isNotEmpty) {
+      _controller.text = q;
+      // Select the whole prefill so typing replaces it in one go.
+      _controller.selection =
+          TextSelection(baseOffset: 0, extentOffset: q.length);
+      _query = q;
+      if (q.length >= 2) {
+        _debounce = Timer(const Duration(milliseconds: 600), _runOnline);
+      }
+    }
+    _runLocal(q);
   }
 
   @override

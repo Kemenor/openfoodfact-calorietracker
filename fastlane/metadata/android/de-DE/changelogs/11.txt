@@ -1,0 +1,1 @@
+Aus einer Zutatenliste: Beim Wischen (oder Tippen) einer Zutat wird die Suche jetzt mit ihrem Namen vorausgefüllt — kein erneutes Tippen des Gescannten.

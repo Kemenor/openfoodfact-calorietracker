@@ -1,0 +1,1 @@
+From an ingredient list: swiping (or tapping) an ingredient now pre-fills the search with its name, so you don't retype what was scanned.
