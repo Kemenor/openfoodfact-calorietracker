@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Auto Backup rules for Android 11 and below (fullBackupContent). Back up the
+     diary DB; exclude the large extracted assets + re-downloadable offline
+     packs so the backup stays under the 25 MB cap. -->
+<full-backup-content>
+    <exclude domain="root" path="app_flutter/flutter_assets" />
+    <exclude domain="root" path="app_flutter/packs" />
+</full-backup-content>

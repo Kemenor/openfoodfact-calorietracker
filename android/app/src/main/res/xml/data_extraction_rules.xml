@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 12+ backup/transfer rules. Only the diary DB
+     (app_flutter/calorie_tracker.sqlite, ~0.5 MB) needs backing up. Exclude the
+     ~96 MB extracted Flutter assets and the re-downloadable offline region
+     packs so the backup stays small and reliable (well under the 25 MB cap). -->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="root" path="app_flutter/flutter_assets" />
+        <exclude domain="root" path="app_flutter/packs" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="root" path="app_flutter/flutter_assets" />
+        <exclude domain="root" path="app_flutter/packs" />
+    </device-transfer>
+</data-extraction-rules>

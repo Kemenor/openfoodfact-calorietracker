@@ -50,7 +50,7 @@ recipe sharing, ZIP backup/restore.
   returns an estimated `grams` per portion (in `GeminiFoodResult.grams`), so it can pre-fill the
   weight; the sheet would then divide the entered totals by the weight to derive the per-100 g
   snapshot instead of hard-coding 100.
-- ☁️ **Auto-backup to Google Drive** (backlog): optional, opt-in automatic backup so data survives
+- ☁️ **Auto-backup to Google Drive** — ✅ DONE 2026-06-23 (v1.0.18+19): re-enabled **Android Auto Backup** (`allowBackup=true`) with `res/xml/data_extraction_rules.xml` + `backup_rules.xml` that back up only the diary DB (~0.5 MB) and **exclude `app_flutter/flutter_assets` (~96 MB) + offline packs** so it stays under the 25 MB cap and actually runs. This IS the standard free GDrive backup (no OAuth/account). Was briefly disabled after stale restores dropped settings during reinstall testing. The Drive-API route below is now unnecessary. Original note: optional, opt-in automatic backup so data survives
   phone loss / reinstall (today's ZIP backup is manual + local). Two routes:
   1. **Android Auto Backup** (`android:allowBackup`, system-managed to the user's existing Google
      account) — zero code, no OAuth, no extra account, fits the keyless/no-account ethos. Caveat:
