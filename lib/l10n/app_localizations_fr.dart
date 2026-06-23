@@ -563,6 +563,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get geminiThinking4 => 'Évaluation de la portion…';
 
   @override
+  String get geminiThinking5 => 'Lecture de l\'assiette…';
+
+  @override
+  String get geminiThinking6 => 'Calcul des chiffres…';
+
+  @override
+  String get geminiSlow => 'Gemini est un peu occupé — un instant…';
+
+  @override
   String geminiRetrying(int n) {
     return 'Serveur occupé — nouvelle tentative ($n)…';
   }

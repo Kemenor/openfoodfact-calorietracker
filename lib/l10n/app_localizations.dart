@@ -1062,6 +1062,24 @@ abstract class AppLocalizations {
   /// **'Working out the portion size…'**
   String get geminiThinking4;
 
+  /// No description provided for @geminiThinking5.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading the plate…'**
+  String get geminiThinking5;
+
+  /// No description provided for @geminiThinking6.
+  ///
+  /// In en, this message translates to:
+  /// **'Crunching the numbers…'**
+  String get geminiThinking6;
+
+  /// No description provided for @geminiSlow.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini\'s a bit busy — hang on…'**
+  String get geminiSlow;
+
   /// No description provided for @geminiRetrying.
   ///
   /// In en, this message translates to:

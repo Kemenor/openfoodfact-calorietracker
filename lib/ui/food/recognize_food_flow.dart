@@ -162,6 +162,8 @@ class _GeminiLoadingDialogState extends State<_GeminiLoadingDialog> {
       l10n.geminiThinking2,
       l10n.geminiThinking3,
       l10n.geminiThinking4,
+      l10n.geminiThinking5,
+      l10n.geminiThinking6,
     ];
     final msg = messages[_step % messages.length];
     return Dialog(
@@ -183,17 +185,25 @@ class _GeminiLoadingDialogState extends State<_GeminiLoadingDialog> {
             ),
             ValueListenableBuilder<int>(
               valueListenable: widget.attempt,
-              builder: (context, n, _) => n > 1
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Text(
-                        l10n.geminiRetrying(n),
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: theme.colorScheme.error),
-                      ),
-                    )
-                  : const SizedBox.shrink(),
+              builder: (context, n, _) {
+                // Escalating reassurance: silent → "busy, taking longer"
+                // (~13 s in) → "retrying (attempt N)" once it actually retries.
+                final sub = n > 1
+                    ? l10n.geminiRetrying(n)
+                    : (_step >= 6 ? l10n.geminiSlow : null);
+                if (sub == null) return const SizedBox.shrink();
+                return Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    sub,
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                        color: n > 1
+                            ? theme.colorScheme.error
+                            : theme.colorScheme.outline),
+                  ),
+                );
+              },
             ),
           ],
         ),

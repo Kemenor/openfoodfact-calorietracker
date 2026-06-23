@@ -184,6 +184,9 @@
   "geminiThinking2": "Stima delle calorie dalla tua foto…",
   "geminiThinking3": "Identificazione del piatto…",
   "geminiThinking4": "Calcolo della porzione…",
+  "geminiThinking5": "Lettura del piatto…",
+  "geminiThinking6": "Calcolo dei numeri…",
+  "geminiSlow": "Gemini è un po' occupato — un attimo…",
   "geminiRetrying": "Server occupato — nuovo tentativo ({n})…",
   "@geminiRetrying": {
     "placeholders": { "n": { "type": "int" } }

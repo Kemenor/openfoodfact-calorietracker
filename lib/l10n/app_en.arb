@@ -217,6 +217,9 @@
   "geminiThinking2": "Estimating calories from your photo…",
   "geminiThinking3": "Identifying the dish…",
   "geminiThinking4": "Working out the portion size…",
+  "geminiThinking5": "Reading the plate…",
+  "geminiThinking6": "Crunching the numbers…",
+  "geminiSlow": "Gemini's a bit busy — hang on…",
   "geminiRetrying": "Server busy — retrying (attempt {n})…",
   "@geminiRetrying": {
     "placeholders": { "n": { "type": "int" } }

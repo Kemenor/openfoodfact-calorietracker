@@ -184,6 +184,9 @@
   "geminiThinking2": "Kalorien werden aus deinem Foto geschätzt…",
   "geminiThinking3": "Gericht wird erkannt…",
   "geminiThinking4": "Portionsgröße wird ermittelt…",
+  "geminiThinking5": "Teller wird gelesen…",
+  "geminiThinking6": "Zahlen werden berechnet…",
+  "geminiSlow": "Gemini ist etwas ausgelastet – einen Moment…",
   "geminiRetrying": "Server ausgelastet – neuer Versuch (Versuch {n})…",
   "@geminiRetrying": {
     "placeholders": { "n": { "type": "int" } }
