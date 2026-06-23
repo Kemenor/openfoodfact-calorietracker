@@ -48,6 +48,17 @@ recipe sharing, ZIP backup/restore.
   returns an estimated `grams` per portion (in `GeminiFoodResult.grams`), so it can pre-fill the
   weight; the sheet would then divide the entered totals by the weight to derive the per-100 g
   snapshot instead of hard-coding 100.
+- ☁️ **Auto-backup to Google Drive** (backlog): optional, opt-in automatic backup so data survives
+  phone loss / reinstall (today's ZIP backup is manual + local). Two routes:
+  1. **Android Auto Backup** (`android:allowBackup`, system-managed to the user's existing Google
+     account) — zero code, no OAuth, no extra account, fits the keyless/no-account ethos. Caveat:
+     ~25 MB cap and it backs up app data wholesale, so **exclude the large offline packs + bundled
+     assets** (back up only the diary DB + settings) via `backup_rules.xml` / `dataExtractionRules`.
+     Preferred first step.
+  2. **Drive API (app-data folder)** — explicit Google sign-in (OAuth) + scheduled upload of the
+     backup ZIP; gives visible/cross-device backups but adds an account + a key, against the
+     no-account default → strictly opt-in, only if users ask. Either way: opt-in and disclosed
+     (data leaves the device to the user's own Drive).
 - 💤 **Phase 5b offline-pack deltas**: PARKED INDEFINITELY (packs are tiny; full re-download is fine).
 
 ## Status (2026-06-17)
