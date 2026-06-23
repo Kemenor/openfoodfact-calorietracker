@@ -1,0 +1,1 @@
+Schnell hinzufügen hat jetzt ein Gewichtsfeld (g), und die Gemini-Fotoerkennung füllt das geschätzte Portionsgewicht vor — so haben erfasste Einträge ein echtes Gramm-Gewicht, das du skalieren kannst.

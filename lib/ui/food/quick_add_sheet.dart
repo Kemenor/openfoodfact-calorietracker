@@ -8,10 +8,11 @@ import '../../l10n/app_localizations.dart';
 import '../../providers.dart';
 
 /// Free add: log a one-off item by name + calories (optionally macros) without
-/// searching the catalog or creating a persistent food. The entered values are
-/// the totals for the portion — stored as a per-100 g snapshot with grams=100,
-/// so the diary shows exactly what was typed. Returns true if something was
-/// logged.
+/// searching the catalog or creating a persistent food. The entered kcal/macros
+/// are the totals for the portion. If a weight (g) is given (e.g. Gemini's
+/// portion estimate via [initialWeight]), the entry stores that real weight with
+/// a correct per-100 g snapshot, so it scales when edited; otherwise it falls
+/// back to grams=100 (the typed totals shown verbatim). Returns true if logged.
 Future<bool?> showQuickAddSheet(
   BuildContext context,
   WidgetRef ref, {
@@ -23,6 +24,7 @@ Future<bool?> showQuickAddSheet(
   double? initialProtein,
   double? initialCarb,
   double? initialFat,
+  double? initialWeight,
   String? sourceLabel,
 }) {
   return showModalBottomSheet<bool>(
@@ -38,6 +40,7 @@ Future<bool?> showQuickAddSheet(
       initialProtein: initialProtein,
       initialCarb: initialCarb,
       initialFat: initialFat,
+      initialWeight: initialWeight,
       sourceLabel: sourceLabel,
     ),
   );
@@ -52,6 +55,7 @@ class _QuickAddSheet extends ConsumerStatefulWidget {
   final double? initialProtein;
   final double? initialCarb;
   final double? initialFat;
+  final double? initialWeight;
   final String? sourceLabel;
   const _QuickAddSheet({
     required this.day,
@@ -62,6 +66,7 @@ class _QuickAddSheet extends ConsumerStatefulWidget {
     required this.initialProtein,
     required this.initialCarb,
     required this.initialFat,
+    required this.initialWeight,
     required this.sourceLabel,
   });
 
@@ -76,6 +81,7 @@ class _QuickAddSheetState extends ConsumerState<_QuickAddSheet> {
   late final _protein = TextEditingController(text: _g(widget.initialProtein));
   late final _carb = TextEditingController(text: _g(widget.initialCarb));
   late final _fat = TextEditingController(text: _g(widget.initialFat));
+  late final _weight = TextEditingController(text: _g(widget.initialWeight));
   late bool _showMacros = widget.initialProtein != null ||
       widget.initialCarb != null ||
       widget.initialFat != null;
@@ -85,14 +91,14 @@ class _QuickAddSheetState extends ConsumerState<_QuickAddSheet> {
   @override
   void initState() {
     super.initState();
-    for (final c in [_name, _kcal, _protein, _carb, _fat]) {
+    for (final c in [_name, _kcal, _protein, _carb, _fat, _weight]) {
       c.addListener(() => setState(() {}));
     }
   }
 
   @override
   void dispose() {
-    for (final c in [_name, _kcal, _protein, _carb, _fat]) {
+    for (final c in [_name, _kcal, _protein, _carb, _fat, _weight]) {
       c.dispose();
     }
     super.dispose();
@@ -106,14 +112,24 @@ class _QuickAddSheetState extends ConsumerState<_QuickAddSheet> {
   Future<void> _add() async {
     final groupId =
         widget.resolveGroup == null ? null : await widget.resolveGroup!();
-    // Totals for the portion → store as per-100 g with grams=100.
+    // The fields hold portion totals. With a weight, store the real grams and a
+    // correct per-100 g snapshot (total / grams * 100) so the entry scales when
+    // edited; without one, fall back to grams=100 (totals shown verbatim).
+    final w = _num(_weight);
+    final grams = (w != null && w > 0) ? w : 100.0;
+    final f = 100 / grams; // total → per-100 g
+    double? per(TextEditingController c) {
+      final v = _num(c);
+      return v == null ? null : v * f;
+    }
+
     await ref.read(diaryRepositoryProvider).logSnapshot(
           name: _name.text.trim(),
-          kcal100: _num(_kcal)!,
-          protein100: _num(_protein),
-          carb100: _num(_carb),
-          fat100: _num(_fat),
-          grams: 100,
+          kcal100: _num(_kcal)! * f,
+          protein100: per(_protein),
+          carb100: per(_carb),
+          fat100: per(_fat),
+          grams: grams,
           meal: widget.meal,
           day: widget.day,
           groupId: groupId,
@@ -158,19 +174,45 @@ class _QuickAddSheetState extends ConsumerState<_QuickAddSheet> {
                   border: const OutlineInputBorder()),
             ),
             const SizedBox(height: 12),
-            TextField(
-              controller: _kcal,
-              autofocus: widget.initialName != null &&
-                  widget.initialName!.trim().isNotEmpty,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: TextField(
+                    controller: _kcal,
+                    autofocus: widget.initialName != null &&
+                        widget.initialName!.trim().isNotEmpty,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))
+                    ],
+                    decoration: InputDecoration(
+                      labelText: l10n.quickAddCalories,
+                      suffixText: l10n.unitKcal,
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: TextField(
+                    controller: _weight,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))
+                    ],
+                    decoration: InputDecoration(
+                      labelText: l10n.quickAddWeight,
+                      suffixText: 'g',
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
+                ),
               ],
-              decoration: InputDecoration(
-                labelText: l10n.quickAddCalories,
-                suffixText: l10n.unitKcal,
-                border: const OutlineInputBorder(),
-              ),
             ),
             if (_showMacros) ...[
               const SizedBox(height: 12),

@@ -1,0 +1,1 @@
+L'ajout rapide a désormais un champ poids (g), et la reconnaissance photo Gemini préremplit le poids de portion estimé — les éléments enregistrés portent un vrai poids en grammes, ajustable.

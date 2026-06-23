@@ -153,6 +153,7 @@
   "quickAddSubtitle": "Registra solo nome e calorie",
   "quickAddName": "Nome",
   "quickAddCalories": "Calorie",
+  "quickAddWeight": "Peso",
   "quickAddMacros": "Aggiungi macro (facoltativo)",
   "recognizeTooltip": "Riconosci da foto",
   "recognizeTakePhoto": "Scatta una foto",

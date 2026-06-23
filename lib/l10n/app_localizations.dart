@@ -876,6 +876,12 @@ abstract class AppLocalizations {
   /// **'Calories'**
   String get quickAddCalories;
 
+  /// No description provided for @quickAddWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get quickAddWeight;
+
   /// No description provided for @quickAddMacros.
   ///
   /// In en, this message translates to:

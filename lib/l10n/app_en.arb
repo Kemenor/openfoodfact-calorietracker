@@ -183,6 +183,7 @@
   "quickAddSubtitle": "Log just a name and calories",
   "quickAddName": "Name",
   "quickAddCalories": "Calories",
+  "quickAddWeight": "Weight",
   "quickAddMacros": "Add macros (optional)",
   "recognizeTooltip": "Recognize from photo",
   "recognizeTakePhoto": "Take a photo",

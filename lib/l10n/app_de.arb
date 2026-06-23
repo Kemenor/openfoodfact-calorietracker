@@ -153,6 +153,7 @@
   "quickAddSubtitle": "Nur Name und Kalorien erfassen",
   "quickAddName": "Name",
   "quickAddCalories": "Kalorien",
+  "quickAddWeight": "Gewicht",
   "quickAddMacros": "Makros hinzufügen (optional)",
   "recognizeTooltip": "Per Foto erkennen",
   "recognizeTakePhoto": "Foto aufnehmen",

@@ -454,6 +454,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quickAddCalories => 'Calories';
 
   @override
+  String get quickAddWeight => 'Weight';
+
+  @override
   String get quickAddMacros => 'Add macros (optional)';
 
   @override

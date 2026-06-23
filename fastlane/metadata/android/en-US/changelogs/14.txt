@@ -1,0 +1,1 @@
+Quick add now has a weight (g) field, and Gemini photo recognition pre-fills its estimated portion weight — so logged items carry a real gram amount you can scale.
