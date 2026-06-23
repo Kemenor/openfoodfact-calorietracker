@@ -1,0 +1,1 @@
+Fixed: your settings (like the Gemini key) are no longer lost when the app updates or is reinstalled.

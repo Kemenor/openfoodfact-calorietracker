@@ -1,0 +1,1 @@
+Behoben: Deine Einstellungen (z. B. der Gemini-Schlüssel) gehen bei Updates oder Neuinstallation nicht mehr verloren.

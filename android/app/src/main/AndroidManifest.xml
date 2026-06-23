@@ -11,7 +11,12 @@
     <application
         android:label="Knabberfuchs"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false"
+        android:fullBackupContent="false"><!-- Android Auto Backup defaults ON and
+        was silently restoring a stale cloud snapshot on reinstall (dropped the
+        Gemini key + recent changes during testing). Off until the opt-in Drive
+        backup ships; the manual ZIP backup covers users meanwhile. -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
