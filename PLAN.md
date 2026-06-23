@@ -59,6 +59,13 @@ recipe sharing, ZIP backup/restore.
      backup ZIP; gives visible/cross-device backups but adds an account + a key, against the
      no-account default → strictly opt-in, only if users ask. Either way: opt-in and disclosed
      (data leaves the device to the user's own Drive).
+- 🤖 **Improve on-device recognition** (backlog): the bundled AIY food_V1 model (2024 dish
+  classes, skewed to North-American/global *dishes*) is weak on or misses whole categories —
+  e.g. **beverages** (coffee/juice/soda/smoothies), drinks, and many packaged/regional foods.
+  Options: evaluate a newer/larger on-device food classifier (or a beverage-aware one); add a
+  lightweight secondary classifier or heuristics for the weak categories; improve the
+  label→catalog kcal mapping for recognized items. The opt-in **Gemini** cloud path already
+  handles these well, so this is specifically about closing the on-device gap.
 - 💤 **Phase 5b offline-pack deltas**: PARKED INDEFINITELY (packs are tiny; full re-download is fine).
 
 ## Status (2026-06-17)
