@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privacy Policy — Knabberfuchs</title>
+<meta name="description" content="Knabberfuchs privacy policy. No accounts, no analytics, no ads, no tracking. Your data stays on your phone." />
+<link rel="icon" href="favicon.png" type="image/png" />
+<style>
+  :root{
+    --green:#5f8a34; --green-d:#456627; --ink:#22271c;
+    --bg:#f4f6ee; --card:#ffffff; --muted:#5c6453; --line:#e3e7d8;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--green-d)}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  header{padding:56px 0 24px;text-align:center}
+  header img.logo{width:84px;height:84px}
+  h1{font-size:2.1rem;margin:.5rem 0 .2rem;letter-spacing:-.02em}
+  .meta{color:var(--muted);font-size:.95rem;margin:0}
+  main{padding:8px 0 24px}
+  h2{font-size:1.3rem;margin:34px 0 10px;letter-spacing:-.01em}
+  h3{font-size:1.05rem;margin:20px 0 4px}
+  p,li{color:var(--ink)}
+  .muted{color:var(--muted)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 24px;margin:18px 0}
+  .tldr{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--green);
+        border-radius:12px;padding:18px 22px;margin:18px 0}
+  ul{padding-left:20px}
+  li{margin:6px 0}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.96rem}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--green-d)}
+  footer{padding:36px 0 60px;text-align:center;color:var(--muted);font-size:.92rem;border-top:1px solid var(--line);margin-top:30px}
+  .back{display:inline-block;margin-top:8px;font-weight:600}
+  @media(max-width:560px){h1{font-size:1.7rem}}
+</style>
+</head>
+<body>
+
+<header>
+  <img class="logo" src="favicon.png" alt="Knabberfuchs" />
+  <h1>Privacy Policy</h1>
+  <p class="meta">Knabberfuchs 🦊 &middot; last updated 23 June 2026</p>
+</header>
+
+<main class="wrap">
+
+  <div class="tldr">
+    <strong>The short version:</strong> Knabberfuchs has no accounts, no analytics, no ads, and
+    no tracking. Everything you log lives in a database <em>on your phone</em>. Nothing is sent to
+    us — we don't run a server and we never see your data. A few optional features talk to outside
+    services only when <em>you</em> use them, and only with the minimum needed to work.
+  </div>
+
+  <h2>1. Who we are</h2>
+  <p>Knabberfuchs (“the app”) is an offline-first calorie tracker for Android. This policy explains
+    what the app does and doesn't do with your information. If anything here is unclear, contact us
+    at <a href="mailto:developer@knabberfuchs.ch">developer@knabberfuchs.ch</a>.</p>
+
+  <h2>2. Data stored on your device</h2>
+  <p>Everything you enter — your food diary, recipes, custom foods, daily targets, and settings — is
+    stored only in a local database on your device. It is not uploaded anywhere, is not readable by
+    us, and stays on the device unless you choose to export it.</p>
+  <p>You can export all of your data to a backup file (a ZIP containing JSON and CSV) and restore it
+    later. That file is saved wherever you choose and is never sent to us or anyone else.</p>
+
+  <h2>3. Information that leaves your device</h2>
+  <p>The app only contacts the internet for the specific features below, and never sends personal
+    identifiers (no name, no email, no account, no device ID, no advertising ID).</p>
+
+  <table>
+    <tr><th>Feature</th><th>What is sent</th><th>To whom</th></tr>
+    <tr>
+      <td>Barcode scan &amp; food search</td>
+      <td>The barcode number or the words you typed</td>
+      <td>Open Food Facts (<span class="muted">world.openfoodfacts.org</span>)</td>
+    </tr>
+    <tr>
+      <td>AI meal photo recognition <strong>(optional)</strong></td>
+      <td>The meal photo you took — <em>only</em> if you have added your own Google&nbsp;Gemini API key</td>
+      <td>Google (<span class="muted">generativelanguage.googleapis.com</span>)</td>
+    </tr>
+    <tr>
+      <td>Offline database download</td>
+      <td>A standard file-download request for the country database you chose</td>
+      <td>Hugging Face (<span class="muted">huggingface.co</span>)</td>
+    </tr>
+    <tr>
+      <td>“Add to Open Food Facts”</td>
+      <td>Opens Open Food Facts' own website in your browser; any product you submit is handled there</td>
+      <td>Open Food Facts</td>
+    </tr>
+  </table>
+
+  <h3>On-device photo recognition</h3>
+  <p>By default, the “scan a meal with AI” feature runs entirely on your device using a bundled image
+    model. Your photo never leaves the phone. It is only sent to Google if you have personally
+    entered a Google Gemini API key in Settings — a feature that is off until you set it up.</p>
+
+  <h3>If you use your own Gemini key</h3>
+  <p>When enabled, the meal photo is sent to Google's Gemini API to estimate the dish and its
+    calories. That request is governed by
+    <a href="https://policies.google.com/privacy">Google's Privacy Policy</a> and the terms of Google
+    AI Studio / the Gemini API. Depending on your Google account and plan, Google may use data sent to
+    the free tier to improve their services. This is your choice; the app works fully without it.</p>
+
+  <h2>4. Health Connect (optional)</h2>
+  <p>If you turn it on, the app can write your logged calories and macronutrients to Android Health
+    Connect. This is a write-only sync that stays on your device and within Android's own Health
+    Connect system; it is not transmitted to us. You can disable it at any time, and you control which
+    apps may read Health Connect data through Android's settings.</p>
+
+  <h2>5. No analytics, ads, or tracking</h2>
+  <p>The app contains no advertising, no analytics or crash-reporting SDKs, no social-media trackers,
+    and no third-party tracking of any kind. We do not build profiles and we do not sell or share
+    data — because we never collect it in the first place.</p>
+
+  <h2>6. Children's privacy</h2>
+  <p>The app is not directed at children under 13 and does not knowingly collect any personal
+    information from anyone, regardless of age.</p>
+
+  <h2>7. Retention &amp; deletion</h2>
+  <p>Because your data is stored only on your device, you are in full control of it. Deleting entries
+    in the app removes them, and uninstalling the app removes all of its local data. There is nothing
+    stored on our side to request deletion of.</p>
+
+  <h2>8. Changes to this policy</h2>
+  <p>If this policy changes, we will update this page and the “last updated” date above. Material
+    changes will be reflected here before they take effect.</p>
+
+  <h2>9. Contact</h2>
+  <p>Questions about this policy or your privacy? Email
+    <a href="mailto:developer@knabberfuchs.ch">developer@knabberfuchs.ch</a>.</p>
+
+  <a class="back" href="index.html">&larr; Back to Knabberfuchs</a>
+</main>
+
+<footer>
+  <div class="wrap">
+    Knabberfuchs · made in Switzerland 🇨🇭 · food data © Open Food Facts contributors (ODbL)
+    &amp; the Swiss Food Composition Database (FSVO)
+  </div>
+</footer>
+
+</body>
+</html>
