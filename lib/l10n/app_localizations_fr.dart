@@ -297,7 +297,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsAboutBody =>
-      'Sans publicité, sans abonnement. Données d\'Open Food Facts et de la Base de données suisse des valeurs nutritives (Office fédéral de la sécurité alimentaire et des affaires vétérinaires, OSAV). La reconnaissance photo utilise le modèle alimentaire AIY de Google (Apache 2.0).';
+      'Sans publicité, sans abonnement. Données alimentaires d\'Open Food Facts (© contributeurs Open Food Facts, ODbL) et de la Base de données suisse des valeurs nutritives (Office fédéral de la sécurité alimentaire et des affaires vétérinaires, OSAV). Tailles de portions d\'après USDA FoodData Central (domaine public). La reconnaissance photo sur l\'appareil utilise le modèle AIY food_V1 de Google (Apache 2.0). Touchez « Afficher les licences » pour les composants open source.';
 
   @override
   String get offThanksTitle => 'Merci à Open Food Facts';

@@ -297,7 +297,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsAboutBody =>
-      'Werbefrei, keine Abos. Daten von Open Food Facts und der Schweizer Nährwertdatenbank (Bundesamt für Lebensmittelsicherheit und Veterinärwesen, BLV). Die Foto-Erkennung nutzt Googles AIY-Lebensmittelmodell (Apache 2.0).';
+      'Werbefrei, keine Abos. Lebensmitteldaten von Open Food Facts (© Open Food Facts contributors, ODbL) und der Schweizer Nährwertdatenbank (Bundesamt für Lebensmittelsicherheit und Veterinärwesen, BLV). Portionsgrössen basierend auf USDA FoodData Central (gemeinfrei). Die Foto-Erkennung auf dem Gerät nutzt Googles AIY-food_V1-Modell (Apache 2.0). Tippe auf „Lizenzen anzeigen“ für die Open-Source-Komponenten.';
 
   @override
   String get offThanksTitle => 'Dank an Open Food Facts';
