@@ -24,6 +24,21 @@ fastlane/
 
 Locales: `en-US` (default), `de-DE`, `fr-FR`, `it-IT`.
 
+## No-Ruby alternative: `tool/play_publish.py`
+
+fastlane needs Ruby. If you don't have it, `tool/play_publish.py` pushes this
+same metadata tree via the Android Publisher API directly (Python only):
+
+```sh
+python3 -m pip install --user google-auth google-api-python-client
+python3 tool/play_publish.py            # DRY RUN — validates, saves nothing
+python3 tool/play_publish.py --commit   # saves the listing as a draft
+```
+
+It reads `fastlane/play-store-key.json` and the `metadata/android/<locale>`
+text + screenshots. `--commit` uses `changesNotSentForReview`, so nothing is
+submitted for review — you still publish manually in the Console.
+
 ## One-time setup
 
 1. **Service account + key (you do this — it's a credential):**
