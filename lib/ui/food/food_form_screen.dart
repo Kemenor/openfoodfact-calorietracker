@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/format.dart';
 import '../../core/snackbar.dart';
@@ -19,8 +18,8 @@ import 'image_source_sheet.dart';
 
 /// Create a saved food: one full nutrition form for everything. The barcode is
 /// just an optional field (type it, or tap the icon to scan one) — with a value
-/// the food is re-scannable and offers an Open Food Facts contribution link.
-/// Pass [barcode] to pre-fill it (e.g. from a not-found scan). Pops the [Food].
+/// the food is re-scannable. Pass [barcode] to pre-fill it (e.g. from a
+/// not-found scan). Pops the [Food].
 class FoodFormScreen extends ConsumerStatefulWidget {
   final String? barcode;
   const FoodFormScreen({super.key, this.barcode});
@@ -43,15 +42,6 @@ class _FoodFormScreenState extends ConsumerState<FoodFormScreen> {
   final _satfat = TextEditingController();
   final _salt = TextEditingController();
   bool _ocrBusy = false;
-
-  bool get _hasBarcode => _barcode.text.trim().isNotEmpty;
-
-  @override
-  void initState() {
-    super.initState();
-    // Rebuild so the "Add to Open Food Facts" section follows the field.
-    _barcode.addListener(() => setState(() {}));
-  }
 
   @override
   void dispose() {
@@ -145,16 +135,6 @@ class _FoodFormScreenState extends ConsumerState<FoodFormScreen> {
     if (mounted) Navigator.of(context).pop(food);
   }
 
-  Future<void> _contributeToOff() async {
-    // Open OFF for this barcode — App Links route to the OFF app if installed,
-    // otherwise the browser. OFF handles its own login + submission.
-    await launchUrl(
-      Uri.parse('https://world.openfoodfacts.org/cgi/product.pl'
-          '?type=add&code=${_barcode.text.trim()}'),
-      mode: LaunchMode.externalApplication,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -230,18 +210,6 @@ class _FoodFormScreenState extends ConsumerState<FoodFormScreen> {
           _numField(_fiber, l10n.addFibre, 'g'),
           const SizedBox(height: 12),
           _numField(_salt, l10n.addSalt, 'g'),
-          if (_hasBarcode) ...[
-            const SizedBox(height: 24),
-            OutlinedButton.icon(
-              onPressed: _contributeToOff,
-              icon: const Icon(Icons.volunteer_activism_outlined),
-              label: Text(l10n.addToOff),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 6),
-              child: Text(l10n.addToOffNote, style: theme.textTheme.bodySmall),
-            ),
-          ],
         ],
       ),
     );
