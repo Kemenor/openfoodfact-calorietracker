@@ -1,0 +1,1 @@
+Da un elenco di ingredienti: scorrendo (o toccando) un ingrediente la ricerca viene ora precompilata con il suo nome, senza riscrivere ciò che è stato scansionato.

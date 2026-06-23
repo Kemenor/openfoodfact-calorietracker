@@ -297,7 +297,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsAboutBody =>
-      'Werbefrei, keine Abos. Daten von Open Food Facts und der Schweizer Nährwertdatenbank (Bundesamt für Lebensmittelsicherheit und Veterinärwesen, BLV). Die Foto-Erkennung nutzt Googles AIY-Lebensmittelmodell (Apache 2.0).';
+      'Werbefrei, keine Abos. Lebensmitteldaten von Open Food Facts (© Open Food Facts contributors, ODbL) und der Schweizer Nährwertdatenbank (Bundesamt für Lebensmittelsicherheit und Veterinärwesen, BLV). Portionsgrössen basierend auf USDA FoodData Central (gemeinfrei). Die Foto-Erkennung auf dem Gerät nutzt Googles AIY-food_V1-Modell (Apache 2.0). Tippe auf „Lizenzen anzeigen“ für die Open-Source-Komponenten.';
 
   @override
   String get offThanksTitle => 'Dank an Open Food Facts';
@@ -361,9 +361,46 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String volumeDensity(String grams, String density) {
+    return '≈ $grams g · $density g/ml';
+  }
+
+  @override
   String oneServing(String grams) {
     return '1 Portion ($grams g)';
   }
+
+  @override
+  String portionChip(String unit, String grams) {
+    return '1 $unit · $grams g';
+  }
+
+  @override
+  String get portionUnitPiece => 'Stück';
+
+  @override
+  String get portionUnitSmall => 'klein';
+
+  @override
+  String get portionUnitMedium => 'mittelgross';
+
+  @override
+  String get portionUnitLarge => 'gross';
+
+  @override
+  String get portionUnitSlice => 'Scheibe';
+
+  @override
+  String get portionUnitClove => 'Zehe';
+
+  @override
+  String get portionUnitStalk => 'Stange';
+
+  @override
+  String get portionUnitHandful => 'Handvoll';
+
+  @override
+  String get portionUnitCob => 'Kolben';
 
   @override
   String get searchFoodsHint => 'Lebensmittel suchen…';
@@ -419,6 +456,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get quickAddCalories => 'Kalorien';
+
+  @override
+  String get quickAddWeight => 'Gewicht';
 
   @override
   String get quickAddMacros => 'Makros hinzufügen (optional)';

@@ -1,0 +1,1 @@
+The barcode scanner when picking a food now shows a labelled “Scan barcode” button, matching the rest of the app.

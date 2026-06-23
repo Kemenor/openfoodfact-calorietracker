@@ -3,9 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 import 'app.dart';
+import 'licenses.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Surface the bundled food model's Apache-2.0 license on the licenses page.
+  registerBundledLicenses();
   // Load date-symbol data so DateFormat can render de/fr/it month + weekday names.
   await initializeDateFormatting();
   runApp(const ProviderScope(child: CalorieApp()));

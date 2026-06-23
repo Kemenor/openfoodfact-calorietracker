@@ -6,6 +6,7 @@ import '../../core/format.dart';
 import '../../data/db/database.dart';
 import '../../domain/enums.dart';
 import '../../domain/food_name.dart';
+import '../../domain/portion_units.dart';
 import '../../domain/units.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers.dart';
@@ -36,6 +37,7 @@ Future<bool?> showLogFoodSheet(
       fat100: food.fat100,
       servingG: food.servingG,
       servingLabel: food.servingLabel,
+      density: food.densityGPerMl,
       initialGrams: food.servingG ?? 100,
       meal: meal,
       onSubmit: (g, m) async {
@@ -132,6 +134,7 @@ class _LogSheet extends StatefulWidget {
   final double? fat100;
   final double? servingG;
   final String? servingLabel;
+  final double? density;
   final double initialGrams;
   final MealType meal;
   final Future<void> Function(double grams, MealType meal) onSubmit;
@@ -151,6 +154,7 @@ class _LogSheet extends StatefulWidget {
     required this.initialGrams,
     required this.meal,
     required this.onSubmit,
+    this.density,
     this.onDelete,
   });
 
@@ -159,13 +163,18 @@ class _LogSheet extends StatefulWidget {
 }
 
 class _LogSheetState extends State<_LogSheet> {
-  late final TextEditingController _amountCtrl =
-      TextEditingController(text: gramsStr(widget.initialGrams));
-  AmountUnit _unit = AmountUnit.grams;
+  // Liquids (those with a density) open in millilitres; everything else in
+  // grams, defaulting to the food's serving/portion weight.
+  late AmountUnit _unit =
+      widget.density != null ? AmountUnit.milliliters : AmountUnit.grams;
+  late final TextEditingController _amountCtrl = TextEditingController(
+      text: gramsStr(_unit == AmountUnit.grams
+          ? widget.initialGrams
+          : _unit.typicalAmount));
 
   double get _amount =>
       double.tryParse(_amountCtrl.text.replaceAll(',', '.')) ?? 0;
-  double get _grams => _unit.toGrams(_amount);
+  double get _grams => _unit.toGrams(_amount, density: widget.density ?? 1.0);
 
   @override
   void dispose() {
@@ -262,22 +271,40 @@ class _LogSheetState extends State<_LogSheet> {
           if (_unit.isVolume)
             Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: Text(l10n.volumeApprox(gramsStr(grams)),
+              child: Text(
+                  widget.density != null
+                      ? l10n.volumeDensity(
+                          gramsStr(grams), widget.density!.toString())
+                      : l10n.volumeApprox(gramsStr(grams)),
                   style: theme.textTheme.bodySmall),
             ),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
             children: [
+              // Natural portion leads the row and shows selected while it's the
+              // chosen amount (it's the default on open), so it reads as the
+              // active pick rather than an afterthought.
+              if (_unit == AmountUnit.grams && widget.servingG != null)
+                Builder(builder: (_) {
+                  // Swiss curated foods carry a known unit key ("medium") →
+                  // "1 medium · 300 g". OFF foods carry a free-text serving_size
+                  // ("30 g") → plain "1 serving (30 g)".
+                  final unit = widget.servingLabel == null
+                      ? null
+                      : portionUnitLabel(l10n, widget.servingLabel!);
+                  return ChoiceChip(
+                    label: Text(unit != null
+                        ? l10n.portionChip(unit, gramsStr(widget.servingG!))
+                        : l10n.oneServing(gramsStr(widget.servingG!))),
+                    selected: _grams == widget.servingG,
+                    onSelected: (_) => _setGrams(widget.servingG!),
+                  );
+                }),
               for (final c in _unit.quickAmounts)
                 ActionChip(
                   label: Text('${gramsStr(c)} ${_unit.label}'),
                   onPressed: () => _setAmount(c),
-                ),
-              if (_unit == AmountUnit.grams && widget.servingG != null)
-                ActionChip(
-                  label: Text(l10n.oneServing(gramsStr(widget.servingG!))),
-                  onPressed: () => _setGrams(widget.servingG!),
                 ),
             ],
           ),

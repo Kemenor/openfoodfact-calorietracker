@@ -609,7 +609,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsAboutBody.
   ///
   /// In en, this message translates to:
-  /// **'Ad-free, no subscriptions. Data from Open Food Facts and the Swiss Food Composition Database (Federal Food Safety and Veterinary Office, FSVO). Food photo recognition uses Google\'s AIY food model (Apache 2.0).'**
+  /// **'Ad-free, no subscriptions. Food data from Open Food Facts (© Open Food Facts contributors, ODbL) and the Swiss Food Composition Database (Federal Food Safety and Veterinary Office, FSVO). Portion sizes informed by USDA FoodData Central (public domain). On-device photo recognition uses Google\'s AIY food_V1 model (Apache 2.0). Tap “View licenses” for open-source components.'**
   String get settingsAboutBody;
 
   /// No description provided for @offThanksTitle.
@@ -708,11 +708,77 @@ abstract class AppLocalizations {
   /// **'≈ {grams} g (assumes ~1 g/ml)'**
   String volumeApprox(String grams);
 
+  /// No description provided for @volumeDensity.
+  ///
+  /// In en, this message translates to:
+  /// **'≈ {grams} g · {density} g/ml'**
+  String volumeDensity(String grams, String density);
+
   /// No description provided for @oneServing.
   ///
   /// In en, this message translates to:
   /// **'1 serving ({grams} g)'**
   String oneServing(String grams);
+
+  /// No description provided for @portionChip.
+  ///
+  /// In en, this message translates to:
+  /// **'1 {unit} · {grams} g'**
+  String portionChip(String unit, String grams);
+
+  /// No description provided for @portionUnitPiece.
+  ///
+  /// In en, this message translates to:
+  /// **'piece'**
+  String get portionUnitPiece;
+
+  /// No description provided for @portionUnitSmall.
+  ///
+  /// In en, this message translates to:
+  /// **'small'**
+  String get portionUnitSmall;
+
+  /// No description provided for @portionUnitMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'medium'**
+  String get portionUnitMedium;
+
+  /// No description provided for @portionUnitLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'large'**
+  String get portionUnitLarge;
+
+  /// No description provided for @portionUnitSlice.
+  ///
+  /// In en, this message translates to:
+  /// **'slice'**
+  String get portionUnitSlice;
+
+  /// No description provided for @portionUnitClove.
+  ///
+  /// In en, this message translates to:
+  /// **'clove'**
+  String get portionUnitClove;
+
+  /// No description provided for @portionUnitStalk.
+  ///
+  /// In en, this message translates to:
+  /// **'stalk'**
+  String get portionUnitStalk;
+
+  /// No description provided for @portionUnitHandful.
+  ///
+  /// In en, this message translates to:
+  /// **'handful'**
+  String get portionUnitHandful;
+
+  /// No description provided for @portionUnitCob.
+  ///
+  /// In en, this message translates to:
+  /// **'cob'**
+  String get portionUnitCob;
 
   /// No description provided for @searchFoodsHint.
   ///
@@ -809,6 +875,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Calories'**
   String get quickAddCalories;
+
+  /// No description provided for @quickAddWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get quickAddWeight;
 
   /// No description provided for @quickAddMacros.
   ///

@@ -297,7 +297,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsAboutBody =>
-      'Sans publicité, sans abonnement. Données d\'Open Food Facts et de la Base de données suisse des valeurs nutritives (Office fédéral de la sécurité alimentaire et des affaires vétérinaires, OSAV). La reconnaissance photo utilise le modèle alimentaire AIY de Google (Apache 2.0).';
+      'Sans publicité, sans abonnement. Données alimentaires d\'Open Food Facts (© contributeurs Open Food Facts, ODbL) et de la Base de données suisse des valeurs nutritives (Office fédéral de la sécurité alimentaire et des affaires vétérinaires, OSAV). Tailles de portions d\'après USDA FoodData Central (domaine public). La reconnaissance photo sur l\'appareil utilise le modèle AIY food_V1 de Google (Apache 2.0). Touchez « Afficher les licences » pour les composants open source.';
 
   @override
   String get offThanksTitle => 'Merci à Open Food Facts';
@@ -361,9 +361,46 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String volumeDensity(String grams, String density) {
+    return '≈ $grams g · $density g/ml';
+  }
+
+  @override
   String oneServing(String grams) {
     return '1 portion ($grams g)';
   }
+
+  @override
+  String portionChip(String unit, String grams) {
+    return '1 $unit · $grams g';
+  }
+
+  @override
+  String get portionUnitPiece => 'pièce';
+
+  @override
+  String get portionUnitSmall => 'petit';
+
+  @override
+  String get portionUnitMedium => 'moyen';
+
+  @override
+  String get portionUnitLarge => 'grand';
+
+  @override
+  String get portionUnitSlice => 'tranche';
+
+  @override
+  String get portionUnitClove => 'gousse';
+
+  @override
+  String get portionUnitStalk => 'branche';
+
+  @override
+  String get portionUnitHandful => 'poignée';
+
+  @override
+  String get portionUnitCob => 'épi';
 
   @override
   String get searchFoodsHint => 'Rechercher des aliments…';
@@ -419,6 +456,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get quickAddCalories => 'Calories';
+
+  @override
+  String get quickAddWeight => 'Poids';
 
   @override
   String get quickAddMacros => 'Ajouter les macros (facultatif)';

@@ -139,17 +139,7 @@ class SettingsScreen extends ConsumerWidget {
               ),
               const Divider(),
               _SectionHeader(l10n.settingsAbout),
-              AboutListTile(
-                icon: const Icon(Icons.info_outline),
-                applicationName: 'Knabberfuchs',
-                applicationVersion: '0.1.0',
-                aboutBoxChildren: [
-                  const SizedBox(height: 4),
-                  Text(l10n.settingsAboutBody),
-                  const SizedBox(height: 20),
-                  const _OpenFoodFactsThanks(),
-                ],
-              ),
+              const _AboutTile(),
             ],
           );
         },
@@ -244,6 +234,34 @@ Future<void> _importBackup(BuildContext context, WidgetRef ref) async {
 
 /// A heartfelt thank-you to Open Food Facts, shown in the About box, with a
 /// link to their donation page.
+/// About entry — shows the real app version+build (so testers can report it)
+/// and opens the standard about dialog with a "view licenses" button.
+class _AboutTile extends ConsumerWidget {
+  const _AboutTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final version = ref.watch(appVersionProvider).asData?.value;
+    return ListTile(
+      leading: const Icon(Icons.info_outline),
+      title: const Text('Knabberfuchs'),
+      subtitle: version == null ? null : Text(version),
+      onTap: () => showAboutDialog(
+        context: context,
+        applicationName: 'Knabberfuchs',
+        applicationVersion: version,
+        children: [
+          const SizedBox(height: 4),
+          Text(l10n.settingsAboutBody),
+          const SizedBox(height: 20),
+          const _OpenFoodFactsThanks(),
+        ],
+      ),
+    );
+  }
+}
+
 class _OpenFoodFactsThanks extends StatelessWidget {
   const _OpenFoodFactsThanks();
 

@@ -1,0 +1,1 @@
+Depuis une liste d'ingrédients : balayer (ou toucher) un ingrédient préremplit désormais la recherche avec son nom, sans avoir à retaper ce qui a été scanné.

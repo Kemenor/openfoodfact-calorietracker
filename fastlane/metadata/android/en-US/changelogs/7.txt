@@ -1,0 +1,1 @@
+Liquid densities: ml/cup/tbsp now convert accurately for oils, honey, milk, juices and more. Plus ~25 more foods with one-tap natural portions (berries, melon, dried fruit, sausages, croissant…).

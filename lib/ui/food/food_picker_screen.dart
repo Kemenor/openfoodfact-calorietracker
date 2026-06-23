@@ -14,7 +14,11 @@ import 'offline_reminder.dart';
 /// ingredient or add a recipe ingredient.
 class FoodPickerScreen extends ConsumerWidget {
   final String? title;
-  const FoodPickerScreen({super.key, this.title});
+
+  /// Pre-fill the search box (e.g. with the OCR ingredient name) so the user
+  /// doesn't retype what we already parsed.
+  final String? initialQuery;
+  const FoodPickerScreen({super.key, this.title, this.initialQuery});
 
   Future<void> _scan(BuildContext context, WidgetRef ref) async {
     final barcode = await Navigator.of(context).push<String>(MaterialPageRoute(
@@ -50,17 +54,15 @@ class FoodPickerScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title ?? l10n.selectFood),
-        actions: [
-          IconButton(
-            tooltip: l10n.scanBarcode,
-            icon: const Icon(Icons.qr_code_scanner),
-            onPressed: () => _scan(context, ref),
-          ),
-        ],
+      appBar: AppBar(title: Text(title ?? l10n.selectFood)),
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'pickerScanFab',
+        onPressed: () => _scan(context, ref),
+        icon: const Icon(Icons.qr_code_scanner),
+        label: Text(l10n.scanBarcode),
       ),
       body: FoodSearchList(
+        initialQuery: initialQuery,
         onPick: (food) => Navigator.of(context).pop(food),
         onCreateCustom: () => _createCustom(context),
       ),

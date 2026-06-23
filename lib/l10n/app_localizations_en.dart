@@ -295,7 +295,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsAboutBody =>
-      'Ad-free, no subscriptions. Data from Open Food Facts and the Swiss Food Composition Database (Federal Food Safety and Veterinary Office, FSVO). Food photo recognition uses Google\'s AIY food model (Apache 2.0).';
+      'Ad-free, no subscriptions. Food data from Open Food Facts (© Open Food Facts contributors, ODbL) and the Swiss Food Composition Database (Federal Food Safety and Veterinary Office, FSVO). Portion sizes informed by USDA FoodData Central (public domain). On-device photo recognition uses Google\'s AIY food_V1 model (Apache 2.0). Tap “View licenses” for open-source components.';
 
   @override
   String get offThanksTitle => 'Thanks to Open Food Facts';
@@ -357,9 +357,46 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String volumeDensity(String grams, String density) {
+    return '≈ $grams g · $density g/ml';
+  }
+
+  @override
   String oneServing(String grams) {
     return '1 serving ($grams g)';
   }
+
+  @override
+  String portionChip(String unit, String grams) {
+    return '1 $unit · $grams g';
+  }
+
+  @override
+  String get portionUnitPiece => 'piece';
+
+  @override
+  String get portionUnitSmall => 'small';
+
+  @override
+  String get portionUnitMedium => 'medium';
+
+  @override
+  String get portionUnitLarge => 'large';
+
+  @override
+  String get portionUnitSlice => 'slice';
+
+  @override
+  String get portionUnitClove => 'clove';
+
+  @override
+  String get portionUnitStalk => 'stalk';
+
+  @override
+  String get portionUnitHandful => 'handful';
+
+  @override
+  String get portionUnitCob => 'cob';
 
   @override
   String get searchFoodsHint => 'Search foods…';
@@ -415,6 +452,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quickAddCalories => 'Calories';
+
+  @override
+  String get quickAddWeight => 'Weight';
 
   @override
   String get quickAddMacros => 'Add macros (optional)';

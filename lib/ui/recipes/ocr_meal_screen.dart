@@ -138,7 +138,9 @@ class _OcrMealScreenState extends ConsumerState<OcrMealScreen> {
   Future<void> _match(int i) async {
     final food = await Navigator.of(context).push<Food>(
       MaterialPageRoute(
-          builder: (_) => FoodPickerScreen(title: _items[i].parsed.name)),
+          builder: (_) => FoodPickerScreen(
+              title: _items[i].parsed.name,
+              initialQuery: _items[i].parsed.name)),
     );
     if (food == null || !mounted) return;
     // Persist + remember the mapping so this name auto-matches next time.

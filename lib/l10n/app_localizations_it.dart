@@ -297,7 +297,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsAboutBody =>
-      'Senza pubblicità, senza abbonamenti. Dati da Open Food Facts e dalla Banca dati svizzera dei valori nutritivi (Ufficio federale della sicurezza alimentare e di veterinaria, USAV). Il riconoscimento foto usa il modello alimentare AIY di Google (Apache 2.0).';
+      'Senza pubblicità, senza abbonamenti. Dati alimentari da Open Food Facts (© contributori Open Food Facts, ODbL) e dalla Banca dati svizzera dei valori nutritivi (Ufficio federale della sicurezza alimentare e di veterinaria, USAV). Dimensioni delle porzioni basate su USDA FoodData Central (dominio pubblico). Il riconoscimento foto sul dispositivo usa il modello AIY food_V1 di Google (Apache 2.0). Tocca “Mostra licenze” per i componenti open source.';
 
   @override
   String get offThanksTitle => 'Grazie a Open Food Facts';
@@ -361,9 +361,46 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String volumeDensity(String grams, String density) {
+    return '≈ $grams g · $density g/ml';
+  }
+
+  @override
   String oneServing(String grams) {
     return '1 porzione ($grams g)';
   }
+
+  @override
+  String portionChip(String unit, String grams) {
+    return '1 $unit · $grams g';
+  }
+
+  @override
+  String get portionUnitPiece => 'pezzo';
+
+  @override
+  String get portionUnitSmall => 'piccolo';
+
+  @override
+  String get portionUnitMedium => 'medio';
+
+  @override
+  String get portionUnitLarge => 'grande';
+
+  @override
+  String get portionUnitSlice => 'fetta';
+
+  @override
+  String get portionUnitClove => 'spicchio';
+
+  @override
+  String get portionUnitStalk => 'gambo';
+
+  @override
+  String get portionUnitHandful => 'manciata';
+
+  @override
+  String get portionUnitCob => 'pannocchia';
 
   @override
   String get searchFoodsHint => 'Cerca alimenti…';
@@ -419,6 +456,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get quickAddCalories => 'Calorie';
+
+  @override
+  String get quickAddWeight => 'Peso';
 
   @override
   String get quickAddMacros => 'Aggiungi macro (facoltativo)';

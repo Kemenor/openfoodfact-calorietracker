@@ -1,0 +1,1 @@
+Flüssigkeits-Dichten: ml/Tasse/EL werden jetzt korrekt umgerechnet für Öle, Honig, Milch, Säfte und mehr. Plus ~25 weitere Lebensmittel mit natürlichen Portionen (Beeren, Melone, Trockenfrüchte, Würste, Gipfeli …).

@@ -12,8 +12,9 @@ const _assetPath = 'assets/swiss_foods.csv.gz';
 const _versionKey = 'swissDatasetVersion';
 
 /// Bump whenever assets/swiss_foods.csv.gz changes so existing installs
-/// re-import. v2: 2025/07 generation, now with full Italian names (1190 foods).
-const swissDatasetVersion = '2';
+/// re-import. v5: ~290 foods with portions/densities (curate+verify pass).
+/// v4: liquid densities + more portions. v3: portions. v2: Italian names.
+const swissDatasetVersion = '5';
 
 /// Minimal RFC-4180-ish CSV parser: handles quoted fields containing commas,
 /// newlines, and doubled quotes. Good enough for our controlled asset.
@@ -66,7 +67,8 @@ List<List<String>> parseCsv(String input) {
 
 /// Parse the bundled Swiss FCDB CSV into catalog rows.
 /// Columns: id,name_en,name_de,name_fr,name_it,kcal100,protein100,carb100,
-///          fat100,fiber100,sugar100,satfat100,sodium_mg100,search_text
+///          fat100,fiber100,sugar100,satfat100,sodium_mg100,search_text,
+///          serving_g,serving_unit,density
 List<FoodsCompanion> parseSwissCsv(String csv) {
   final rows = parseCsv(csv);
   final out = <FoodsCompanion>[];
@@ -88,6 +90,9 @@ List<FoodsCompanion> parseSwissCsv(String csv) {
       nameFr: Value(s(r[3])),
       nameIt: Value(s(r[4])),
       searchText: Value(s(r[13])),
+      servingG: Value(r.length > 14 ? n(r[14]) : null),
+      servingLabel: Value(r.length > 15 ? s(r[15]) : null),
+      densityGPerMl: Value(r.length > 16 ? n(r[16]) : null),
       kcal100: kcal,
       protein100: Value(n(r[6])),
       carb100: Value(n(r[7])),

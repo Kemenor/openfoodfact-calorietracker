@@ -72,6 +72,7 @@ Future<bool> startRecognizeFoodFlow(
               initialProtein: r.protein,
               initialCarb: r.carb,
               initialFat: r.fat,
+              initialWeight: r.grams,
               sourceLabel: l10n.recognizeByGemini) ==
           true;
     }

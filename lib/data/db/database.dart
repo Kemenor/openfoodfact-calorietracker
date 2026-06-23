@@ -18,7 +18,7 @@ class AppDatabase extends _$AppDatabase {
       : super(executor ?? driftDatabase(name: 'calorie_tracker'));
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -77,6 +77,10 @@ class AppDatabase extends _$AppDatabase {
             await customStatement(
                 'UPDATE foods SET source = 1 WHERE source IN (2, 3)');
             await customStatement('UPDATE foods SET source = 2 WHERE source = 4');
+          }
+          if (from < 9) {
+            // Per-food liquid density (g/ml) for accurate volume → grams.
+            await m.addColumn(foods, foods.densityGPerMl);
           }
         },
         beforeOpen: (details) async {

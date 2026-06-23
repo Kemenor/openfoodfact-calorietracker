@@ -1,0 +1,1 @@
+L'aggiunta rapida ha ora un campo peso (g) e il riconoscimento foto Gemini precompila il peso stimato della porzione — così le voci registrate hanno un peso reale in grammi, scalabile.
