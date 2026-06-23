@@ -1,0 +1,1 @@
+Updated to the 2025 Swiss Food Composition Database — now with full Italian food names and around 80 more foods. Search and display are native in all four languages.

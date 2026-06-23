@@ -1,0 +1,1 @@
+Mise à jour vers la Base suisse de composition des aliments 2025 — désormais avec les noms italiens complets et environ 80 aliments de plus. Recherche et affichage natifs dans les quatre langues.
