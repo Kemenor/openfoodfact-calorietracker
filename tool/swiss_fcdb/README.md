@@ -21,20 +21,22 @@ The DB is published as one Excel file per language, all sharing a stable numeric
 `ID` column (the join key). Place them next to this script as `de.xlsx`,
 `fr.xlsx`, `it.xlsx`, `en.xlsx`. They are git-ignored (large binaries).
 
-Current generation (2023/08, "corrected version 17.08.2023", ~1109 generic
-foods). The live host `naehrwertdaten.ch` is geo-restricted / intermittently
-down; these were retrieved via the Internet Archive:
+Current generation (**2025/07**, 1190 generic foods, all four languages). The
+download links live behind each language's `/downloads/` page on
+`naehrwertdaten.ch` (geo-restricted to CH); the files themselves are served from
+the BLV foodcase host:
 
 ```sh
-WB=https://web.archive.org/web
-curl -L -o de.xlsx "$WB/20250407204953id_/https://naehrwertdaten.ch/wp-content/uploads/2023/08/Schweizer_Nahrwertdatenbank.xlsx"
-curl -L -o fr.xlsx "$WB/20240423194012id_/https://naehrwertdaten.ch/wp-content/uploads/2023/08/Base_de_donnees_suisse_des_valeurs_nutritives.xlsx"
-curl -L -o en.xlsx "$WB/20231222230532id_/https://naehrwertdaten.ch/wp-content/uploads/2023/08/Swiss_food_composition_database.xlsx"
-# it.xlsx: not archived by the Wayback Machine. Fetch from the live site when
-# reachable (Italian /it/downloads/ page) — likely
-#   https://naehrwertdaten.ch/wp-content/uploads/2023/08/Banca_dati_svizzera_dei_valori_nutritivi.xlsx
-# Until then, Italian names fall back to English (nameIt stays null).
+B=https://webapp.prod.blv.foodcase-services.com/wp-content/uploads/2025/07
+curl -L -o en.xlsx "$B/Swiss_food_composition_database.xlsx"
+curl -L -o de.xlsx "$B/Schweizer_Nahrwertdatenbank.xlsx"
+curl -L -o fr.xlsx "$B/Base_de_donnees_suisse_des_valeurs_nutritives.xlsx"
+curl -L -o it.xlsx "$B/Banca_dati_svizzera_dei_valori_nutritivi.xlsx"
 ```
+
+Always fetch all four from the **same** generation so the `ID` join lines up.
+To find newer links later, scrape each `/<lang>/downloads/` page for the
+`.xlsx` href.
 
 ## Build
 

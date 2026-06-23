@@ -11,8 +11,8 @@ const _assetPath = 'assets/swiss_foods.csv.gz';
 const _versionKey = 'swissDatasetVersion';
 
 /// Bump whenever assets/swiss_foods.csv.gz changes so existing installs
-/// re-import (e.g. when the Italian names land).
-const swissDatasetVersion = '1';
+/// re-import. v2: 2025/07 generation, now with full Italian names (1190 foods).
+const swissDatasetVersion = '2';
 
 /// Minimal RFC-4180-ish CSV parser: handles quoted fields containing commas,
 /// newlines, and doubled quotes. Good enough for our controlled asset.
