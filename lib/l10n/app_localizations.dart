@@ -714,6 +714,48 @@ abstract class AppLocalizations {
   /// **'1 serving ({grams} g)'**
   String oneServing(String grams);
 
+  /// No description provided for @portionChip.
+  ///
+  /// In en, this message translates to:
+  /// **'1 {unit} · {grams} g'**
+  String portionChip(String unit, String grams);
+
+  /// No description provided for @portionUnitPiece.
+  ///
+  /// In en, this message translates to:
+  /// **'piece'**
+  String get portionUnitPiece;
+
+  /// No description provided for @portionUnitMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'medium'**
+  String get portionUnitMedium;
+
+  /// No description provided for @portionUnitSlice.
+  ///
+  /// In en, this message translates to:
+  /// **'slice'**
+  String get portionUnitSlice;
+
+  /// No description provided for @portionUnitClove.
+  ///
+  /// In en, this message translates to:
+  /// **'clove'**
+  String get portionUnitClove;
+
+  /// No description provided for @portionUnitStalk.
+  ///
+  /// In en, this message translates to:
+  /// **'stalk'**
+  String get portionUnitStalk;
+
+  /// No description provided for @portionUnitHandful.
+  ///
+  /// In en, this message translates to:
+  /// **'handful'**
+  String get portionUnitHandful;
+
   /// No description provided for @searchFoodsHint.
   ///
   /// In en, this message translates to:

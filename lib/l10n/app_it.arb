@@ -123,6 +123,13 @@
   "kcalPer100": "{kcal} kcal / 100 g",
   "volumeApprox": "≈ {grams} g (assume ~1 g/ml)",
   "oneServing": "1 porzione ({grams} g)",
+  "portionChip": "1 {unit} · {grams} g",
+  "portionUnitPiece": "pezzo",
+  "portionUnitMedium": "medio",
+  "portionUnitSlice": "fetta",
+  "portionUnitClove": "spicchio",
+  "portionUnitStalk": "gambo",
+  "portionUnitHandful": "manciata",
 
   "searchFoodsHint": "Cerca alimenti…",
   "searchRecentlyUsed": "Usati di recente",

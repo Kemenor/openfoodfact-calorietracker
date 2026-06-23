@@ -123,6 +123,13 @@
   "kcalPer100": "{kcal} kcal / 100 g",
   "volumeApprox": "≈ {grams} g (suppose ~1 g/ml)",
   "oneServing": "1 portion ({grams} g)",
+  "portionChip": "1 {unit} · {grams} g",
+  "portionUnitPiece": "pièce",
+  "portionUnitMedium": "moyen",
+  "portionUnitSlice": "tranche",
+  "portionUnitClove": "gousse",
+  "portionUnitStalk": "branche",
+  "portionUnitHandful": "poignée",
 
   "searchFoodsHint": "Rechercher des aliments…",
   "searchRecentlyUsed": "Récemment utilisés",

@@ -27,6 +27,22 @@ import openpyxl
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "..", "..", "assets", "swiss_foods.csv.gz")
+PORTIONS = os.path.join(HERE, "..", "portions", "portions.csv")
+
+
+def _load_portions():
+    """Curated natural-portion weights, keyed by exact English name (lower-cased).
+
+    Returns {name_lower: (unit_key, grams_str)}. See tool/portions/.
+    """
+    out = {}
+    if not os.path.exists(PORTIONS):
+        return out
+    with open(PORTIONS, encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            out[row["name_en"].strip().lower()] = (
+                row["unit"].strip(), row["grams"].strip())
+    return out
 
 # The "generic foods" sheet is named per language; match by position/keywords.
 GENERIC_SHEET = {
@@ -104,6 +120,8 @@ def main():
 
     names = {l: _names(r) for l, r in langs.items()}
     base = langs["en"]  # nutrients read from EN (identical across languages)
+    portions = _load_portions()
+    matched = 0
 
     rows_out = []
     for r in base[HEADER_ROW + 1:]:
@@ -134,12 +152,16 @@ def main():
                 toks.append(tok)
         search_text = " ".join(toks)
 
+        serving_unit, serving_g = portions.get(name_en.strip().lower(), ("", ""))
+        if serving_g:
+            matched += 1
+
         rows_out.append([
             fid, name_en, name_de, name_fr, name_it,
             _fmt(kcal), _fmt(_num(r[C_PROTEIN])), _fmt(_num(r[C_CARB])),
             _fmt(_num(r[C_FAT])), _fmt(_num(r[C_FIBRE])), _fmt(_num(r[C_SUGAR])),
             _fmt(_num(r[C_SATFAT])), _fmt(_num(r[C_SODIUM])),
-            search_text,
+            search_text, serving_g, serving_unit,
         ])
 
     rows_out.sort(key=lambda x: x[1].lower())  # by English name for stable diffs
@@ -148,13 +170,14 @@ def main():
     w.writerow([
         "id", "name_en", "name_de", "name_fr", "name_it",
         "kcal100", "protein100", "carb100", "fat100", "fiber100", "sugar100",
-        "satfat100", "sodium_mg100", "search_text",
+        "satfat100", "sodium_mg100", "search_text", "serving_g", "serving_unit",
     ])
     w.writerows(rows_out)
     raw = buf.getvalue().encode("utf-8")
     with gzip.open(OUT, "wb", compresslevel=9) as f:
         f.write(raw)
-    print(f"wrote {len(rows_out)} foods -> {os.path.relpath(OUT, os.path.join(HERE,'..','..'))} "
+    print(f"wrote {len(rows_out)} foods ({matched} with a natural portion) -> "
+          f"{os.path.relpath(OUT, os.path.join(HERE,'..','..'))} "
           f"({os.path.getsize(OUT)//1024} KB gz, {len(raw)//1024} KB raw)", file=sys.stderr)
 
 

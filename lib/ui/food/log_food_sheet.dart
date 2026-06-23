@@ -6,6 +6,7 @@ import '../../core/format.dart';
 import '../../data/db/database.dart';
 import '../../domain/enums.dart';
 import '../../domain/food_name.dart';
+import '../../domain/portion_units.dart';
 import '../../domain/units.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers.dart';
@@ -276,7 +277,11 @@ class _LogSheetState extends State<_LogSheet> {
                 ),
               if (_unit == AmountUnit.grams && widget.servingG != null)
                 ActionChip(
-                  label: Text(l10n.oneServing(gramsStr(widget.servingG!))),
+                  label: Text(widget.servingLabel != null
+                      ? l10n.portionChip(
+                          portionUnitLabel(l10n, widget.servingLabel!),
+                          gramsStr(widget.servingG!))
+                      : l10n.oneServing(gramsStr(widget.servingG!))),
                   onPressed: () => _setGrams(widget.servingG!),
                 ),
             ],

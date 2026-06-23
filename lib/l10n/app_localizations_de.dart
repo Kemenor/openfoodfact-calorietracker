@@ -366,6 +366,29 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String portionChip(String unit, String grams) {
+    return '1 $unit · $grams g';
+  }
+
+  @override
+  String get portionUnitPiece => 'Stück';
+
+  @override
+  String get portionUnitMedium => 'mittelgross';
+
+  @override
+  String get portionUnitSlice => 'Scheibe';
+
+  @override
+  String get portionUnitClove => 'Zehe';
+
+  @override
+  String get portionUnitStalk => 'Stange';
+
+  @override
+  String get portionUnitHandful => 'Handvoll';
+
+  @override
   String get searchFoodsHint => 'Lebensmittel suchen…';
 
   @override

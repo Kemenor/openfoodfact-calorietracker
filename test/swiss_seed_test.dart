@@ -34,6 +34,29 @@ void main() {
       expect(rows.single.name.value, 'Good');
     });
 
+    test('reads natural-portion columns when present', () {
+      const csv =
+          'id,name_en,name_de,name_fr,name_it,kcal100,protein100,carb100,fat100,fiber100,sugar100,satfat100,sodium_mg100,search_text,serving_g,serving_unit\n'
+          '10,"Cucumber, raw",Gurke,Concombre,Cetriolo,12,0.6,2,0.2,,,,,cucumber gurke,300,medium\n'
+          '11,Custom,Eigen,,,50,,,,,,,,custom,,\n';
+      final rows = parseSwissCsv(csv);
+      final cuke = rows[0];
+      expect(cuke.servingG.value, 300);
+      expect(cuke.servingLabel.value, 'medium');
+      // empty serving columns stay null
+      expect(rows[1].servingG.value, isNull);
+      expect(rows[1].servingLabel.value, isNull);
+    });
+
+    test('older 14-column rows (no portion columns) still parse', () {
+      const csv =
+          'id,name_en,name_de,name_fr,name_it,kcal100,protein100,carb100,fat100,fiber100,sugar100,satfat100,sodium_mg100,search_text\n'
+          '273,Almond,Mandel,Amande,,624,25.6,7.8,52.1,,,,,almond\n';
+      final f = parseSwissCsv(csv).single;
+      expect(f.name.value, 'Almond');
+      expect(f.servingG.value, isNull);
+    });
+
     test('leaves missing nutrients null', () {
       const csv =
           'id,name_en,name_de,name_fr,name_it,kcal100,protein100,carb100,fat100,fiber100,sugar100,satfat100,sodium_mg100,search_text\n'
