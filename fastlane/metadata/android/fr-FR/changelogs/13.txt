@@ -1,0 +1,1 @@
+Le scanner de code-barres lors du choix d'un aliment affiche désormais un bouton « Scanner un code-barres » étiqueté, comme dans le reste de l'app.

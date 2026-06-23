@@ -1,0 +1,1 @@
+Der Barcode-Scanner beim Auswählen eines Lebensmittels zeigt jetzt einen beschrifteten „Barcode scannen“-Button, passend zum Rest der App.

@@ -1,0 +1,1 @@
+Lo scanner di codici a barre quando scegli un alimento mostra ora un pulsante etichettato "Scansiona codice a barre", coerente con il resto dell'app.
