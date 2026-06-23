@@ -1,0 +1,1 @@
+The natural-portion chip (e.g. "1 medium · 300 g") now leads the quick-pick row and shows as selected when it's the chosen amount.
