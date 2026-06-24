@@ -23,4 +23,4 @@ Keine Konten, keine Analyse, keine Werbung, keine Tracker. Wir betreiben keinen 
 
 Lebensmitteldaten: Open Food Facts (ODbL) und die Schweizer Nährwertdatenbank (BLV). Die Mahlzeitenerkennung auf dem Gerät nutzt das Google-AIY-Lebensmittelmodell, lokal eingebettet und ausgeführt.
 
-Hergestellt in der Schweiz. 🦊
+Hergestellt in der Schweiz.

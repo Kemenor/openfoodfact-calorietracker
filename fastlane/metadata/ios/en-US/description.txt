@@ -23,4 +23,4 @@ There are no accounts, no analytics, no ads, and no trackers. We don't run a ser
 
 Food data: Open Food Facts (ODbL) and the Swiss Food Composition Database (FSVO). On-device meal recognition uses the Google AIY food model, bundled and run locally.
 
-Made in Switzerland. 🦊
+Made in Switzerland.

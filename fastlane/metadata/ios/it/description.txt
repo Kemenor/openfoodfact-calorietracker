@@ -23,4 +23,4 @@ Nessun account, nessuna analisi, nessuna pubblicità, nessun tracker. Non gestia
 
 Dati alimentari: Open Food Facts (ODbL) e la Banca dati svizzera dei valori nutritivi (USAV). Il riconoscimento dei pasti sul dispositivo usa il modello alimentare Google AIY, integrato ed eseguito localmente.
 
-Realizzato in Svizzera. 🦊
+Realizzato in Svizzera.

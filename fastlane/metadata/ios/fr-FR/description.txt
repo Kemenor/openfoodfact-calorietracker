@@ -23,4 +23,4 @@ Aucun compte, aucune analyse, aucune publicité, aucun traceur. Nous n'avons pas
 
 Données alimentaires : Open Food Facts (ODbL) et la Base suisse de composition des aliments (OSAV). La reconnaissance de repas sur l'appareil utilise le modèle alimentaire Google AIY, intégré et exécuté localement.
 
-Conçu en Suisse. 🦊
+Conçu en Suisse.
