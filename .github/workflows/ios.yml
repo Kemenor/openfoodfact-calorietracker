@@ -25,10 +25,19 @@ on:
 
 jobs:
   testflight:
-    runs-on: macos-latest
+    # macOS 26 image → Xcode 26 (iOS 26 SDK). device_info_plus 12.4.0 references
+    # NSProcessInfo.isiOSAppOnVision, which only exists in the iOS 26 SDK; the
+    # older macos-15 default (Xcode 16) fails to compile it. macos-latest still
+    # points at macOS 15 during the migration, so pin macos-26 explicitly.
+    runs-on: macos-26
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v5
+
+      - name: Select latest Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
 
       - uses: subosito/flutter-action@v2
         with:
