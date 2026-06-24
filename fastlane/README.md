@@ -60,6 +60,14 @@ Upload the built IPA to TestFlight (run `flutter build ipa` first)
 
 Push App Store listing text (no binary, no screenshots) — staged, not submitted
 
+### ios screenshots
+
+```sh
+[bundle exec] fastlane ios screenshots
+```
+
+Replace the App Store screenshots with the repo set (overwrites all — fixes dupes)
+
 ### ios validate
 
 ```sh
