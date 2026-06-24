@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:health/health.dart' as h;
 
 import '../../domain/enums.dart';
@@ -21,9 +23,12 @@ class HealthService {
     _configured = true;
   }
 
-  /// Whether Health Connect is installed/available on this device.
+  /// Whether a health store is available to sync to. iOS always ships HealthKit;
+  /// on Android this depends on Health Connect being installed. (getHealthConnect-
+  /// SdkStatus is Android-only, so it must not be called on iOS.)
   Future<bool> isAvailable() async {
     await _ensureConfigured();
+    if (Platform.isIOS) return true;
     final status = await _health.getHealthConnectSdkStatus();
     return status == h.HealthConnectSdkStatus.sdkAvailable;
   }
