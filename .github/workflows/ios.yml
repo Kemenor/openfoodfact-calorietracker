@@ -32,7 +32,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.44.2"
+          flutter-version: "3.44.3"
           channel: stable
           cache: true
 
@@ -70,7 +70,7 @@ jobs:
 
       - name: Build signed IPA
         # ios/ExportOptions.plist is created during Mac setup (flutter create +
-        # first Xcode archive): method=app-store, teamID=2Q964MD3Q2, manual
+        # first signed build): method=app-store, teamID=2Q964MD3G2, manual
         # signing, the App Store provisioning profile.
         run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist
 
