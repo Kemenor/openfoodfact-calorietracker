@@ -52,13 +52,17 @@ platform :ios do
 
   desc "Upload the built IPA to TestFlight (run `flutter build ipa` first)"
   lane :beta do
-    ipa = Dir["build/ios/ipa/*.ipa"].max_by { |f| File.mtime(f) }
-    UI.user_error!("No IPA in build/ios/ipa — run `flutter build ipa` first") unless ipa
+    # Anchor paths to the repo root (one level above this Fastfile) so the lane
+    # works regardless of fastlane's working directory, which differs on CI.
+    root = File.expand_path("..", __dir__)
+    ipa_glob = File.join(root, "build/ios/ipa/*.ipa")
+    ipa = Dir[ipa_glob].max_by { |f| File.mtime(f) }
+    UI.user_error!("No IPA matching #{ipa_glob} — run `flutter build ipa` first") unless ipa
     upload_to_testflight(
       api_key: asc_key,
       ipa: ipa,
       skip_waiting_for_build_processing: true,
-      changelog: File.read("fastlane/metadata/ios/en-US/release_notes.txt").strip,
+      changelog: File.read(File.join(root, "fastlane/metadata/ios/en-US/release_notes.txt")).strip,
     )
   end
 
