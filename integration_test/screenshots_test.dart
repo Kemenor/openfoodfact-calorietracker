@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:drift/drift.dart' show Value;
@@ -12,7 +13,10 @@ import 'package:calorie_tracker/core/date_x.dart';
 import 'package:calorie_tracker/data/db/database.dart';
 import 'package:calorie_tracker/domain/enums.dart';
 import 'package:calorie_tracker/providers.dart';
+import 'package:calorie_tracker/ui/food/recognize_food_flow.dart';
 import 'package:calorie_tracker/ui/home_shell.dart';
+
+import 'meal_fixture.dart';
 
 /// Generates App Store screenshots. Run with:
 ///   flutter drive --driver=test_driver/integration_test.dart \
@@ -54,7 +58,12 @@ void main() {
     await initializeDateFormatting();
     tester.platformDispatcher.localeTestValue = const Locale('en');
 
-    final container = ProviderContainer();
+    final container = ProviderContainer(overrides: [
+      // Feed the on-device classifier a bundled meal photo instead of the
+      // native picker, so the "recognise" screenshot is fully automated.
+      mealImagePickerProvider
+          .overrideWithValue((_) async => base64Decode(mealJpegBase64)),
+    ]);
     await tester.pumpWidget(
       UncontrolledProviderScope(container: container, child: const CalorieApp()),
     );
@@ -238,6 +247,23 @@ void main() {
     try {
       tab(2);
       await shot('08_settings');
+    } catch (_) {}
+
+    // 9. Recognise a meal — the injected photo drives the on-device classifier;
+    // capture the guess sheet ("Looks like…" + ranked dishes).
+    try {
+      tab(0);
+      await settle(tester); // let the Day tab rebuild after leaving Settings
+      await tapFab('dayCapture');
+      if (await tapText('Scan a meal with AI')) {
+        for (var i = 0; i < 60; i++) {
+          if (find.text('Looks like…').evaluate().isNotEmpty) break;
+          await tester.pump(const Duration(milliseconds: 200));
+        }
+        await shot('09_recognize');
+        await tester.tapAt(const Offset(20, 20)); // dismiss the sheet
+        await settle(tester);
+      }
     } catch (_) {}
   });
 }

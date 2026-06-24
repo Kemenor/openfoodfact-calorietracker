@@ -14,6 +14,24 @@ import '../../providers.dart';
 import 'image_source_sheet.dart';
 import 'quick_add_sheet.dart';
 
+/// Acquires a meal photo for AI recognition — the camera/gallery chooser, then
+/// the system image picker (down-scaled). Overridable in tests so the
+/// screenshot harness can feed a bundled photo without driving the native picker.
+final mealImagePickerProvider =
+    Provider<Future<Uint8List?> Function(BuildContext)>((ref) {
+  return (context) async {
+    final source = await pickImageSource(context);
+    if (source == null || !context.mounted) return null;
+    final img = await ImagePicker().pickImage(
+      source: source,
+      maxWidth: 1024,
+      imageQuality: 85,
+    );
+    if (img == null) return null;
+    return img.readAsBytes();
+  };
+});
+
 /// Photo → on-device dish guess → Free add. Pick a photo, classify it with the
 /// AIY food model, let the user confirm which guess it is, estimate the
 /// calories from the local catalog, and open the Free add sheet prefilled.
@@ -26,19 +44,10 @@ Future<bool> startRecognizeFoodFlow(
   Future<int?> Function()? resolveGroup,
 }) async {
   final l10n = AppLocalizations.of(context);
-  final source = await pickImageSource(context);
-  if (source == null || !context.mounted) return false;
-
   final messenger = ScaffoldMessenger.of(context);
   final navigator = Navigator.of(context);
-  final img = await ImagePicker().pickImage(
-    source: source,
-    maxWidth: 1024,
-    imageQuality: 85,
-  );
-  if (img == null || !context.mounted) return false;
-  final bytes = await img.readAsBytes();
-  if (!context.mounted) return false;
+  final bytes = await ref.read(mealImagePickerProvider)(context);
+  if (bytes == null || !context.mounted) return false;
 
   // Cloud path: if the user configured a (free-tier) Gemini key, use it for a
   // richer estimate — dish + grams + macros. Falls back to on-device on any
