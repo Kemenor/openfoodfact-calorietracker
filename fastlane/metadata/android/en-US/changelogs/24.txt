@@ -1,0 +1,1 @@
+You can now collapse meals in the day view to cut the scrolling. Custom foods can be entered in millilitres for drinks, and the nutrition fields now follow the order printed on Swiss/EU labels.

@@ -1,0 +1,1 @@
+Mahlzeiten in der Tagesansicht lassen sich jetzt einklappen, um Scrollen zu sparen. Eigene Lebensmittel kannst du für Getränke in Millilitern erfassen, und die Nährwertfelder folgen jetzt der Reihenfolge auf Schweizer/EU-Etiketten.

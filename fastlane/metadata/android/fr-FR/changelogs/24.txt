@@ -1,0 +1,1 @@
+Vous pouvez désormais réduire les repas dans la vue du jour pour moins défiler. Les aliments personnalisés peuvent être saisis en millilitres pour les boissons, et les champs nutritionnels suivent l'ordre des étiquettes suisses/UE.
