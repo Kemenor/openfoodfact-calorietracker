@@ -78,7 +78,7 @@ dev_dependencies:
 # App icon (Knabberfuchs). Regenerate with: dart run flutter_launcher_icons
 flutter_launcher_icons:
   android: true
-  ios: false
+  ios: true
   image_path: "assets/icon/cutefox.png"
   adaptive_icon_background: "#5F8A34"
   adaptive_icon_foreground: "assets/icon/cutefox_fg.png"
