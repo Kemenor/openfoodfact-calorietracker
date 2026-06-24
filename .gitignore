@@ -77,3 +77,7 @@ ios/fastlane/report.xml
 # fastlane run artifacts
 fastlane/report.xml
 fastlane/Preview.html
+
+# Screenshot generation (transient driver output + staging)
+/screenshots/
+/delivery/
