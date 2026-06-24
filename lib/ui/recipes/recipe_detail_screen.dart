@@ -52,8 +52,25 @@ class _RecipeDetailScreenState extends ConsumerState<RecipeDetailScreen> {
   }
 
   Future<void> _delete() async {
+    final l10n = AppLocalizations.of(context);
+    final navigator = Navigator.of(context);
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.recipeDeleteConfirm(_recipe.name)),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(l10n.actionCancel)),
+          FilledButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(l10n.actionDelete)),
+        ],
+      ),
+    );
+    if (ok != true) return;
     await ref.read(recipeRepositoryProvider).delete(_recipe.id);
-    if (mounted) Navigator.of(context).pop();
+    if (mounted) navigator.pop();
   }
 
   @override
@@ -254,7 +271,7 @@ class _LogPortionSheetState extends ConsumerState<_LogPortionSheet> {
           SizedBox(
             width: double.infinity,
             child: FilledButton(
-              onPressed: grams <= 0 ? null : _log,
+              onPressed: (grams <= 0 || _saving) ? null : _log,
               child: Text(l10n.recipeLogToDay(dayLabel(context, _day))),
             ),
           ),
@@ -275,29 +292,38 @@ class _LogPortionSheetState extends ConsumerState<_LogPortionSheet> {
     if (picked != null) setState(() => _day = DayKey.of(picked));
   }
 
+  bool _saving = false;
+
   Future<void> _log() async {
+    if (_saving) return; // guard against a double-tap before the sheet pops
+    setState(() => _saving = true);
     final grams = _oneServingGrams * _portions;
     final messenger = ScaffoldMessenger.of(context);
     final l10n = AppLocalizations.of(context);
     final label = dayLabel(context, _day);
-    // Log the portion as its own meal group named after the recipe.
-    final groupId =
-        await ref.read(dbProvider).createEntryGroup(_day, widget.share.name);
-    final meal = (ref.read(mealTimesProvider).asData?.value ?? MealTimes.defaults)
-        .inferNow();
-    await ref.read(recipeRepositoryProvider).logPortionGrams(
-          share: widget.share,
-          grams: grams,
-          meal: meal,
-          day: _day,
-          groupId: groupId,
-        );
-    // Land the user on the day they just logged to, so they see the meal.
-    ref.read(selectedDayProvider.notifier).set(_day);
-    ref.read(homeTabProvider.notifier).set(0); // Day tab
-    // Pop the sheet (and the recipe-detail route, if we came from it) back to
-    // the home shell so the Day tab is actually visible.
-    if (mounted) Navigator.of(context).popUntil((r) => r.isFirst);
-    messenger.showAutoSnackBar(SnackBar(content: Text(l10n.loggedTo(label))));
+    try {
+      // Log the portion as its own meal group named after the recipe.
+      final groupId =
+          await ref.read(dbProvider).createEntryGroup(_day, widget.share.name);
+      final meal =
+          (ref.read(mealTimesProvider).asData?.value ?? MealTimes.defaults)
+              .inferNow();
+      await ref.read(recipeRepositoryProvider).logPortionGrams(
+            share: widget.share,
+            grams: grams,
+            meal: meal,
+            day: _day,
+            groupId: groupId,
+          );
+      // Land the user on the day they just logged to, so they see the meal.
+      ref.read(selectedDayProvider.notifier).set(_day);
+      ref.read(homeTabProvider.notifier).set(0); // Day tab
+      // Pop the sheet (and the recipe-detail route, if we came from it) back to
+      // the home shell so the Day tab is actually visible.
+      if (mounted) Navigator.of(context).popUntil((r) => r.isFirst);
+      messenger.showAutoSnackBar(SnackBar(content: Text(l10n.loggedTo(label))));
+    } catch (_) {
+      if (mounted) setState(() => _saving = false);
+    }
   }
 }

@@ -174,29 +174,34 @@ class _OcrMealScreenState extends ConsumerState<OcrMealScreen> {
     final l10n = AppLocalizations.of(context);
     final c = TextEditingController(
         text: _grams(_items[i])?.let(gramsStr) ?? '');
-    final g = await showDialog<double>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(_items[i].matched?.name ?? _items[i].parsed.name),
-        content: TextField(
-          controller: c,
-          autofocus: true,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
-          decoration: const InputDecoration(suffixText: 'g'),
-        ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: Text(l10n.actionCancel)),
-          FilledButton(
-            onPressed: () =>
-                Navigator.pop(ctx, double.tryParse(c.text.replaceAll(',', '.'))),
-            child: Text(l10n.actionSet),
+    double? g;
+    try {
+      g = await showDialog<double>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(_items[i].matched?.name ?? _items[i].parsed.name),
+          content: TextField(
+            controller: c,
+            autofocus: true,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
+            decoration: const InputDecoration(suffixText: 'g'),
           ),
-        ],
-      ),
-    );
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: Text(l10n.actionCancel)),
+            FilledButton(
+              onPressed: () => Navigator.pop(
+                  ctx, double.tryParse(c.text.replaceAll(',', '.'))),
+              child: Text(l10n.actionSet),
+            ),
+          ],
+        ),
+      );
+    } finally {
+      c.dispose();
+    }
     if (g != null && mounted) setState(() => _items[i].gramsOverride = g);
   }
 
@@ -336,7 +341,9 @@ class _OcrMealScreenState extends ConsumerState<OcrMealScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
             child: Text(l10n.ocrSwipeHint,
-                style: const TextStyle(fontStyle: FontStyle.italic)),
+                style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.outline,
+                    fontStyle: FontStyle.italic)),
           ),
           const Divider(height: 1),
           Expanded(

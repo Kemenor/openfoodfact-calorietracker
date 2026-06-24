@@ -231,6 +231,9 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get couldNotOpenLink => 'Impossible d\'ouvrir le lien';
+
+  @override
   String get settingsTargets => 'Objectifs caloriques';
 
   @override

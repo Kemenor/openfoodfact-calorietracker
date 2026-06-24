@@ -50,29 +50,34 @@ class RecipesScreen extends ConsumerWidget {
     Future<void> importFromText() async {
       final messenger = ScaffoldMessenger.of(context);
       final controller = TextEditingController();
-      final text = await showDialog<String>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text(l10n.importTextTitle),
-          content: TextField(
-            controller: controller,
-            autofocus: true,
-            minLines: 2,
-            maxLines: 5,
-            decoration: InputDecoration(
-                hintText: l10n.importTextHint,
-                border: const OutlineInputBorder()),
+      String? text;
+      try {
+        text = await showDialog<String>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(l10n.importTextTitle),
+            content: TextField(
+              controller: controller,
+              autofocus: true,
+              minLines: 2,
+              maxLines: 5,
+              decoration: InputDecoration(
+                  hintText: l10n.importTextHint,
+                  border: const OutlineInputBorder()),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: Text(l10n.actionCancel)),
+              FilledButton(
+                  onPressed: () => Navigator.pop(ctx, controller.text),
+                  child: Text(l10n.actionImport)),
+            ],
           ),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                child: Text(l10n.actionCancel)),
-            FilledButton(
-                onPressed: () => Navigator.pop(ctx, controller.text),
-                child: Text(l10n.actionImport)),
-          ],
-        ),
-      );
+        );
+      } finally {
+        controller.dispose();
+      }
       if (text == null || text.trim().isEmpty) return;
       await applyImport(messenger, text);
     }

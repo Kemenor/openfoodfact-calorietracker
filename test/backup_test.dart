@@ -13,10 +13,12 @@ import 'package:flutter_test/flutter_test.dart';
 Future<void> _seed(AppDatabase db) async {
   final repo = FoodRepository(db, OffApi(), RegionPackStore());
   final apple = await repo.createFood(name: 'Apple', kcal100: 52);
+  final groupId = await db.createEntryGroup('2026-06-17', 'Breakfast');
   await db.addEntry(EntriesCompanion.insert(
     day: '2026-06-17',
     mealType: MealType.breakfast,
     grams: 150,
+    groupId: Value(groupId),
     foodId: Value(apple.id),
     sName: 'Apple',
     sKcal100: 52,
@@ -26,7 +28,7 @@ Future<void> _seed(AppDatabase db) async {
     RecipesCompanion.insert(name: 'Salad'),
     [RecipeItemsCompanion.insert(recipeId: 0, sName: 'Lettuce', grams: 100, sKcal100: 15)],
   );
-  await db.setTarget(0, const TargetsCompanion(kcal: Value(2200)));
+  await db.setTarget(0, const TargetsCompanion(kcalMin: Value(1800), kcalMax: Value(2200)));
   await db.setSetting('groupByMeal', 'false');
 }
 
@@ -50,13 +52,20 @@ void main() {
     final recipes = await dst.allRecipes();
     expect(recipes.single.name, 'Salad');
     expect((await dst.itemsForRecipe(recipes.single.id)).single.sName, 'Lettuce');
-    expect((await dst.targetForWeekday(0))!.kcal, 2200);
+    final target = (await dst.targetForWeekday(0))!;
+    expect(target.kcalMin, 1800);
+    expect(target.kcalMax, 2200);
     expect(await dst.getSetting('groupByMeal'), 'false');
 
-    // Restored entry keeps its snapshot but drops the source-food link.
+    // The ad-hoc meal group and its membership survive the round-trip.
+    final groups = await dst.watchGroups('2026-06-17').first;
+    expect(groups.single.name, 'Breakfast');
+
+    // Restored entry keeps its snapshot and group, but drops the food link.
     final entry = (await dst.allEntries()).single;
     expect(entry.sName, 'Apple');
     expect(entry.foodId, isNull);
+    expect(entry.groupId, groups.single.id);
   });
 
   test('restore is idempotent / replaces existing data', () async {

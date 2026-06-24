@@ -7,8 +7,9 @@ import '../domain/nutrition.dart';
 import 'db/database.dart';
 
 /// Backup schema version, carried in the manifest so future versions can
-/// migrate an older export on import.
-const backupSchemaVersion = 1;
+/// migrate an older export on import. v2 adds entryGroups + entry.groupId and
+/// replaces the legacy target `kcal` field with `kcalMin`/`kcalMax`.
+const backupSchemaVersion = 2;
 
 int _ms(DateTime d) => d.millisecondsSinceEpoch;
 DateTime _dt(Object? v) =>
@@ -25,6 +26,7 @@ Future<Map<String, dynamic>> buildBackupMap(
   required DateTime exportedAt,
 }) async {
   final entries = await db.allEntries();
+  final groups = await db.select(db.entryGroups).get();
   final customFoods = await db.allCustomFoods();
   final recipes = await db.allRecipes();
   final targets = await db.allTargets();
@@ -51,11 +53,21 @@ Future<Map<String, dynamic>> buildBackupMap(
   return {
     'schemaVersion': backupSchemaVersion,
     'exportedAt': _ms(exportedAt),
+    'entryGroups': [
+      for (final g in groups)
+        {
+          'id': g.id,
+          'day': g.day,
+          'name': g.name,
+          'createdAt': _ms(g.createdAt),
+        }
+    ],
     'entries': [
       for (final e in entries)
         {
           'id': e.id,
           'day': e.day,
+          'groupId': e.groupId,
           'mealType': e.mealType.index,
           'grams': e.grams,
           'sName': e.sName,
@@ -103,7 +115,8 @@ Future<Map<String, dynamic>> buildBackupMap(
       for (final t in targets)
         {
           'weekday': t.weekday,
-          'kcal': t.kcal,
+          'kcalMin': t.kcalMin,
+          'kcalMax': t.kcalMax,
           'protein': t.protein,
           'carb': t.carb,
           'fat': t.fat,
@@ -115,9 +128,14 @@ Future<Map<String, dynamic>> buildBackupMap(
 
 /// Human/spreadsheet-friendly CSV of every logged entry.
 String buildEntriesCsv(List<Entry> entries) {
-  String esc(String s) => s.contains(RegExp(r'[",\n]'))
-      ? '"${s.replaceAll('"', '""')}"'
-      : s;
+  String esc(String s) {
+    // Neutralize spreadsheet formula injection: a cell a spreadsheet would
+    // evaluate (leading = + - @) gets a leading apostrophe so it stays text.
+    if (s.isNotEmpty && '=+-@'.contains(s[0])) s = "'$s";
+    return s.contains(RegExp(r'[",\n]'))
+        ? '"${s.replaceAll('"', '""')}"'
+        : s;
+  }
   final rows = <String>['day,meal,food,grams,kcal,protein_g,carb_g,fat_g'];
   for (final e in entries) {
     final n = Nutrition.fromPer100g(
@@ -149,6 +167,7 @@ String buildEntriesCsv(List<Entry> entries) {
 Future<void> restoreBackupMap(AppDatabase db, Map<String, dynamic> map) async {
   await db.transaction(() async {
     await db.delete(db.entries).go();
+    await db.delete(db.entryGroups).go();
     await db.delete(db.recipeItems).go();
     await db.delete(db.recipes).go();
     await (db.delete(db.foods)
@@ -202,10 +221,21 @@ Future<void> restoreBackupMap(AppDatabase db, Map<String, dynamic> map) async {
           ));
     }
 
+    // Groups before entries: entries.groupId has a FK onto entry_groups.
+    for (final g in (map['entryGroups'] as List? ?? const [])) {
+      await db.into(db.entryGroups).insert(EntryGroupsCompanion(
+            id: Value((g['id'] as num).toInt()),
+            day: Value(g['day'] as String),
+            name: Value(g['name'] as String),
+            createdAt: Value(_dt(g['createdAt'])),
+          ));
+    }
+
     for (final e in (map['entries'] as List? ?? const [])) {
       await db.into(db.entries).insert(EntriesCompanion(
             id: Value((e['id'] as num).toInt()),
             day: Value(e['day'] as String),
+            groupId: Value((e['groupId'] as num?)?.toInt()),
             mealType: Value(MealType.values[(e['mealType'] as num).toInt()]),
             grams: Value(_d(e['grams']) ?? 0),
             sName: Value(e['sName'] as String),
@@ -222,7 +252,8 @@ Future<void> restoreBackupMap(AppDatabase db, Map<String, dynamic> map) async {
     for (final t in (map['targets'] as List? ?? const [])) {
       await db.into(db.targets).insertOnConflictUpdate(TargetsCompanion(
             weekday: Value((t['weekday'] as num).toInt()),
-            kcal: Value(_d(t['kcal'])),
+            kcalMin: Value(_d(t['kcalMin'])),
+            kcalMax: Value(_d(t['kcalMax'])),
             protein: Value(_d(t['protein'])),
             carb: Value(_d(t['carb'])),
             fat: Value(_d(t['fat'])),

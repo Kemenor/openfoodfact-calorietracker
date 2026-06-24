@@ -85,7 +85,9 @@ class _FoodSearchListState extends ConsumerState<FoodSearchList> {
 
   Future<void> _runLocal(String value) async {
     final results = await ref.read(foodRepositoryProvider).searchLocal(value);
-    if (mounted) setState(() => _local = results);
+    // Drop stale results: if the query moved on while we awaited, a newer
+    // _runLocal is already in flight and owns _local.
+    if (mounted && value == _query) setState(() => _local = results);
   }
 
   Future<void> _runOnline() async {
@@ -100,8 +102,12 @@ class _FoodSearchListState extends ConsumerState<FoodSearchList> {
     } catch (_) {
       // network/rate-limit issues are non-fatal; local results remain.
     } finally {
-      if (mounted && seq == _seq) setState(() => _searchingOnline = false);
-      _runLocal(_query);
+      // Only the latest online search refreshes local (to pick up rows it just
+      // cached); a stale one must not clobber newer results.
+      if (mounted && seq == _seq) {
+        setState(() => _searchingOnline = false);
+        _runLocal(_query);
+      }
     }
   }
 

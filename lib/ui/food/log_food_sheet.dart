@@ -176,6 +176,9 @@ class _LogSheetState extends State<_LogSheet> {
       double.tryParse(_amountCtrl.text.replaceAll(',', '.')) ?? 0;
   double get _grams => _unit.toGrams(_amount, density: widget.density ?? 1.0);
 
+  // Guards the submit/delete actions against a double-tap before the sheet pops.
+  bool _busy = false;
+
   @override
   void dispose() {
     _amountCtrl.dispose();
@@ -313,10 +316,17 @@ class _LogSheetState extends State<_LogSheet> {
             children: [
               if (widget.onDelete != null)
                 TextButton.icon(
-                  onPressed: () async {
-                    await widget.onDelete!();
-                    if (context.mounted) Navigator.of(context).pop();
-                  },
+                  onPressed: _busy
+                      ? null
+                      : () async {
+                          setState(() => _busy = true);
+                          try {
+                            await widget.onDelete!();
+                            if (context.mounted) Navigator.of(context).pop();
+                          } catch (_) {
+                            if (mounted) setState(() => _busy = false);
+                          }
+                        },
                   icon: const Icon(Icons.delete_outline),
                   label: Text(l10n.actionDelete),
                   style: TextButton.styleFrom(
@@ -324,11 +334,16 @@ class _LogSheetState extends State<_LogSheet> {
                 ),
               const Spacer(),
               FilledButton(
-                onPressed: _grams <= 0
+                onPressed: (_grams <= 0 || _busy)
                     ? null
                     : () async {
-                        await widget.onSubmit(_grams, widget.meal);
-                        if (context.mounted) Navigator.of(context).pop(true);
+                        setState(() => _busy = true);
+                        try {
+                          await widget.onSubmit(_grams, widget.meal);
+                          if (context.mounted) Navigator.of(context).pop(true);
+                        } catch (_) {
+                          if (mounted) setState(() => _busy = false);
+                        }
                       },
                 child: Text(widget.submitLabel),
               ),

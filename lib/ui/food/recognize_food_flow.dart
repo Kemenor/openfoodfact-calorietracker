@@ -50,7 +50,10 @@ Future<bool> startRecognizeFoodFlow(
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => const _GeminiLoadingDialog(),
+      // canPop:false blocks the hardware back button too, so the matching
+      // navigator.pop() always closes this dialog, not the screen beneath it.
+      builder: (_) =>
+          const PopScope(canPop: false, child: _GeminiLoadingDialog()),
     );
     GeminiFoodResult? r;
     try {
@@ -84,7 +87,10 @@ Future<bool> startRecognizeFoodFlow(
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (_) => const Center(child: CircularProgressIndicator()),
+    // canPop:false blocks the hardware back button so the matching
+    // navigator.pop() always closes this dialog, not a route underneath it.
+    builder: (_) => const PopScope(
+        canPop: false, child: Center(child: CircularProgressIndicator())),
   );
   List<FoodGuess> guesses;
   try {

@@ -8,16 +8,34 @@ import 'l10n/app_localizations.dart';
 import 'providers.dart';
 import 'ui/home_shell.dart';
 
-class CalorieApp extends ConsumerWidget {
+class CalorieApp extends ConsumerStatefulWidget {
   const CalorieApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // null until the setting stream resolves → falls back to the device locale.
-    final locale = ref.watch(localeProvider).asData?.value;
+  ConsumerState<CalorieApp> createState() => _CalorieAppState();
+}
+
+class _CalorieAppState extends ConsumerState<CalorieApp> {
+  void _syncNumberLocale(AsyncValue<Locale?> v) {
     // Point the number formatters at the resolved UI locale (decimal comma in
     // de/fr/it).
-    setNumberLocale(resolveUiLocale(locale?.languageCode));
+    setNumberLocale(resolveUiLocale(v.asData?.value?.languageCode));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Seed from the current value; updates arrive via ref.listen in build.
+    _syncNumberLocale(ref.read(localeProvider));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // null until the setting stream resolves → falls back to the device locale.
+    final locale = ref.watch(localeProvider).asData?.value;
+    // Keep the number formatters in sync as the locale changes — done via
+    // listen (a side effect) rather than inline so build() stays pure.
+    ref.listen(localeProvider, (_, next) => _syncNumberLocale(next));
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,

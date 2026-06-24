@@ -58,16 +58,24 @@ class _SplitSheetState extends ConsumerState<_SplitSheet> {
     if (picked != null) setState(() => _days[i] = DayKey.of(picked));
   }
 
+  bool _saving = false;
+
   Future<void> _split() async {
+    if (_saving) return; // guard against a double-tap before the sheet pops
+    setState(() => _saving = true);
     final messenger = ScaffoldMessenger.of(context);
     final l10n = AppLocalizations.of(context);
-    await ref.read(diaryRepositoryProvider).splitGroupAcrossDays(
-          groupId: widget.group.id,
-          days: _days,
-        );
-    if (mounted) Navigator.of(context).pop();
-    messenger.showAutoSnackBar(
-        SnackBar(content: Text(l10n.splitInto('$_n'))));
+    try {
+      await ref.read(diaryRepositoryProvider).splitGroupAcrossDays(
+            groupId: widget.group.id,
+            days: _days,
+          );
+      if (mounted) Navigator.of(context).pop();
+      messenger.showAutoSnackBar(
+          SnackBar(content: Text(l10n.splitInto('$_n'))));
+    } catch (_) {
+      if (mounted) setState(() => _saving = false);
+    }
   }
 
   @override
@@ -129,7 +137,7 @@ class _SplitSheetState extends ConsumerState<_SplitSheet> {
           SizedBox(
             width: double.infinity,
             child: FilledButton(
-              onPressed: _split,
+              onPressed: _saving ? null : _split,
               child: Text(l10n.splitInto('$_n')),
             ),
           ),

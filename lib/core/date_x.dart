@@ -18,24 +18,4 @@ class DayKey {
 
   /// Monday-first weekday index: Monday = 0 … Sunday = 6.
   static int weekdayIndex(String key) => parse(key).weekday - 1;
-
-  /// Human label like "Today", "Yesterday", or "Mon, 17 Jun".
-  static String label(String key) {
-    final date = parse(key);
-    final todayKey = today();
-    if (key == todayKey) return 'Today';
-    if (key == shift(todayKey, -1)) return 'Yesterday';
-    if (key == shift(todayKey, 1)) return 'Tomorrow';
-    return DateFormat('EEE, d MMM').format(date);
-  }
 }
-
-const List<String> kWeekdayNames = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
-];

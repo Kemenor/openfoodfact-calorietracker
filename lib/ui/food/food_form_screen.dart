@@ -117,7 +117,10 @@ class _FoodFormScreenState extends ConsumerState<FoodFormScreen> {
     }
   }
 
+  bool _saving = false;
+
   Future<void> _save() async {
+    if (_saving) return; // guard against a double-tap before the screen pops
     final messenger = ScaffoldMessenger.of(context);
     final l10n = AppLocalizations.of(context);
     final name = _name.text.trim();
@@ -127,22 +130,28 @@ class _FoodFormScreenState extends ConsumerState<FoodFormScreen> {
           SnackBar(content: Text(l10n.addNameEnergyRequired)));
       return;
     }
-    final barcode = _barcode.text.trim();
-    final food = await ref.read(foodRepositoryProvider).createFood(
-          barcode: barcode.isEmpty ? null : barcode,
-          name: name,
-          brand: _brand.text.trim().isEmpty ? null : _brand.text.trim(),
-          kcal100: kcal,
-          protein100: _val(_protein),
-          carb100: _val(_carb),
-          fat100: _val(_fat),
-          fiber100: _val(_fiber),
-          sugar100: _val(_sugar),
-          satFat100: _val(_satfat),
-          saltG100: _val(_salt),
-          servingG: _val(_serving),
-        );
-    if (mounted) Navigator.of(context).pop(food);
+    setState(() => _saving = true);
+    try {
+      final barcode = _barcode.text.trim();
+      final food = await ref.read(foodRepositoryProvider).createFood(
+            barcode: barcode.isEmpty ? null : barcode,
+            name: name,
+            brand: _brand.text.trim().isEmpty ? null : _brand.text.trim(),
+            kcal100: kcal,
+            protein100: _val(_protein),
+            carb100: _val(_carb),
+            fat100: _val(_fat),
+            fiber100: _val(_fiber),
+            sugar100: _val(_sugar),
+            satFat100: _val(_satfat),
+            saltG100: _val(_salt),
+            servingG: _val(_serving),
+          );
+      if (mounted) Navigator.of(context).pop(food);
+    } catch (e) {
+      messenger.showAutoSnackBar(SnackBar(content: Text(l10n.genericError('$e'))));
+      if (mounted) setState(() => _saving = false);
+    }
   }
 
   @override
@@ -153,7 +162,7 @@ class _FoodFormScreenState extends ConsumerState<FoodFormScreen> {
       appBar: AppBar(title: Text(l10n.foodFormTitle)),
       floatingActionButton: FloatingActionButton.extended(
         heroTag: 'foodSaveFab',
-        onPressed: _save,
+        onPressed: _saving ? null : _save,
         icon: const Icon(Icons.check),
         label: Text(l10n.actionSave),
       ),
@@ -226,11 +235,23 @@ class _FoodFormScreenState extends ConsumerState<FoodFormScreen> {
           if (_hasBarcode) ...[
             const SizedBox(height: 20),
             InkWell(
-              onTap: () => launchUrl(
-                Uri.parse(
-                    'https://world.openfoodfacts.org/how-to-add-a-product'),
-                mode: LaunchMode.externalApplication,
-              ),
+              onTap: () async {
+                final messenger = ScaffoldMessenger.of(context);
+                try {
+                  final ok = await launchUrl(
+                    Uri.parse(
+                        'https://world.openfoodfacts.org/how-to-add-a-product'),
+                    mode: LaunchMode.externalApplication,
+                  );
+                  if (!ok) {
+                    messenger.showAutoSnackBar(
+                        SnackBar(content: Text(l10n.couldNotOpenLink)));
+                  }
+                } catch (_) {
+                  messenger.showAutoSnackBar(
+                      SnackBar(content: Text(l10n.couldNotOpenLink)));
+                }
+              },
               borderRadius: BorderRadius.circular(8),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),

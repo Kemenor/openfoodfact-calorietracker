@@ -18,7 +18,7 @@ class AppDatabase extends _$AppDatabase {
       : super(executor ?? driftDatabase(name: 'calorie_tracker'));
 
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 10;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -81,6 +81,11 @@ class AppDatabase extends _$AppDatabase {
           if (from < 9) {
             // Per-food liquid density (g/ml) for accurate volume → grams.
             await m.addColumn(foods, foods.densityGPerMl);
+          }
+          if (from < 10) {
+            // Drop the dead legacy `kcal` column (fully superseded by
+            // kcalMin/kcalMax; any value was migrated into kcal_max at v2).
+            await customStatement('ALTER TABLE targets DROP COLUMN kcal');
           }
         },
         beforeOpen: (details) async {

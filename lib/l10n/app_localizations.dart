@@ -486,6 +486,12 @@ abstract class AppLocalizations {
   /// **'Error: {error}'**
   String genericError(String error);
 
+  /// Shown when launching an external URL or app fails
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the link'**
+  String get couldNotOpenLink;
+
   /// No description provided for @settingsTargets.
   ///
   /// In en, this message translates to:

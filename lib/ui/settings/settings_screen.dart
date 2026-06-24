@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import '../../core/snackbar.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../core/date_x.dart';
 import '../../core/support_email.dart';
 import '../../data/db/database.dart';
 import '../../domain/enums.dart';
@@ -66,7 +66,11 @@ class SettingsScreen extends ConsumerWidget {
                 children: [
                   for (var wd = 0; wd < 7; wd++)
                     _TargetRow(
-                      label: kWeekdayNames[wd],
+                      // Localized weekday name (Mon=0…Sun=6); 2024-01-01 was a
+                      // Monday, so offset by wd from it.
+                      label: DateFormat.EEEE(
+                              Localizations.localeOf(context).languageCode)
+                          .format(DateTime(2024, 1, 1).add(Duration(days: wd))),
                       keyPrefix: 'wd$wd',
                       initialMin: rowFor(wd).kcalMin,
                       initialMax: rowFor(wd).kcalMax,
@@ -305,8 +309,20 @@ class _OpenFoodFactsThanks extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: FilledButton.tonalIcon(
-            onPressed: () =>
-                launchUrl(_donateUrl, mode: LaunchMode.externalApplication),
+            onPressed: () async {
+              final messenger = ScaffoldMessenger.of(context);
+              try {
+                final ok = await launchUrl(_donateUrl,
+                    mode: LaunchMode.externalApplication);
+                if (!ok) {
+                  messenger.showAutoSnackBar(
+                      SnackBar(content: Text(l10n.couldNotOpenLink)));
+                }
+              } catch (_) {
+                messenger.showAutoSnackBar(
+                    SnackBar(content: Text(l10n.couldNotOpenLink)));
+              }
+            },
             icon: const Icon(Icons.favorite_border, size: 18),
             label: Text(l10n.offDonate),
           ),
@@ -494,9 +510,21 @@ class _AiKeyTileState extends ConsumerState<_AiKeyTile> {
           Align(
             alignment: Alignment.centerLeft,
             child: TextButton.icon(
-              onPressed: () => launchUrl(
-                  Uri.parse('https://aistudio.google.com/apikey'),
-                  mode: LaunchMode.externalApplication),
+              onPressed: () async {
+                final messenger = ScaffoldMessenger.of(context);
+                try {
+                  final ok = await launchUrl(
+                      Uri.parse('https://aistudio.google.com/apikey'),
+                      mode: LaunchMode.externalApplication);
+                  if (!ok) {
+                    messenger.showAutoSnackBar(
+                        SnackBar(content: Text(l10n.couldNotOpenLink)));
+                  }
+                } catch (_) {
+                  messenger.showAutoSnackBar(
+                      SnackBar(content: Text(l10n.couldNotOpenLink)));
+                }
+              },
               icon: const Icon(Icons.open_in_new, size: 16),
               label: Text(l10n.aiKeyGet),
             ),

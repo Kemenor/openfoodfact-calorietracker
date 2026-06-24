@@ -76,6 +76,7 @@
   "createFromQrSub": "Ein geteiltes Rezept scannen",
 
   "genericError": "Fehler: {error}",
+  "couldNotOpenLink": "Link konnte nicht geöffnet werden",
 
   "settingsTargets": "Kalorienziele",
   "settingsTargetsHelp": "Lege ein Minimum, ein Maximum oder beides fest. Ein Minimum hilft, wenn du sicherstellen möchtest, genug zu essen. Leer lassen, um den Standard zu verwenden.",

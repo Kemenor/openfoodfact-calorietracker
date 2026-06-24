@@ -113,31 +113,40 @@ class _RecipeEditScreenState extends ConsumerState<RecipeEditScreen> {
     });
   }
 
+  bool _saving = false;
+
   Future<void> _save() async {
+    if (_saving) return; // guard against a double-tap before the screen pops
+    final messenger = ScaffoldMessenger.of(context);
     final name = _name.text.trim();
     final servings = double.tryParse(_servings.text.replaceAll(',', '.')) ?? 1;
     final l10n = AppLocalizations.of(context);
     if (name.isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showAutoSnackBar(SnackBar(content: Text(l10n.recipeNeedName)));
+      messenger.showAutoSnackBar(SnackBar(content: Text(l10n.recipeNeedName)));
       return;
     }
     if (_items.isEmpty) {
-      ScaffoldMessenger.of(context).showAutoSnackBar(
+      messenger.showAutoSnackBar(
           SnackBar(content: Text(l10n.recipeNeedIngredient)));
       return;
     }
-    final repo = ref.read(recipeRepositoryProvider);
-    if (widget.recipe == null) {
-      await repo.create(name: name, servings: servings, items: _items);
-    } else {
-      await repo.update(
-          id: widget.recipe!.id,
-          name: name,
-          servings: servings,
-          items: _items);
+    setState(() => _saving = true);
+    try {
+      final repo = ref.read(recipeRepositoryProvider);
+      if (widget.recipe == null) {
+        await repo.create(name: name, servings: servings, items: _items);
+      } else {
+        await repo.update(
+            id: widget.recipe!.id,
+            name: name,
+            servings: servings,
+            items: _items);
+      }
+      if (mounted) Navigator.of(context).pop(true);
+    } catch (e) {
+      messenger.showAutoSnackBar(SnackBar(content: Text(l10n.genericError('$e'))));
+      if (mounted) setState(() => _saving = false);
     }
-    if (mounted) Navigator.of(context).pop(true);
   }
 
   @override
@@ -150,7 +159,7 @@ class _RecipeEditScreenState extends ConsumerState<RecipeEditScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         heroTag: 'recipeSaveFab',
-        onPressed: _save,
+        onPressed: _saving ? null : _save,
         icon: const Icon(Icons.check),
         label: Text(l10n.actionSave),
       ),

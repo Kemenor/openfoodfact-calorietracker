@@ -40,11 +40,18 @@ class OffApi {
     await productBucket.acquire();
     final uri = Uri.https(_host, '/api/v2/product/$barcode.json',
         {'fields': _fields});
-    final res = await _client.get(uri, headers: _headers);
-    if (res.statusCode != 200) return null;
-    final body = jsonDecode(res.body) as Map<String, dynamic>;
-    if (body['status'] == 0 || body['product'] == null) return null;
-    return _mapProduct(body['product'] as Map<String, dynamic>, barcode);
+    try {
+      final res = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 10));
+      if (res.statusCode != 200) return null;
+      final body = jsonDecode(res.body);
+      if (body is! Map<String, dynamic>) return null;
+      if (body['status'] == 0 || body['product'] == null) return null;
+      return _mapProduct(body['product'] as Map<String, dynamic>, barcode);
+    } catch (_) {
+      return null; // network failure, timeout, or non-JSON body
+    }
   }
 
   /// Full-text search. Caller must debounce — this is the 10/min endpoint.
@@ -59,17 +66,24 @@ class OffApi {
       'page_size': '$pageSize',
       'fields': _fields,
     });
-    final res = await _client.get(uri, headers: _headers);
-    if (res.statusCode != 200) return const [];
-    final body = jsonDecode(res.body) as Map<String, dynamic>;
-    final products = (body['products'] as List?) ?? const [];
-    final out = <FoodsCompanion>[];
-    for (final p in products) {
-      if (p is! Map<String, dynamic>) continue;
-      final mapped = _mapProduct(p, (p['code'] ?? '').toString());
-      if (mapped != null) out.add(mapped);
+    try {
+      final res = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 10));
+      if (res.statusCode != 200) return const [];
+      final body = jsonDecode(res.body);
+      if (body is! Map<String, dynamic>) return const [];
+      final products = (body['products'] as List?) ?? const [];
+      final out = <FoodsCompanion>[];
+      for (final p in products) {
+        if (p is! Map<String, dynamic>) continue;
+        final mapped = _mapProduct(p, (p['code'] ?? '').toString());
+        if (mapped != null) out.add(mapped);
+      }
+      return out;
+    } catch (_) {
+      return const []; // network failure, timeout, or non-JSON body
     }
-    return out;
   }
 
   FoodsCompanion? _mapProduct(Map<String, dynamic> p, String barcode) {

@@ -106,11 +106,9 @@ class Entries extends Table {
 /// Optional calorie target per weekday (0 = Monday … 6 = Sunday).
 /// Both bounds are optional: a minimum (for people who need to eat *enough*)
 /// and a maximum. Missing values fall back to the `defaultKcalMin` /
-/// `defaultKcalMax` settings. (`kcal` is a legacy v1 column, migrated into
-/// kcalMax; kept to avoid a destructive migration.)
+/// `defaultKcalMax` settings.
 class Targets extends Table {
   IntColumn get weekday => integer()();
-  RealColumn get kcal => real().nullable()();
   RealColumn get kcalMin => real().nullable()();
   RealColumn get kcalMax => real().nullable()();
   RealColumn get protein => real().nullable()();

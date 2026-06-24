@@ -98,6 +98,8 @@
 
   "genericError": "Error: {error}",
   "@genericError": { "placeholders": { "error": { "type": "String" } } },
+  "couldNotOpenLink": "Couldn't open the link",
+  "@couldNotOpenLink": { "description": "Shown when launching an external URL or app fails" },
 
   "settingsTargets": "Calorie targets",
   "settingsTargetsHelp": "Set a minimum, a maximum, or both. A minimum helps if you need to make sure you eat enough. Leave blank to use the default.",

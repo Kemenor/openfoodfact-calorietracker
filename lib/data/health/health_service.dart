@@ -53,16 +53,18 @@ class HealthService {
       for (var i = 0; i < entries.length; i++) {
         final e = entries[i];
         final factor = e.grams / 100.0;
-        // Use the real moment the entry was logged (editable via back-dating).
-        // Fall back to the day's noon if somehow unset, and never write a
-        // future-dated record — Health Connect rejects those.
+        // Anchor on the real moment the entry was logged (editable via
+        // back-dating). HC rejects future records, and startT must stay >=
+        // the day's start or the record lands on the wrong day. So cap the
+        // window at min(now, end); when the log time is unset / out of range /
+        // future, fall back to a stable in-day slot (noon, spread a minute
+        // apart to keep order), then clamp the tail to the cap.
+        final upper = now.isBefore(end) ? now : end;
         var endT = e.createdAt;
-        if (endT.isBefore(start) || !endT.isBefore(end)) {
-          endT = start.add(const Duration(hours: 12, minutes: 1));
+        if (endT.isBefore(start) || !endT.isBefore(upper)) {
+          endT = start.add(Duration(hours: 12, minutes: i));
         }
-        if (endT.isAfter(now)) {
-          endT = now.subtract(Duration(minutes: entries.length - i));
-        }
+        if (!endT.isBefore(upper)) endT = upper;
         final startT = endT.subtract(const Duration(minutes: 1));
         await _health.writeMeal(
           mealType: _mealType(e.mealType),

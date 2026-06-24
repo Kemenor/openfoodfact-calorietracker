@@ -67,7 +67,8 @@ NutritionLabel parseNutritionLabel(Iterable<String> lines) {
 
     if (out.kcal100 == null && _has(line, _energy)) {
       final k = _energyKcal(line);
-      out.kcal100 = (k != null && k >= 0 && k <= 900) ? k : null;
+      // Ceiling allows pure fats/oils (~900 kcal/100 g) plus OCR slack.
+      out.kcal100 = (k != null && k >= 0 && k <= 1200) ? k : null;
     } else if (out.satFat100 == null && _has(line, _satFat)) {
       out.satFat100 = _grams(line);
     } else if (out.sugar100 == null && _has(line, _sugar)) {

@@ -2659,15 +2659,6 @@ class $TargetsTable extends Targets with TableInfo<$TargetsTable, Target> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _kcalMeta = const VerificationMeta('kcal');
-  @override
-  late final GeneratedColumn<double> kcal = GeneratedColumn<double>(
-    'kcal',
-    aliasedName,
-    true,
-    type: DriftSqlType.double,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _kcalMinMeta = const VerificationMeta(
     'kcalMin',
   );
@@ -2722,7 +2713,6 @@ class $TargetsTable extends Targets with TableInfo<$TargetsTable, Target> {
   @override
   List<GeneratedColumn> get $columns => [
     weekday,
-    kcal,
     kcalMin,
     kcalMax,
     protein,
@@ -2745,12 +2735,6 @@ class $TargetsTable extends Targets with TableInfo<$TargetsTable, Target> {
       context.handle(
         _weekdayMeta,
         weekday.isAcceptableOrUnknown(data['weekday']!, _weekdayMeta),
-      );
-    }
-    if (data.containsKey('kcal')) {
-      context.handle(
-        _kcalMeta,
-        kcal.isAcceptableOrUnknown(data['kcal']!, _kcalMeta),
       );
     }
     if (data.containsKey('kcal_min')) {
@@ -2796,10 +2780,6 @@ class $TargetsTable extends Targets with TableInfo<$TargetsTable, Target> {
         DriftSqlType.int,
         data['${effectivePrefix}weekday'],
       )!,
-      kcal: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}kcal'],
-      ),
       kcalMin: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}kcal_min'],
@@ -2831,7 +2811,6 @@ class $TargetsTable extends Targets with TableInfo<$TargetsTable, Target> {
 
 class Target extends DataClass implements Insertable<Target> {
   final int weekday;
-  final double? kcal;
   final double? kcalMin;
   final double? kcalMax;
   final double? protein;
@@ -2839,7 +2818,6 @@ class Target extends DataClass implements Insertable<Target> {
   final double? fat;
   const Target({
     required this.weekday,
-    this.kcal,
     this.kcalMin,
     this.kcalMax,
     this.protein,
@@ -2850,9 +2828,6 @@ class Target extends DataClass implements Insertable<Target> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['weekday'] = Variable<int>(weekday);
-    if (!nullToAbsent || kcal != null) {
-      map['kcal'] = Variable<double>(kcal);
-    }
     if (!nullToAbsent || kcalMin != null) {
       map['kcal_min'] = Variable<double>(kcalMin);
     }
@@ -2874,7 +2849,6 @@ class Target extends DataClass implements Insertable<Target> {
   TargetsCompanion toCompanion(bool nullToAbsent) {
     return TargetsCompanion(
       weekday: Value(weekday),
-      kcal: kcal == null && nullToAbsent ? const Value.absent() : Value(kcal),
       kcalMin: kcalMin == null && nullToAbsent
           ? const Value.absent()
           : Value(kcalMin),
@@ -2896,7 +2870,6 @@ class Target extends DataClass implements Insertable<Target> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Target(
       weekday: serializer.fromJson<int>(json['weekday']),
-      kcal: serializer.fromJson<double?>(json['kcal']),
       kcalMin: serializer.fromJson<double?>(json['kcalMin']),
       kcalMax: serializer.fromJson<double?>(json['kcalMax']),
       protein: serializer.fromJson<double?>(json['protein']),
@@ -2909,7 +2882,6 @@ class Target extends DataClass implements Insertable<Target> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'weekday': serializer.toJson<int>(weekday),
-      'kcal': serializer.toJson<double?>(kcal),
       'kcalMin': serializer.toJson<double?>(kcalMin),
       'kcalMax': serializer.toJson<double?>(kcalMax),
       'protein': serializer.toJson<double?>(protein),
@@ -2920,7 +2892,6 @@ class Target extends DataClass implements Insertable<Target> {
 
   Target copyWith({
     int? weekday,
-    Value<double?> kcal = const Value.absent(),
     Value<double?> kcalMin = const Value.absent(),
     Value<double?> kcalMax = const Value.absent(),
     Value<double?> protein = const Value.absent(),
@@ -2928,7 +2899,6 @@ class Target extends DataClass implements Insertable<Target> {
     Value<double?> fat = const Value.absent(),
   }) => Target(
     weekday: weekday ?? this.weekday,
-    kcal: kcal.present ? kcal.value : this.kcal,
     kcalMin: kcalMin.present ? kcalMin.value : this.kcalMin,
     kcalMax: kcalMax.present ? kcalMax.value : this.kcalMax,
     protein: protein.present ? protein.value : this.protein,
@@ -2938,7 +2908,6 @@ class Target extends DataClass implements Insertable<Target> {
   Target copyWithCompanion(TargetsCompanion data) {
     return Target(
       weekday: data.weekday.present ? data.weekday.value : this.weekday,
-      kcal: data.kcal.present ? data.kcal.value : this.kcal,
       kcalMin: data.kcalMin.present ? data.kcalMin.value : this.kcalMin,
       kcalMax: data.kcalMax.present ? data.kcalMax.value : this.kcalMax,
       protein: data.protein.present ? data.protein.value : this.protein,
@@ -2951,7 +2920,6 @@ class Target extends DataClass implements Insertable<Target> {
   String toString() {
     return (StringBuffer('Target(')
           ..write('weekday: $weekday, ')
-          ..write('kcal: $kcal, ')
           ..write('kcalMin: $kcalMin, ')
           ..write('kcalMax: $kcalMax, ')
           ..write('protein: $protein, ')
@@ -2963,13 +2931,12 @@ class Target extends DataClass implements Insertable<Target> {
 
   @override
   int get hashCode =>
-      Object.hash(weekday, kcal, kcalMin, kcalMax, protein, carb, fat);
+      Object.hash(weekday, kcalMin, kcalMax, protein, carb, fat);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Target &&
           other.weekday == this.weekday &&
-          other.kcal == this.kcal &&
           other.kcalMin == this.kcalMin &&
           other.kcalMax == this.kcalMax &&
           other.protein == this.protein &&
@@ -2979,7 +2946,6 @@ class Target extends DataClass implements Insertable<Target> {
 
 class TargetsCompanion extends UpdateCompanion<Target> {
   final Value<int> weekday;
-  final Value<double?> kcal;
   final Value<double?> kcalMin;
   final Value<double?> kcalMax;
   final Value<double?> protein;
@@ -2987,7 +2953,6 @@ class TargetsCompanion extends UpdateCompanion<Target> {
   final Value<double?> fat;
   const TargetsCompanion({
     this.weekday = const Value.absent(),
-    this.kcal = const Value.absent(),
     this.kcalMin = const Value.absent(),
     this.kcalMax = const Value.absent(),
     this.protein = const Value.absent(),
@@ -2996,7 +2961,6 @@ class TargetsCompanion extends UpdateCompanion<Target> {
   });
   TargetsCompanion.insert({
     this.weekday = const Value.absent(),
-    this.kcal = const Value.absent(),
     this.kcalMin = const Value.absent(),
     this.kcalMax = const Value.absent(),
     this.protein = const Value.absent(),
@@ -3005,7 +2969,6 @@ class TargetsCompanion extends UpdateCompanion<Target> {
   });
   static Insertable<Target> custom({
     Expression<int>? weekday,
-    Expression<double>? kcal,
     Expression<double>? kcalMin,
     Expression<double>? kcalMax,
     Expression<double>? protein,
@@ -3014,7 +2977,6 @@ class TargetsCompanion extends UpdateCompanion<Target> {
   }) {
     return RawValuesInsertable({
       if (weekday != null) 'weekday': weekday,
-      if (kcal != null) 'kcal': kcal,
       if (kcalMin != null) 'kcal_min': kcalMin,
       if (kcalMax != null) 'kcal_max': kcalMax,
       if (protein != null) 'protein': protein,
@@ -3025,7 +2987,6 @@ class TargetsCompanion extends UpdateCompanion<Target> {
 
   TargetsCompanion copyWith({
     Value<int>? weekday,
-    Value<double?>? kcal,
     Value<double?>? kcalMin,
     Value<double?>? kcalMax,
     Value<double?>? protein,
@@ -3034,7 +2995,6 @@ class TargetsCompanion extends UpdateCompanion<Target> {
   }) {
     return TargetsCompanion(
       weekday: weekday ?? this.weekday,
-      kcal: kcal ?? this.kcal,
       kcalMin: kcalMin ?? this.kcalMin,
       kcalMax: kcalMax ?? this.kcalMax,
       protein: protein ?? this.protein,
@@ -3048,9 +3008,6 @@ class TargetsCompanion extends UpdateCompanion<Target> {
     final map = <String, Expression>{};
     if (weekday.present) {
       map['weekday'] = Variable<int>(weekday.value);
-    }
-    if (kcal.present) {
-      map['kcal'] = Variable<double>(kcal.value);
     }
     if (kcalMin.present) {
       map['kcal_min'] = Variable<double>(kcalMin.value);
@@ -3074,7 +3031,6 @@ class TargetsCompanion extends UpdateCompanion<Target> {
   String toString() {
     return (StringBuffer('TargetsCompanion(')
           ..write('weekday: $weekday, ')
-          ..write('kcal: $kcal, ')
           ..write('kcalMin: $kcalMin, ')
           ..write('kcalMax: $kcalMax, ')
           ..write('protein: $protein, ')
@@ -6686,7 +6642,6 @@ typedef $$EntriesTableProcessedTableManager =
 typedef $$TargetsTableCreateCompanionBuilder =
     TargetsCompanion Function({
       Value<int> weekday,
-      Value<double?> kcal,
       Value<double?> kcalMin,
       Value<double?> kcalMax,
       Value<double?> protein,
@@ -6696,7 +6651,6 @@ typedef $$TargetsTableCreateCompanionBuilder =
 typedef $$TargetsTableUpdateCompanionBuilder =
     TargetsCompanion Function({
       Value<int> weekday,
-      Value<double?> kcal,
       Value<double?> kcalMin,
       Value<double?> kcalMax,
       Value<double?> protein,
@@ -6715,11 +6669,6 @@ class $$TargetsTableFilterComposer
   });
   ColumnFilters<int> get weekday => $composableBuilder(
     column: $table.weekday,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<double> get kcal => $composableBuilder(
-    column: $table.kcal,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -6763,11 +6712,6 @@ class $$TargetsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get kcal => $composableBuilder(
-    column: $table.kcal,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<double> get kcalMin => $composableBuilder(
     column: $table.kcalMin,
     builder: (column) => ColumnOrderings(column),
@@ -6805,9 +6749,6 @@ class $$TargetsTableAnnotationComposer
   });
   GeneratedColumn<int> get weekday =>
       $composableBuilder(column: $table.weekday, builder: (column) => column);
-
-  GeneratedColumn<double> get kcal =>
-      $composableBuilder(column: $table.kcal, builder: (column) => column);
 
   GeneratedColumn<double> get kcalMin =>
       $composableBuilder(column: $table.kcalMin, builder: (column) => column);
@@ -6854,7 +6795,6 @@ class $$TargetsTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> weekday = const Value.absent(),
-                Value<double?> kcal = const Value.absent(),
                 Value<double?> kcalMin = const Value.absent(),
                 Value<double?> kcalMax = const Value.absent(),
                 Value<double?> protein = const Value.absent(),
@@ -6862,7 +6802,6 @@ class $$TargetsTableTableManager
                 Value<double?> fat = const Value.absent(),
               }) => TargetsCompanion(
                 weekday: weekday,
-                kcal: kcal,
                 kcalMin: kcalMin,
                 kcalMax: kcalMax,
                 protein: protein,
@@ -6872,7 +6811,6 @@ class $$TargetsTableTableManager
           createCompanionCallback:
               ({
                 Value<int> weekday = const Value.absent(),
-                Value<double?> kcal = const Value.absent(),
                 Value<double?> kcalMin = const Value.absent(),
                 Value<double?> kcalMax = const Value.absent(),
                 Value<double?> protein = const Value.absent(),
@@ -6880,7 +6818,6 @@ class $$TargetsTableTableManager
                 Value<double?> fat = const Value.absent(),
               }) => TargetsCompanion.insert(
                 weekday: weekday,
-                kcal: kcal,
                 kcalMin: kcalMin,
                 kcalMax: kcalMax,
                 protein: protein,

@@ -13,7 +13,7 @@ void main() {
   test('seeds 7 weekday targets on create, all null', () async {
     final t = await db.allTargets();
     expect(t.length, 7);
-    expect(t.every((x) => x.kcal == null), isTrue);
+    expect(t.every((x) => x.kcalMin == null && x.kcalMax == null), isTrue);
   });
 
   test('upsertFood dedups on (source, externalId)', () async {
@@ -174,9 +174,9 @@ void main() {
   });
 
   test('target update persists', () async {
-    await db.setTarget(0, const TargetsCompanion(kcal: Value(2200)));
+    await db.setTarget(0, const TargetsCompanion(kcalMax: Value(2200)));
     final t = await db.targetForWeekday(0);
-    expect(t!.kcal, 2200);
+    expect(t!.kcalMax, 2200);
   });
 
   test('recipe with items round-trips and cascades on delete', () async {

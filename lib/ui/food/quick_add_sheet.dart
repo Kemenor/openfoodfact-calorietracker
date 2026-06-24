@@ -151,35 +151,43 @@ class _QuickAddSheetState extends ConsumerState<_QuickAddSheet> {
 
   bool get _valid => _name.text.trim().isNotEmpty && (_num(_kcal) ?? 0) > 0;
 
-  Future<void> _add() async {
-    // Tapping "Add" doesn't blur the weight field, so commit any pending rescale
-    // first (idempotent if the focus listener already ran).
-    _applyWeightScale();
-    final groupId =
-        widget.resolveGroup == null ? null : await widget.resolveGroup!();
-    // The fields hold portion totals. With a weight, store the real grams and a
-    // correct per-100 g snapshot (total / grams * 100) so the entry scales when
-    // edited; without one, fall back to grams=100 (totals shown verbatim).
-    final w = _num(_weight);
-    final grams = (w != null && w > 0) ? w : 100.0;
-    final f = 100 / grams; // total → per-100 g
-    double? per(TextEditingController c) {
-      final v = _num(c);
-      return v == null ? null : v * f;
-    }
+  bool _saving = false;
 
-    await ref.read(diaryRepositoryProvider).logSnapshot(
-          name: _name.text.trim(),
-          kcal100: _num(_kcal)! * f,
-          protein100: per(_protein),
-          carb100: per(_carb),
-          fat100: per(_fat),
-          grams: grams,
-          meal: widget.meal,
-          day: widget.day,
-          groupId: groupId,
-        );
-    if (mounted) Navigator.of(context).pop(true);
+  Future<void> _add() async {
+    if (_saving) return; // guard against a double-tap before the sheet pops
+    setState(() => _saving = true);
+    try {
+      // Tapping "Add" doesn't blur the weight field, so commit any pending
+      // rescale first (idempotent if the focus listener already ran).
+      _applyWeightScale();
+      final groupId =
+          widget.resolveGroup == null ? null : await widget.resolveGroup!();
+      // The fields hold portion totals. With a weight, store the real grams and
+      // a correct per-100 g snapshot (total / grams * 100) so the entry scales
+      // when edited; without one, fall back to grams=100 (totals verbatim).
+      final w = _num(_weight);
+      final grams = (w != null && w > 0) ? w : 100.0;
+      final f = 100 / grams; // total → per-100 g
+      double? per(TextEditingController c) {
+        final v = _num(c);
+        return v == null ? null : v * f;
+      }
+
+      await ref.read(diaryRepositoryProvider).logSnapshot(
+            name: _name.text.trim(),
+            kcal100: _num(_kcal)! * f,
+            protein100: per(_protein),
+            carb100: per(_carb),
+            fat100: per(_fat),
+            grams: grams,
+            meal: widget.meal,
+            day: widget.day,
+            groupId: groupId,
+          );
+      if (mounted) Navigator.of(context).pop(true);
+    } catch (_) {
+      if (mounted) setState(() => _saving = false); // let the user retry
+    }
   }
 
   @override
@@ -284,7 +292,7 @@ class _QuickAddSheetState extends ConsumerState<_QuickAddSheet> {
             SizedBox(
               width: double.infinity,
               child: FilledButton(
-                onPressed: _valid ? _add : null,
+                onPressed: (_valid && !_saving) ? _add : null,
                 child: Text(l10n.actionAdd),
               ),
             ),

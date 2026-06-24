@@ -29,5 +29,9 @@ Future<bool> contactDeveloper({String? locale}) async {
   final uri = Uri.parse('mailto:$supportEmail'
       '?subject=${Uri.encodeComponent(subject)}'
       '&body=${Uri.encodeComponent(body)}');
-  return launchUrl(uri, mode: LaunchMode.externalApplication);
+  try {
+    return await launchUrl(uri, mode: LaunchMode.externalApplication);
+  } catch (_) {
+    return false; // no mail app / launch threw — treat as "couldn't open"
+  }
 }
