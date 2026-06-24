@@ -14,8 +14,23 @@ class HealthService {
   /// Cached opt-in flag (mirrors the 'healthSync' setting).
   bool enabled = false;
 
-  static const _types = [h.HealthDataType.NUTRITION];
-  static const _perms = [h.HealthDataAccess.READ_WRITE];
+  // iOS HealthKit's umbrella NUTRITION type expands the permission sheet to ~40
+  // dietary sub-types (every vitamin/mineral), even though we only ever write
+  // energy + macros. So on iOS request exactly those four. Health Connect
+  // (Android) exposes nutrition as a single permission, so the umbrella type is
+  // correct there and keeps the existing behaviour. writeMeal still works with
+  // only the four granular grants — saving a food correlation needs share access
+  // to its contained sample types, not the correlation type itself.
+  static final List<h.HealthDataType> _types = Platform.isIOS
+      ? const [
+          h.HealthDataType.DIETARY_ENERGY_CONSUMED,
+          h.HealthDataType.DIETARY_PROTEIN_CONSUMED,
+          h.HealthDataType.DIETARY_CARBS_CONSUMED,
+          h.HealthDataType.DIETARY_FATS_CONSUMED,
+        ]
+      : const [h.HealthDataType.NUTRITION];
+  static final List<h.HealthDataAccess> _perms =
+      List.filled(_types.length, h.HealthDataAccess.READ_WRITE);
 
   Future<void> _ensureConfigured() async {
     if (_configured) return;
@@ -53,11 +68,9 @@ class HealthService {
     final start = DateTime(d.year, d.month, d.day);
     final end = start.add(const Duration(days: 1));
     try {
-      await _health.delete(
-        type: h.HealthDataType.NUTRITION,
-        startTime: start,
-        endTime: end,
-      );
+      for (final t in _types) {
+        await _health.delete(type: t, startTime: start, endTime: end);
+      }
       for (var i = 0; i < entries.length; i++) {
         final e = entries[i];
         final factor = e.grams / 100.0;
@@ -100,11 +113,13 @@ class HealthService {
   Future<void> deleteAll() async {
     await _ensureConfigured();
     try {
-      await _health.delete(
-        type: h.HealthDataType.NUTRITION,
-        startTime: DateTime(2000),
-        endTime: DateTime.now().add(const Duration(days: 1)),
-      );
+      for (final t in _types) {
+        await _health.delete(
+          type: t,
+          startTime: DateTime(2000),
+          endTime: DateTime.now().add(const Duration(days: 1)),
+        );
+      }
     } catch (_) {}
   }
 
