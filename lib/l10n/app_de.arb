@@ -97,9 +97,9 @@
   "settingsOfflineRegions": "Offline-Regionen",
   "settingsOfflineRegionsSub": "Länder-Produktdatenbanken für die Offline-Suche herunterladen",
 
-  "settingsHealthConnect": "Health Connect",
-  "settingsHealthSync": "Mit Health Connect synchronisieren",
-  "settingsHealthSyncSub": "Erfasste Kalorien & Makros in Health Connect schreiben",
+  "settingsHealthConnect": "{store}",
+  "settingsHealthSync": "Mit {store} synchronisieren",
+  "settingsHealthSyncSub": "Erfasste Kalorien & Makros in {store} schreiben",
   "settingsHealthTimeNote": "Einträge werden zur Erfassungszeit synchronisiert",
   "settingsHealthTimeNoteSub": "Datiere eine Mahlzeit über ihr ⋮-Menü zurück, um ihre Zeit zu ändern.",
 
@@ -118,10 +118,10 @@
   "offThanksBody": "Knabberfuchs basiert auf Open Food Facts — einer kostenlosen, offenen, gemeinschaftlich gepflegten Lebensmitteldatenbank, die von Freiwilligen auf der ganzen Welt am Leben gehalten wird. Ohne ihre Arbeit würde es diese App schlicht nicht geben.\n\nWenn dir Knabberfuchs nützlich ist, denk bitte darüber nach, sie zu unterstützen.",
   "offDonate": "An Open Food Facts spenden",
 
-  "healthSyncOff": "Health-Connect-Synchronisierung deaktiviert.",
-  "healthUnavailable": "Health Connect ist auf diesem Gerät nicht verfügbar.",
-  "healthNoPermission": "Health-Connect-Berechtigung wurde nicht erteilt.",
-  "healthSyncOn": "Health-Connect-Synchronisierung aktiv — heute übertragen.",
+  "healthSyncOff": "{store}-Synchronisierung deaktiviert.",
+  "healthUnavailable": "{store} ist auf diesem Gerät nicht verfügbar.",
+  "healthNoPermission": "{store}-Berechtigung wurde nicht erteilt.",
+  "healthSyncOn": "{store}-Synchronisierung aktiv — heute übertragen.",
 
   "backupExportFailed": "Export fehlgeschlagen: {error}",
   "backupReplaceTitle": "Alle Daten ersetzen?",

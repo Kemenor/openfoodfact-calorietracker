@@ -287,14 +287,19 @@ class AppLocalizationsDe extends AppLocalizations {
       'Länder-Produktdatenbanken für die Offline-Suche herunterladen';
 
   @override
-  String get settingsHealthConnect => 'Health Connect';
+  String settingsHealthConnect(String store) {
+    return '$store';
+  }
 
   @override
-  String get settingsHealthSync => 'Mit Health Connect synchronisieren';
+  String settingsHealthSync(String store) {
+    return 'Mit $store synchronisieren';
+  }
 
   @override
-  String get settingsHealthSyncSub =>
-      'Erfasste Kalorien & Makros in Health Connect schreiben';
+  String settingsHealthSyncSub(String store) {
+    return 'Erfasste Kalorien & Makros in $store schreiben';
+  }
 
   @override
   String get settingsHealthTimeNote =>
@@ -350,19 +355,24 @@ class AppLocalizationsDe extends AppLocalizations {
   String get offDonate => 'An Open Food Facts spenden';
 
   @override
-  String get healthSyncOff => 'Health-Connect-Synchronisierung deaktiviert.';
+  String healthSyncOff(String store) {
+    return '$store-Synchronisierung deaktiviert.';
+  }
 
   @override
-  String get healthUnavailable =>
-      'Health Connect ist auf diesem Gerät nicht verfügbar.';
+  String healthUnavailable(String store) {
+    return '$store ist auf diesem Gerät nicht verfügbar.';
+  }
 
   @override
-  String get healthNoPermission =>
-      'Health-Connect-Berechtigung wurde nicht erteilt.';
+  String healthNoPermission(String store) {
+    return '$store-Berechtigung wurde nicht erteilt.';
+  }
 
   @override
-  String get healthSyncOn =>
-      'Health-Connect-Synchronisierung aktiv — heute übertragen.';
+  String healthSyncOn(String store) {
+    return '$store-Synchronisierung aktiv — heute übertragen.';
+  }
 
   @override
   String backupExportFailed(String error) {

@@ -97,9 +97,9 @@
   "settingsOfflineRegions": "Regioni offline",
   "settingsOfflineRegionsSub": "Scarica i database di prodotti per paese per la ricerca offline",
 
-  "settingsHealthConnect": "Health Connect",
-  "settingsHealthSync": "Sincronizza con Health Connect",
-  "settingsHealthSyncSub": "Scrivi calorie e macro registrate in Health Connect",
+  "settingsHealthConnect": "{store}",
+  "settingsHealthSync": "Sincronizza con {store}",
+  "settingsHealthSyncSub": "Scrivi calorie e macro registrate in {store}",
   "settingsHealthTimeNote": "Le voci si sincronizzano all'ora di registrazione",
   "settingsHealthTimeNoteSub": "Retrodata un pasto dal suo menu ⋮ per cambiarne l'ora.",
 
@@ -118,10 +118,10 @@
   "offThanksBody": "Knabberfuchs si basa su Open Food Facts — un database alimentare gratuito, aperto e collaborativo, mantenuto vivo da volontari di tutto il mondo. Senza il loro lavoro, questa app semplicemente non esisterebbe.\n\nSe Knabberfuchs ti è utile, valuta di sostenerli.",
   "offDonate": "Dona a Open Food Facts",
 
-  "healthSyncOff": "Sincronizzazione Health Connect disattivata.",
-  "healthUnavailable": "Health Connect non è disponibile su questo dispositivo.",
-  "healthNoPermission": "L'autorizzazione a Health Connect non è stata concessa.",
-  "healthSyncOn": "Sincronizzazione Health Connect attiva — oggi inviato.",
+  "healthSyncOff": "Sincronizzazione {store} disattivata.",
+  "healthUnavailable": "{store} non è disponibile su questo dispositivo.",
+  "healthNoPermission": "L'autorizzazione a {store} non è stata concessa.",
+  "healthSyncOn": "Sincronizzazione {store} attiva — oggi inviato.",
 
   "backupExportFailed": "Esportazione non riuscita: {error}",
   "backupReplaceTitle": "Sostituire tutti i dati?",

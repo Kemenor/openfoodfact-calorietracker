@@ -591,20 +591,20 @@ abstract class AppLocalizations {
   /// No description provided for @settingsHealthConnect.
   ///
   /// In en, this message translates to:
-  /// **'Health Connect'**
-  String get settingsHealthConnect;
+  /// **'{store}'**
+  String settingsHealthConnect(String store);
 
   /// No description provided for @settingsHealthSync.
   ///
   /// In en, this message translates to:
-  /// **'Sync to Health Connect'**
-  String get settingsHealthSync;
+  /// **'Sync to {store}'**
+  String settingsHealthSync(String store);
 
   /// No description provided for @settingsHealthSyncSub.
   ///
   /// In en, this message translates to:
-  /// **'Write logged calories & macros to Health Connect'**
-  String get settingsHealthSyncSub;
+  /// **'Write logged calories & macros to {store}'**
+  String settingsHealthSyncSub(String store);
 
   /// No description provided for @settingsHealthTimeNote.
   ///
@@ -699,26 +699,26 @@ abstract class AppLocalizations {
   /// No description provided for @healthSyncOff.
   ///
   /// In en, this message translates to:
-  /// **'Health Connect sync turned off.'**
-  String get healthSyncOff;
+  /// **'{store} sync turned off.'**
+  String healthSyncOff(String store);
 
   /// No description provided for @healthUnavailable.
   ///
   /// In en, this message translates to:
-  /// **'Health Connect is not available on this device.'**
-  String get healthUnavailable;
+  /// **'{store} is not available on this device.'**
+  String healthUnavailable(String store);
 
   /// No description provided for @healthNoPermission.
   ///
   /// In en, this message translates to:
-  /// **'Health Connect permission was not granted.'**
-  String get healthNoPermission;
+  /// **'{store} permission was not granted.'**
+  String healthNoPermission(String store);
 
   /// No description provided for @healthSyncOn.
   ///
   /// In en, this message translates to:
-  /// **'Health Connect sync on — today pushed.'**
-  String get healthSyncOn;
+  /// **'{store} sync on — today pushed.'**
+  String healthSyncOn(String store);
 
   /// No description provided for @backupExportFailed.
   ///

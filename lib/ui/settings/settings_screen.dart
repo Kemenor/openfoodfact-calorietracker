@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:drift/drift.dart' show Value;
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,9 @@ import '../../domain/meal_type_i18n.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers.dart';
 import 'offline_regions_screen.dart';
+
+/// HealthKit on iOS, Health Connect on Android — for user-facing labels.
+String _healthStore() => Platform.isIOS ? 'Apple Health' : 'Health Connect';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -116,11 +121,11 @@ class SettingsScreen extends ConsumerWidget {
               _SectionHeader(l10n.settingsAi),
               const _AiKeyTile(),
               const Divider(),
-              _SectionHeader(l10n.settingsHealthConnect),
+              _SectionHeader(l10n.settingsHealthConnect(_healthStore())),
               SwitchListTile(
                 secondary: const Icon(Icons.favorite_border),
-                title: Text(l10n.settingsHealthSync),
-                subtitle: Text(l10n.settingsHealthSyncSub),
+                title: Text(l10n.settingsHealthSync(_healthStore())),
+                subtitle: Text(l10n.settingsHealthSyncSub(_healthStore())),
                 value: healthSync,
                 onChanged: (v) => _toggleHealthSync(context, ref, v),
               ),
@@ -188,18 +193,18 @@ Future<void> _toggleHealthSync(
   if (!value) {
     await db.setSetting('healthSync', 'false');
     await health.refreshEnabled(db);
-    messenger.showAutoSnackBar(SnackBar(content: Text(l10n.healthSyncOff)));
+    messenger.showAutoSnackBar(SnackBar(content: Text(l10n.healthSyncOff(_healthStore()))));
     return;
   }
 
   if (!await health.isAvailable()) {
-    messenger.showAutoSnackBar(SnackBar(content: Text(l10n.healthUnavailable)));
+    messenger.showAutoSnackBar(SnackBar(content: Text(l10n.healthUnavailable(_healthStore()))));
     return;
   }
   final granted = await health.requestPermissions();
   if (!granted) {
     messenger.showAutoSnackBar(
-      SnackBar(content: Text(l10n.healthNoPermission)),
+      SnackBar(content: Text(l10n.healthNoPermission(_healthStore()))),
     );
     return;
   }
@@ -208,7 +213,7 @@ Future<void> _toggleHealthSync(
   // Sync the selected day immediately so the user sees data right away.
   final day = ref.read(selectedDayProvider);
   await health.syncDay(day, await db.watchDay(day).first);
-  messenger.showAutoSnackBar(SnackBar(content: Text(l10n.healthSyncOn)));
+  messenger.showAutoSnackBar(SnackBar(content: Text(l10n.healthSyncOn(_healthStore()))));
 }
 
 Future<void> _exportBackup(BuildContext context, WidgetRef ref) async {
