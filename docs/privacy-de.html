@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Datenschutzerklärung — Knabberfuchs</title>
+<meta name="description" content="Datenschutzerklärung von Knabberfuchs. Keine Konten, keine Analyse, keine Werbung, kein Tracking. Deine Daten bleiben auf deinem Handy." />
+<link rel="icon" href="favicon.png" type="image/png" />
+<style>
+  :root{
+    --green:#5f8a34; --green-d:#456627; --ink:#22271c;
+    --bg:#f4f6ee; --card:#ffffff; --muted:#5c6453; --line:#e3e7d8;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--green-d)}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  header{padding:56px 0 24px;text-align:center}
+  header img.logo{width:84px;height:84px}
+  h1{font-size:2.1rem;margin:.5rem 0 .2rem;letter-spacing:-.02em}
+  .meta{color:var(--muted);font-size:.95rem;margin:0}
+  .langs{color:var(--muted);font-size:.92rem;margin:8px 0 0}
+  .langs a{margin:0 4px}
+  main{padding:8px 0 24px}
+  h2{font-size:1.3rem;margin:34px 0 10px;letter-spacing:-.01em}
+  h3{font-size:1.05rem;margin:20px 0 4px}
+  p,li{color:var(--ink)}
+  .muted{color:var(--muted)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 24px;margin:18px 0}
+  .tldr{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--green);
+        border-radius:12px;padding:18px 22px;margin:18px 0}
+  ul{padding-left:20px}
+  li{margin:6px 0}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.96rem}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--green-d)}
+  footer{padding:36px 0 60px;text-align:center;color:var(--muted);font-size:.92rem;border-top:1px solid var(--line);margin-top:30px}
+  .back{display:inline-block;margin-top:8px;font-weight:600}
+  @media(max-width:560px){h1{font-size:1.7rem}}
+</style>
+</head>
+<body>
+
+<header>
+  <img class="logo" src="favicon.png" alt="Knabberfuchs" />
+  <h1>Datenschutzerklärung</h1>
+  <p class="meta">Knabberfuchs 🦊 &middot; zuletzt aktualisiert am 24. Juni 2026</p>
+  <p class="langs"><a href="privacy.html">EN</a> &middot; <strong>DE</strong> &middot; <a href="privacy-fr.html">FR</a> &middot; <a href="privacy-it.html">IT</a></p>
+</header>
+
+<main class="wrap">
+
+  <div class="tldr">
+    <strong>Kurz gesagt:</strong> Knabberfuchs hat keine Konten, keine Analyse, keine Werbung und
+    kein Tracking. Alles, was du erfasst, bleibt in einer Datenbank <em>auf deinem Handy</em>. Nichts
+    wird an uns gesendet — wir betreiben keinen Server und sehen deine Daten nie. Einige optionale
+    Funktionen sprechen nur dann mit externen Diensten, wenn <em>du</em> sie nutzt, und nur mit dem
+    nötigen Minimum.
+  </div>
+
+  <h2>1. Wer wir sind</h2>
+  <p>Knabberfuchs („die App“) ist ein offline-orientierter Kalorienzähler für Android und iOS. Diese
+    Erklärung beschreibt, was die App mit deinen Informationen tut und was nicht. Falls etwas unklar
+    ist, kontaktiere uns unter <a href="mailto:developer@knabberfuchs.ch">developer@knabberfuchs.ch</a>.</p>
+
+  <h2>2. Daten auf deinem Gerät</h2>
+  <p>Alles, was du eingibst — dein Ernährungstagebuch, Rezepte, eigene Lebensmittel, Tagesziele und
+    Einstellungen — wird ausschließlich in einer lokalen Datenbank auf deinem Gerät gespeichert. Es
+    wird nirgendwohin hochgeladen, ist für uns nicht lesbar und bleibt auf dem Gerät, sofern du es
+    nicht selbst exportierst.</p>
+  <p>Du kannst alle deine Daten in eine Sicherungsdatei exportieren (eine ZIP-Datei mit JSON und CSV)
+    und später wiederherstellen. Diese Datei wird dort gespeichert, wo du möchtest, und niemals an uns
+    oder andere gesendet.</p>
+
+  <h2>3. Informationen, die dein Gerät verlassen</h2>
+  <p>Die App kontaktiert das Internet nur für die folgenden Funktionen und sendet niemals persönliche
+    Identifikatoren (kein Name, keine E-Mail, kein Konto, keine Geräte-ID, keine Werbe-ID).</p>
+
+  <table>
+    <tr><th>Funktion</th><th>Was gesendet wird</th><th>An wen</th></tr>
+    <tr>
+      <td>Barcode-Scan &amp; Lebensmittelsuche</td>
+      <td>Die Barcode-Nummer oder die von dir eingegebenen Wörter</td>
+      <td>Open Food Facts (<span class="muted">world.openfoodfacts.org</span>)</td>
+    </tr>
+    <tr>
+      <td>KI-Mahlzeitenerkennung per Foto <strong>(optional)</strong></td>
+      <td>Das aufgenommene Foto der Mahlzeit — <em>nur</em> wenn du deinen eigenen Google-Gemini-API-Schlüssel hinzugefügt hast</td>
+      <td>Google (<span class="muted">generativelanguage.googleapis.com</span>)</td>
+    </tr>
+    <tr>
+      <td>Download der Offline-Datenbank</td>
+      <td>Eine normale Datei-Download-Anfrage für die von dir gewählte Länderdatenbank</td>
+      <td>Hugging Face (<span class="muted">huggingface.co</span>)</td>
+    </tr>
+    <tr>
+      <td>„Zu Open Food Facts hinzufügen“</td>
+      <td>Öffnet die Website von Open Food Facts in deinem Browser; jedes von dir eingereichte Produkt wird dort verarbeitet</td>
+      <td>Open Food Facts</td>
+    </tr>
+  </table>
+
+  <h3>Mahlzeitenerkennung auf dem Gerät</h3>
+  <p>Standardmäßig läuft die Funktion „Mahlzeit mit KI scannen“ vollständig auf deinem Gerät mit einem
+    mitgelieferten Bildmodell. Dein Foto verlässt das Handy nie. Es wird nur dann an Google gesendet,
+    wenn du in den Einstellungen persönlich einen Google-Gemini-API-Schlüssel eingegeben hast — eine
+    Funktion, die deaktiviert ist, bis du sie einrichtest.</p>
+
+  <h3>Wenn du deinen eigenen Gemini-Schlüssel verwendest</h3>
+  <p>Wenn aktiviert, wird das Mahlzeitenfoto an Googles Gemini-API gesendet, um das Gericht und seine
+    Kalorien zu schätzen. Diese Anfrage unterliegt
+    <a href="https://policies.google.com/privacy">Googles Datenschutzerklärung</a> und den Bedingungen
+    von Google AI Studio / der Gemini-API. Je nach deinem Google-Konto und -Tarif kann Google an die
+    kostenlose Stufe gesendete Daten zur Verbesserung seiner Dienste verwenden. Dies ist deine
+    Entscheidung; die App funktioniert auch vollständig ohne sie.</p>
+
+  <h2>4. Apple Health &amp; Health Connect (optional)</h2>
+  <p>Wenn du es aktivierst, kann die App deine erfassten Kalorien und Makronährstoffe in den
+    Gesundheitsspeicher deines Geräts schreiben — Apple Health unter iOS oder Health Connect unter
+    Android. Dies ist eine reine Schreibsynchronisierung: Die Daten bleiben auf deinem Gerät,
+    innerhalb von Apple Health oder Android Health Connect, und werden niemals an uns übermittelt. Du
+    kannst es jederzeit deaktivieren und steuerst über die Gesundheitseinstellungen deines Geräts,
+    welche Apps diese Daten lesen dürfen.</p>
+
+  <h2>5. Keine Analyse, Werbung oder Tracking</h2>
+  <p>Die App enthält keine Werbung, keine Analyse- oder Absturzbericht-SDKs, keine Social-Media-Tracker
+    und kein Tracking durch Dritte jeglicher Art. Wir erstellen keine Profile und verkaufen oder teilen
+    keine Daten — weil wir sie gar nicht erst erheben.</p>
+
+  <h2>6. Privatsphäre von Kindern</h2>
+  <p>Die App richtet sich nicht an Kinder unter 13 Jahren und erhebt wissentlich keine
+    personenbezogenen Daten von irgendjemandem, unabhängig vom Alter.</p>
+
+  <h2>7. Aufbewahrung &amp; Löschung</h2>
+  <p>Da deine Daten nur auf deinem Gerät gespeichert sind, hast du die volle Kontrolle darüber. Das
+    Löschen von Einträgen in der App entfernt sie, und das Deinstallieren der App entfernt alle lokalen
+    Daten. Auf unserer Seite ist nichts gespeichert, dessen Löschung du beantragen müsstest.</p>
+
+  <h2>8. Änderungen dieser Erklärung</h2>
+  <p>Falls sich diese Erklärung ändert, aktualisieren wir diese Seite und das Datum „zuletzt
+    aktualisiert“ oben. Wesentliche Änderungen werden hier vor ihrem Inkrafttreten dargestellt.</p>
+
+  <h2>9. Kontakt</h2>
+  <p>Fragen zu dieser Erklärung oder deiner Privatsphäre? Schreib an
+    <a href="mailto:developer@knabberfuchs.ch">developer@knabberfuchs.ch</a>.</p>
+
+  <a class="back" href="index.html">&larr; Zurück zu Knabberfuchs</a>
+</main>
+
+<footer>
+  <div class="wrap">
+    Knabberfuchs · hergestellt in der Schweiz 🇨🇭 · Lebensmitteldaten © Open Food Facts-Mitwirkende
+    (ODbL) &amp; die Schweizer Nährwertdatenbank (BLV)
+    <br /><a href="license.html">Lizenzen &amp; Danksagungen</a>
+  </div>
+</footer>
+
+</body>
+</html>
