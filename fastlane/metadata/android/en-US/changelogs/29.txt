@@ -1,0 +1,1 @@
+New: Trends tab — chart your calories against your target by week, month, or a custom date range, with per-day goals and weekly/monthly views for long spans. Plus reliability and polish fixes.

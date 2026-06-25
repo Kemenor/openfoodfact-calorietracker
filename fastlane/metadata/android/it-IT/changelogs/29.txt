@@ -1,0 +1,1 @@
+Novità: scheda Andamento — grafico delle calorie rispetto all'obiettivo per settimana, mese o periodo personalizzato, con obiettivi giornalieri e viste settimanali/mensili per periodi lunghi. Inoltre correzioni di stabilità.

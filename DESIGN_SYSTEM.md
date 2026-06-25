@@ -13,7 +13,7 @@ This is a Flutter + Riverpod (Material 3) app. Entry: `lib/main.dart` →
 
 ## 1. Navigation
 
-- Root is a Material 3 `NavigationBar` ordered **Day, [Trends], Recipes,
+- Root is a Material 3 `NavigationBar` ordered **Day, Recipes, [Trends],
   Settings**. **Day is always index 0** (the only programmatic jump target). The
   **Trends** tab is optional — toggled in Settings via `showTrendsProvider`; the
   `pages`/`destinations` lists are built conditionally and the active index is

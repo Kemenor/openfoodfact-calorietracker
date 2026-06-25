@@ -9,7 +9,7 @@ import 'settings/settings_screen.dart';
 import 'trends/trends_screen.dart';
 
 /// Root navigation: a bottom bar switching between the top-level destinations.
-/// Order is **Day, [Trends], Recipes, Settings** — the Trends tab is optional
+/// Order is **Day, Recipes, [Trends], Settings** — the Trends tab is optional
 /// (toggled in Settings via [showTrendsProvider]). Day is always index 0 (the
 /// only programmatic jump target). Tabs keep their state (IndexedStack) so
 /// switching never resets scroll position or an in-progress search.
@@ -23,8 +23,8 @@ class HomeShell extends ConsumerWidget {
 
     final pages = <Widget>[
       const DayScreen(),
-      if (showTrends) const TrendsScreen(),
       const RecipesScreen(),
+      if (showTrends) const TrendsScreen(),
       const SettingsScreen(),
     ];
     final destinations = <NavigationDestination>[
@@ -33,17 +33,17 @@ class HomeShell extends ConsumerWidget {
         selectedIcon: const Icon(Icons.today),
         label: l10n.navDay,
       ),
+      NavigationDestination(
+        icon: const Icon(Icons.menu_book_outlined),
+        selectedIcon: const Icon(Icons.menu_book),
+        label: l10n.navRecipes,
+      ),
       if (showTrends)
         NavigationDestination(
           icon: const Icon(Icons.insights_outlined),
           selectedIcon: const Icon(Icons.insights),
           label: l10n.navTrends,
         ),
-      NavigationDestination(
-        icon: const Icon(Icons.menu_book_outlined),
-        selectedIcon: const Icon(Icons.menu_book),
-        label: l10n.navRecipes,
-      ),
       NavigationDestination(
         icon: const Icon(Icons.settings_outlined),
         selectedIcon: const Icon(Icons.settings),

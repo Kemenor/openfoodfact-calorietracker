@@ -334,8 +334,8 @@ final selectedDayProvider = NotifierProvider<SelectedDayNotifier, String>(
 );
 
 /// HomeShell bottom-nav tab index. Day is always 0; the remaining tabs depend
-/// on whether the Trends tab is enabled ([showTrendsProvider]) — Day, [Trends],
-/// Recipes, Settings. A provider so flows like "log a recipe portion to a day"
+/// on whether the Trends tab is enabled ([showTrendsProvider]) — Day, Recipes,
+/// [Trends], Settings. A provider so flows like "log a recipe portion to a day"
 /// can jump to the Day tab (index 0) on the day they just logged to.
 class HomeTabNotifier extends Notifier<int> {
   @override

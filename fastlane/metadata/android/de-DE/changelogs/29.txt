@@ -1,0 +1,1 @@
+Neu: Verlauf-Tab — Kalorien vs. Ziel als Diagramm pro Woche, Monat oder eigenem Zeitraum, mit Tageszielen und Wochen-/Monatsansicht für lange Zeiträume. Dazu Stabilitäts- und Detailverbesserungen.

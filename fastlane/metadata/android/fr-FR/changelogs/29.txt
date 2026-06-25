@@ -1,0 +1,1 @@
+Nouveau : onglet Tendances — visualisez vos calories par rapport à votre objectif par semaine, mois ou période personnalisée, avec objectifs par jour et vues hebdo/mensuelle pour les longues périodes. Plus des corrections de fiabilité.
