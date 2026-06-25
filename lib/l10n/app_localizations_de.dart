@@ -40,6 +40,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get trendsMonth => 'Monat';
 
   @override
+  String get trendsCustom => 'Eigen';
+
+  @override
   String get trendsAvgPerDay => 'Ø pro Tag';
 
   @override

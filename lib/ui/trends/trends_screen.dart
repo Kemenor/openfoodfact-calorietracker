@@ -9,16 +9,16 @@ import '../../domain/day_summary.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers.dart';
 
-/// Weekly / monthly calorie history against the user's target. Each day is a bar
-/// colored by its own status (under / in-range / over); the target band is drawn
-/// from today's resolved target as a reference.
+/// Calorie history against the user's target: a line of daily intake over a
+/// shaded target band, each day's dot colored by its status (under / in-range /
+/// over). Pick Week / Month / a custom range, and step through periods.
 class TrendsScreen extends ConsumerWidget {
   const TrendsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final range = ref.watch(trendRangeProvider);
+    final window = ref.watch(trendRangeProvider);
     final trendsAsync = ref.watch(trendsProvider);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.navTrends)),
@@ -27,27 +27,39 @@ class TrendsScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SegmentedButton<TrendRange>(
+            SegmentedButton<TrendMode>(
+              showSelectedIcon: false,
               segments: [
                 ButtonSegment(
-                  value: TrendRange.week,
+                  value: TrendMode.week,
                   label: Text(l10n.trendsWeek),
                 ),
                 ButtonSegment(
-                  value: TrendRange.month,
+                  value: TrendMode.month,
                   label: Text(l10n.trendsMonth),
                 ),
+                ButtonSegment(
+                  value: TrendMode.custom,
+                  label: Text(l10n.trendsCustom),
+                ),
               ],
-              selected: {range},
-              onSelectionChanged: (s) =>
-                  ref.read(trendRangeProvider.notifier).set(s.first),
+              selected: {window.mode},
+              onSelectionChanged: (s) {
+                if (s.first == TrendMode.custom) {
+                  pickCustomRange(context, ref, window);
+                } else {
+                  ref.read(trendRangeProvider.notifier).setMode(s.first);
+                }
+              },
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
+            _RangeHeader(window: window),
+            const SizedBox(height: 8),
             Expanded(
               child: trendsAsync.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (e, _) => Center(child: Text(l10n.genericError('$e'))),
-                data: (trends) => _TrendsBody(trends: trends, range: range),
+                data: (trends) => _TrendsBody(trends: trends),
               ),
             ),
           ],
@@ -57,10 +69,84 @@ class TrendsScreen extends ConsumerWidget {
   }
 }
 
+/// Open the system date-range picker and store the chosen custom range; leaves
+/// the window unchanged if the user cancels.
+Future<void> pickCustomRange(
+  BuildContext context,
+  WidgetRef ref,
+  TrendWindow current,
+) async {
+  final now = DateTime.now();
+  final last = DateTime(now.year, now.month, now.day);
+  DateTime clamp(DateTime d) => d.isAfter(last) ? last : d;
+  final picked = await showDateRangePicker(
+    context: context,
+    firstDate: DateTime(2020),
+    lastDate: last,
+    initialDateRange: DateTimeRange(
+      start: clamp(current.start),
+      end: clamp(current.end),
+    ),
+  );
+  if (picked != null) {
+    ref.read(trendRangeProvider.notifier).setCustom(picked.start, picked.end);
+  }
+}
+
+/// The current period's date label, with prev/next arrows for week/month. In
+/// custom mode the label is a button that re-opens the range picker.
+class _RangeHeader extends ConsumerWidget {
+  final TrendWindow window;
+  const _RangeHeader({required this.window});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final locale = Localizations.localeOf(context).languageCode;
+    final label = _rangeLabel(window.start, window.end, locale);
+
+    if (window.mode == TrendMode.custom) {
+      return Center(
+        child: TextButton.icon(
+          icon: const Icon(Icons.edit_calendar_outlined, size: 18),
+          label: Text(label),
+          onPressed: () => pickCustomRange(context, ref, window),
+        ),
+      );
+    }
+    final notifier = ref.read(trendRangeProvider.notifier);
+    return Row(
+      children: [
+        IconButton(
+          icon: const Icon(Icons.chevron_left),
+          onPressed: notifier.older,
+        ),
+        Expanded(
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.titleSmall,
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.chevron_right),
+          onPressed: window.isCurrent ? null : notifier.newer,
+        ),
+      ],
+    );
+  }
+}
+
+String _rangeLabel(DateTime s, DateTime e, String locale) {
+  final fmt = s.year == e.year
+      ? DateFormat.MMMd(locale)
+      : DateFormat.yMMMd(locale);
+  return '${fmt.format(s)} – ${fmt.format(e)}';
+}
+
 class _TrendsBody extends StatelessWidget {
   final List<DayTrend> trends;
-  final TrendRange range;
-  const _TrendsBody({required this.trends, required this.range});
+  const _TrendsBody({required this.trends});
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +187,7 @@ class _TrendsBody extends StatelessWidget {
           targetedDays: withTarget.length,
         ),
         const SizedBox(height: 16),
-        Expanded(child: _Chart(trends: trends, range: range)),
+        Expanded(child: _Chart(trends: trends)),
       ],
     );
   }
@@ -155,8 +241,7 @@ class _SummaryCard extends StatelessWidget {
 
 class _Chart extends StatelessWidget {
   final List<DayTrend> trends;
-  final TrendRange range;
-  const _Chart({required this.trends, required this.range});
+  const _Chart({required this.trends});
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +249,9 @@ class _Chart extends StatelessWidget {
     final scheme = theme.colorScheme;
     final locale = Localizations.localeOf(context).languageCode;
     final l10n = AppLocalizations.of(context);
-    final isWeek = range == TrendRange.week;
+    // Label/dot density adapts to how many days are shown (week vs a long range).
+    final dense = trends.length > 8;
+    final labelStep = dense ? (trends.length / 6).ceil() : 1;
     final hasTarget = trends.any((t) => !t.target.isEmpty);
 
     final maxKcal = trends.fold<double>(0, (m, t) => t.kcal > m ? t.kcal : m);
@@ -217,7 +304,7 @@ class _Chart extends StatelessWidget {
             dotData: FlDotData(
               show: true,
               getDotPainter: (spot, pct, bar, index) => FlDotCirclePainter(
-                radius: isWeek ? 4.5 : 2.5,
+                radius: dense ? 2.5 : 4.5,
                 color: statusColor(scheme, trends[spot.x.round()].status),
                 strokeWidth: 0,
               ),
@@ -291,12 +378,12 @@ class _Chart extends StatelessWidget {
                 if (i < 0 || i >= trends.length || (value - i).abs() > 0.01) {
                   return const SizedBox.shrink();
                 }
-                // Week: every weekday initial. Month: day-of-month every 5th.
-                final show = isWeek || i % 5 == 0;
-                if (!show) return const SizedBox.shrink();
-                final label = isWeek
-                    ? DateFormat('EEE', locale).format(trends[i].date)
-                    : DateFormat('d', locale).format(trends[i].date);
+                // Short ranges show weekday initials; longer ones thin out to
+                // ~6 day/month labels.
+                if (i % labelStep != 0) return const SizedBox.shrink();
+                final label = dense
+                    ? DateFormat('d/M', locale).format(trends[i].date)
+                    : DateFormat('EEE', locale).format(trends[i].date);
                 return Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: Text(

@@ -29,6 +29,14 @@ Future<void> _loadRoboto() async {
   await loader.load();
 }
 
+/// Pins the trends window so golden dates (the range header) are deterministic.
+class _FixedRange extends TrendRangeNotifier {
+  _FixedRange(this._window);
+  final TrendWindow _window;
+  @override
+  TrendWindow build() => _window;
+}
+
 void main() {
   setUpAll(_loadRoboto);
 
@@ -54,14 +62,17 @@ void main() {
     ];
   }
 
-  Widget app(List<DayTrend> trends) {
+  Widget app(List<DayTrend> trends, TrendWindow window) {
     final base = buildTheme(Brightness.light);
     final theme = base.copyWith(
       textTheme: base.textTheme.apply(fontFamily: 'Roboto'),
       primaryTextTheme: base.primaryTextTheme.apply(fontFamily: 'Roboto'),
     );
     return ProviderScope(
-      overrides: [trendsProvider.overrideWith((ref) => Stream.value(trends))],
+      overrides: [
+        trendsProvider.overrideWith((ref) => Stream.value(trends)),
+        trendRangeProvider.overrideWith(() => _FixedRange(window)),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: theme,
@@ -77,7 +88,17 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(app(seed(7)));
+    await tester.pumpWidget(
+      app(
+        seed(7),
+        TrendWindow(
+          TrendMode.week,
+          0,
+          DateTime(2026, 6, 15),
+          DateTime(2026, 6, 21),
+        ),
+      ),
+    );
     await tester.pumpAndSettle();
 
     await expectLater(
@@ -91,11 +112,17 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(app(seed(30)));
-    await tester.pumpAndSettle();
-
-    // Switch to the Month range (drives the real toggle + month bar styling).
-    await tester.tap(find.text('Month'));
+    await tester.pumpWidget(
+      app(
+        seed(30),
+        TrendWindow(
+          TrendMode.month,
+          0,
+          DateTime(2026, 5, 23),
+          DateTime(2026, 6, 21),
+        ),
+      ),
+    );
     await tester.pumpAndSettle();
 
     await expectLater(
@@ -139,7 +166,17 @@ void main() {
         }(),
     ];
 
-    await tester.pumpWidget(app(trends));
+    await tester.pumpWidget(
+      app(
+        trends,
+        TrendWindow(
+          TrendMode.week,
+          0,
+          DateTime(2026, 6, 15),
+          DateTime(2026, 6, 21),
+        ),
+      ),
+    );
     await tester.pumpAndSettle();
 
     await expectLater(

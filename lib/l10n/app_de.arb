@@ -14,6 +14,7 @@
 
   "trendsWeek": "Woche",
   "trendsMonth": "Monat",
+  "trendsCustom": "Eigen",
   "trendsAvgPerDay": "Ø pro Tag",
   "trendsDaysInTarget": "Tage im Ziel",
   "trendsEmpty": "Noch keine Einträge in diesem Zeitraum. Erfasse etwas, um deinen Verlauf zu sehen.",

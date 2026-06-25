@@ -162,6 +162,12 @@ abstract class AppLocalizations {
   /// **'Month'**
   String get trendsMonth;
 
+  /// No description provided for @trendsCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get trendsCustom;
+
   /// No description provided for @trendsAvgPerDay.
   ///
   /// In en, this message translates to:

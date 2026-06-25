@@ -374,36 +374,80 @@ final daySummaryProvider = StreamProvider<DaySummary>((ref) {
 
 // ---------------- Trends ----------------
 
-/// Rolling window shown in the trends charts.
-enum TrendRange { week, month }
+/// Which window the trends charts show.
+enum TrendMode { week, month, custom }
 
-class TrendRangeNotifier extends Notifier<TrendRange> {
-  @override
-  TrendRange build() => TrendRange.week;
-  void set(TrendRange range) => state = range;
+/// The resolved trends window: a [mode], how many whole periods back it sits
+/// from today ([offset], for week/month), and the inclusive [start]–[end] dates.
+class TrendWindow {
+  final TrendMode mode;
+  final int offset;
+  final DateTime start;
+  final DateTime end;
+  const TrendWindow(this.mode, this.offset, this.start, this.end);
+
+  /// True when this is the latest period (so "newer" navigation is disabled).
+  bool get isCurrent => mode != TrendMode.custom && offset == 0;
+  int get days => end.difference(start).inDays + 1;
 }
 
-final trendRangeProvider = NotifierProvider<TrendRangeNotifier, TrendRange>(
+class TrendRangeNotifier extends Notifier<TrendWindow> {
+  @override
+  TrendWindow build() => preset(TrendMode.week, 0);
+
+  /// A week/month window [offset] whole periods before today.
+  TrendWindow preset(TrendMode mode, int offset) {
+    final today = DayKey.parse(DayKey.today());
+    final len = mode == TrendMode.month ? 30 : 7;
+    final end = today.subtract(Duration(days: len * offset));
+    final start = end.subtract(Duration(days: len - 1));
+    return TrendWindow(mode, offset, start, end);
+  }
+
+  /// Switch Week/Month (resets to the current, latest period).
+  void setMode(TrendMode mode) => state = preset(mode, 0);
+
+  /// Step to the older adjacent period.
+  void older() {
+    if (state.mode == TrendMode.custom) return;
+    state = preset(state.mode, state.offset + 1);
+  }
+
+  /// Step to the newer adjacent period (no-op once at the latest).
+  void newer() {
+    if (state.mode == TrendMode.custom || state.offset == 0) return;
+    state = preset(state.mode, state.offset - 1);
+  }
+
+  /// Pick an arbitrary inclusive range (dates are normalized to local midnight).
+  void setCustom(DateTime start, DateTime end) {
+    state = TrendWindow(
+      TrendMode.custom,
+      0,
+      DateTime(start.year, start.month, start.day),
+      DateTime(end.year, end.month, end.day),
+    );
+  }
+}
+
+final trendRangeProvider = NotifierProvider<TrendRangeNotifier, TrendWindow>(
   TrendRangeNotifier.new,
 );
 
-/// Per-day kcal vs target for the selected window (last 7 or 30 days ending
-/// today), gap-filled so every day has a bar.
+/// Per-day kcal vs target for the selected window, gap-filled so every day has
+/// a point.
 final trendsProvider = StreamProvider<List<DayTrend>>((ref) {
   final db = ref.watch(dbProvider);
-  final range = ref.watch(trendRangeProvider);
+  final w = ref.watch(trendRangeProvider);
   final targets = ref.watch(targetsProvider).asData?.value ?? const [];
   final defaultMin = ref.watch(defaultMinProvider).asData?.value;
   final defaultMax = ref.watch(defaultMaxProvider).asData?.value;
-  final days = range == TrendRange.week ? 7 : 30;
-  final end = DayKey.parse(DayKey.today());
-  final start = end.subtract(Duration(days: days - 1));
   return db
-      .watchDailyKcal(DayKey.of(start), DayKey.of(end))
+      .watchDailyKcal(DayKey.of(w.start), DayKey.of(w.end))
       .map(
         (rows) => buildDayTrends(
-          start,
-          end,
+          w.start,
+          w.end,
           {for (final r in rows) r.day: r.kcal},
           targets,
           defaultMin,
