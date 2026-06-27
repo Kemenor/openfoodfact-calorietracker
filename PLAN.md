@@ -8,10 +8,10 @@ recipe sharing, ZIP backup/restore.
 
 ### New feedback (2026-06-27)
 
-- 📊 **Macro goals + macro visualization** (feedback) — **DESIGNED 2026-06-27 (grilled), in
-  progress.** Optional per-weekday min/max targets for protein/carb/fat at full parity with
-  kcal, surfaced as glanceable bars on the Day card and as a swappable metric on the Trends
-  graphs. Resolved design:
+- 📊 **Macro goals + macro visualization** (feedback) — ✅ **DONE 2026-06-27** (grilled →
+  5 commits; schema v11, Targets sub-screen, Day-card bars, Trends toggle, docs). Optional
+  per-weekday min/max targets for protein/carb/fat at full parity with kcal, surfaced as
+  glanceable bars on the Day card and as a swappable metric on the Trends graphs. As built:
   - **Schema (v10→v11):** `targets` gains 6 nullable columns (`proteinMin/Max`, `carbMin/Max`,
     `fatMin/Max`; `addColumn` ×6, no backfill) + 6 app-wide default settings keys
     (`defaultProteinMin/Max`, `defaultCarbMin/Max`, `defaultFatMin/Max`), mirroring the

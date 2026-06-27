@@ -329,6 +329,31 @@ Live: `quick_add_sheet.dart:188-294`, `log_food_sheet.dart:205-340`,
 
 ---
 
+## 13. Targets & metric bars
+
+- **A metric draws a progress bar only when it has a target, and the bar fills
+  toward `max` if set, else `min`** (a floor, e.g. a protein goal). One helper
+  drives all four metrics: `DaySummary.barFractionFor(TargetMetric)` returns the
+  0..1 fill or `null` (→ no bar). Live: the kcal bar + per-macro under-bars in
+  `day_screen.dart` (`_SummaryCard` / `_MacroRow`).
+- **The Day card shows every metric at once — no toggle.** kcal headline + bar,
+  then the P/C/F row where each macro *with a target* gains a thin
+  status-colored under-bar and a status-colored value; targetless macros stay
+  plain text (mirrors the optional kcal bar, so a calorie-only card is
+  unchanged).
+- **Bar + value color = `statusColor(status)`** (under=`tertiary`,
+  in-range=`primary`, over=`error`); an over bar forces `error`.
+- **Metric switching belongs on the chart, not the Day card.** Trends carries a
+  `SegmentedButton<TargetMetric>` (kcal · P · C · F) that swaps the plotted
+  series + target band; selection is in-memory (`selectedTrendMetricProvider`,
+  defaults to kcal). Values format per metric (kcal vs `g`).
+- **Targets get their own screen** (`settings/targets_screen.dart`), pushed from
+  a Settings `ListTile`. Metric-first (Calories / Protein / Carbohydrates /
+  Fat); each metric has an always-visible default Min/Max row + an independently
+  expandable per-weekday `ExpansionTile`. Every bound is optional.
+
+---
+
 ## Cross-cutting invariants (quick checklist for any new UI)
 
 1. Main action = bottom-right extended FAB, unique `heroTag`; secondary smaller,
