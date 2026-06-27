@@ -1,22 +1,19 @@
 import 'dart:io';
 
-import 'package:drift/drift.dart' show Value;
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import '../../core/snackbar.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/support_email.dart';
-import '../../data/db/database.dart';
 import '../../domain/enums.dart';
 import '../../domain/meal_times.dart';
 import '../../domain/meal_type_i18n.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers.dart';
 import 'offline_regions_screen.dart';
+import 'targets_screen.dart';
 
 /// HealthKit on iOS, Health Connect on Android — for user-facing labels.
 String _healthStore() => Platform.isIOS ? 'Apple Health' : 'Health Connect';
@@ -28,8 +25,6 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final db = ref.watch(dbProvider);
     final targetsAsync = ref.watch(targetsProvider);
-    final defaultMin = ref.watch(defaultMinProvider).asData?.value;
-    final defaultMax = ref.watch(defaultMaxProvider).asData?.value;
     final healthSync =
         ref.watch(healthSyncEnabledProvider).asData?.value ?? false;
 
@@ -39,11 +34,10 @@ class SettingsScreen extends ConsumerWidget {
       body: targetsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text(l10nTop.genericError('$e'))),
-        data: (targets) {
+        data: (_) {
           final l10n = AppLocalizations.of(context);
           final showTrends =
               ref.watch(showTrendsProvider).asData?.value ?? true;
-          Target rowFor(int wd) => targets.firstWhere((t) => t.weekday == wd);
           return ListView(
             children: [
               _SectionHeader(l10n.settingsSectionLanguage),
@@ -59,46 +53,13 @@ class SettingsScreen extends ConsumerWidget {
                     db.setSetting('showTrends', v ? 'true' : 'false'),
               ),
               const Divider(),
-              _SectionHeader(l10n.settingsTargets),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                child: Text(l10n.settingsTargetsHelp),
-              ),
-              _TargetRow(
-                label: l10n.settingsTargetDefault,
-                keyPrefix: 'default',
-                initialMin: defaultMin,
-                initialMax: defaultMax,
-                onMin: (v) =>
-                    db.setSetting('defaultKcalMin', v?.toStringAsFixed(0)),
-                onMax: (v) =>
-                    db.setSetting('defaultKcalMax', v?.toStringAsFixed(0)),
-              ),
-              const SizedBox(height: 8),
-              ExpansionTile(
-                leading: const Icon(Icons.event_repeat),
-                title: Text(l10n.settingsCustomizePerDay),
-                subtitle: Text(l10n.settingsCustomizePerDaySub),
-                childrenPadding: const EdgeInsets.only(bottom: 8),
-                children: [
-                  for (var wd = 0; wd < 7; wd++)
-                    _TargetRow(
-                      // Localized weekday name (Mon=0…Sun=6); 2024-01-01 was a
-                      // Monday, so offset by wd from it.
-                      label: DateFormat.EEEE(
-                        Localizations.localeOf(context).languageCode,
-                      ).format(DateTime(2024, 1, 1).add(Duration(days: wd))),
-                      keyPrefix: 'wd$wd',
-                      initialMin: rowFor(wd).kcalMin,
-                      initialMax: rowFor(wd).kcalMax,
-                      hintMin: defaultMin?.toStringAsFixed(0),
-                      hintMax: defaultMax?.toStringAsFixed(0),
-                      onMin: (v) =>
-                          db.setTarget(wd, TargetsCompanion(kcalMin: Value(v))),
-                      onMax: (v) =>
-                          db.setTarget(wd, TargetsCompanion(kcalMax: Value(v))),
-                    ),
-                ],
+              ListTile(
+                leading: const Icon(Icons.flag_outlined),
+                title: Text(l10n.settingsTargets),
+                subtitle: Text(l10n.settingsTargetsSub),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const TargetsScreen()),
+                ),
               ),
               const Divider(),
               _SectionHeader(l10n.settingsLogging),
@@ -665,103 +626,3 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-/// A weekday/default row with a Min and a Max calorie field.
-class _TargetRow extends StatelessWidget {
-  final String label;
-  final String keyPrefix;
-  final double? initialMin;
-  final double? initialMax;
-  final String? hintMin;
-  final String? hintMax;
-  final ValueChanged<double?> onMin;
-  final ValueChanged<double?> onMax;
-
-  const _TargetRow({
-    required this.label,
-    required this.keyPrefix,
-    required this.initialMin,
-    required this.initialMax,
-    required this.onMin,
-    required this.onMax,
-    this.hintMin,
-    this.hintMax,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: Row(
-        children: [
-          Expanded(flex: 3, child: Text(label)),
-          Expanded(
-            flex: 2,
-            child: _TargetField(
-              key: ValueKey('$keyPrefix-min'),
-              initial: initialMin,
-              hint: hintMin ?? l10n.settingsTargetMin,
-              onChanged: onMin,
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 6),
-            child: Text('–'),
-          ),
-          Expanded(
-            flex: 2,
-            child: _TargetField(
-              key: ValueKey('$keyPrefix-max'),
-              initial: initialMax,
-              hint: hintMax ?? l10n.settingsTargetMax,
-              onChanged: onMax,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// A small numeric field that reports a parsed kcal value (or null when empty).
-class _TargetField extends StatefulWidget {
-  final double? initial;
-  final String? hint;
-  final ValueChanged<double?> onChanged;
-  const _TargetField({
-    super.key,
-    required this.initial,
-    required this.onChanged,
-    this.hint,
-  });
-
-  @override
-  State<_TargetField> createState() => _TargetFieldState();
-}
-
-class _TargetFieldState extends State<_TargetField> {
-  late final TextEditingController _c = TextEditingController(
-    text: widget.initial == null ? '' : widget.initial!.toStringAsFixed(0),
-  );
-
-  @override
-  void dispose() {
-    _c.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: _c,
-      textAlign: TextAlign.end,
-      keyboardType: TextInputType.number,
-      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-      decoration: InputDecoration(isDense: true, hintText: widget.hint ?? '—'),
-      onChanged: (v) {
-        final parsed = v.trim().isEmpty ? null : double.tryParse(v.trim());
-        widget.onChanged(parsed);
-      },
-    );
-  }
-}

@@ -579,8 +579,20 @@ abstract class AppLocalizations {
   /// No description provided for @settingsTargets.
   ///
   /// In en, this message translates to:
-  /// **'Calorie targets'**
+  /// **'Targets'**
   String get settingsTargets;
+
+  /// Subtitle on the Settings tile that opens the Targets screen
+  ///
+  /// In en, this message translates to:
+  /// **'Calorie and macro goals, per day'**
+  String get settingsTargetsSub;
+
+  /// Label for the calories metric in the Targets screen header
+  ///
+  /// In en, this message translates to:
+  /// **'Calories'**
+  String get metricCalories;
 
   /// No description provided for @settingsTargetsHelp.
   ///

@@ -94,7 +94,9 @@
   "genericError": "Errore: {error}",
   "couldNotOpenLink": "Impossibile aprire il link",
 
-  "settingsTargets": "Obiettivi calorici",
+  "settingsTargets": "Obiettivi",
+  "settingsTargetsSub": "Obiettivi di calorie e macro, al giorno",
+  "metricCalories": "Calorie",
   "settingsTargetsHelp": "Imposta un minimo, un massimo o entrambi. Un minimo aiuta se devi assicurarti di mangiare abbastanza. Lascia vuoto per usare il valore predefinito.",
   "settingsTargetDefault": "Predefinito",
   "settingsTargetMin": "min",

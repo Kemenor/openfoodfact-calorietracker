@@ -118,7 +118,11 @@
   "couldNotOpenLink": "Couldn't open the link",
   "@couldNotOpenLink": { "description": "Shown when launching an external URL or app fails" },
 
-  "settingsTargets": "Calorie targets",
+  "settingsTargets": "Targets",
+  "settingsTargetsSub": "Calorie and macro goals, per day",
+  "@settingsTargetsSub": { "description": "Subtitle on the Settings tile that opens the Targets screen" },
+  "metricCalories": "Calories",
+  "@metricCalories": { "description": "Label for the calories metric in the Targets screen header" },
   "settingsTargetsHelp": "Set a minimum, a maximum, or both. A minimum helps if you need to make sure you eat enough. Leave blank to use the default.",
   "settingsTargetDefault": "Default",
   "settingsTargetMin": "min",
