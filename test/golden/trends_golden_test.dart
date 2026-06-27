@@ -16,7 +16,9 @@ import 'package:flutter_test/flutter_test.dart';
 /// render, and loads the vendored Roboto font so text renders for real.
 /// Regenerate after intentional UI changes with:
 ///   flutter test --update-goldens test/golden/trends_golden_test.dart
-/// Goldens are font/AA-sensitive — regenerate on the platform you run CI on.
+/// Goldens are font/AA-sensitive, so Linux is the canonical platform (the dev
+/// distrobox + the `test` CI job): regenerate there. Off Linux comparison is
+/// skipped — see test/flutter_test_config.dart.
 Future<void> _loadRoboto() async {
   final loader = FontLoader('Roboto');
   for (final name in ['Roboto-Regular', 'Roboto-Medium', 'Roboto-Bold']) {

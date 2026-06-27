@@ -12,6 +12,9 @@ unlinked.ds
 unlinked_spec.ds
 # pubspec.lock is committed (this is an app, not a package) for reproducible builds.
 
+# Golden-test failure artifacts (diff/isolated/masked PNGs from a failed run).
+test/golden/failures/
+
 # IDE / tooling
 .idea/
 .vscode/
