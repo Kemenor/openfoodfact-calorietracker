@@ -8,17 +8,34 @@ recipe sharing, ZIP backup/restore.
 
 ### New feedback (2026-06-27)
 
-- 📊 **Macro goals + macro visualization toggle** (feedback): let the user set **min/max
-  targets for the three macros** (protein / carb / fat), and on the day-view visualization
-  **toggle between** kcal and each macro. The data model already anticipates this — the
-  `targets` table is per-weekday with a `default` row and was migrated to `kcalMin/kcalMax`
-  (schema v2); extend it with `proteinMin/Max`, `carbMin/Max`, `fatMin/Max` (all optional,
-  same per-weekday + default shape, schema bump). Settings → Targets grows three optional
-  min/max pairs alongside the existing kcal ones. Day screen: a segmented toggle (kcal · P ·
-  C · F) that swaps the progress/over-under readout to the selected macro, reusing the
-  existing status-color logic (under=`tertiary` / in-range=`primary` / over=`error`). Entries
-  already snapshot macros, so the day total per macro is available with no model change to
-  `entries`. Keep all targets optional so users who only track calories are unaffected.
+- 📊 **Macro goals + macro visualization** (feedback) — **DESIGNED 2026-06-27 (grilled), in
+  progress.** Optional per-weekday min/max targets for protein/carb/fat at full parity with
+  kcal, surfaced as glanceable bars on the Day card and as a swappable metric on the Trends
+  graphs. Resolved design:
+  - **Schema (v10→v11):** `targets` gains 6 nullable columns (`proteinMin/Max`, `carbMin/Max`,
+    `fatMin/Max`; `addColumn` ×6, no backfill) + 6 app-wide default settings keys
+    (`defaultProteinMin/Max`, `defaultCarbMin/Max`, `defaultFatMin/Max`), mirroring the
+    `kcalMin/Max` + `defaultKcalMin/Max` shape. `entries` unchanged (macros already snapshotted).
+  - **Bar gating, unified across all four metrics:** a metric draws a progress bar when *either*
+    bound is set; denominator = `max` if set else `min` (a floor fills toward the min — the
+    dominant macro case, e.g. protein ≥120 g). kcal adopts this too (its min-only case now grows
+    a bar). Status via shared `statusFor` (under=`tertiary` / in-range=`primary` / over=`error`).
+  - **Day card: NO toggle** — shows everything at once. kcal headline unchanged; the P/C/F row
+    keeps its compact horizontal 3-up but each macro *with a target* gains a thin under-bar and a
+    status-colored gram value. Targetless macros stay plain text, so a calorie-only card is
+    essentially unchanged (optional, exactly like the kcal bar).
+  - **Settings → new Targets sub-screen** (pushed; moved out of the inline section to avoid
+    clutter): **metric-first** — Calories · Protein · Carbohydrates · Fat, each with a default
+    Min/Max row always visible + an independent `ExpansionTile` "Per-weekday" revealing the 7
+    weekday rows. Reuses `_TargetRow`/`_TargetField` with `g`/`kcal` suffixes.
+  - **Trends: the metric swap lives here** — a `SegmentedButton` (kcal · P · C · F) at the top
+    re-plots the value series + target band for the selected metric (per-day macro totals = `SUM`
+    over entry snapshots, analogous to `watchDailyKcal`). Selection is in-memory (`StateProvider`,
+    defaults to kcal, not persisted); range/bucketing untouched.
+  - **Also:** new l10n keys mirrored en/de/fr/it; regenerate Trends goldens (SegmentedButton
+    changes the screen); update `DESIGN_SYSTEM.md` (per-metric summary-card mini-bars + the metric
+    SegmentedButton are new patterns). Build order: (1) schema+domain+providers+tests → (2)
+    Targets sub-screen → (3) day-card bars → (4) Trends toggle+goldens → (5) docs.
 - 🔗 **Make "Contribute to Open Food Facts" prominent in the food form** (feedback): in
   `lib/ui/food/food_form_screen.dart` the OFF contribution link today sits at the **bottom**
   of the form, only when a barcode is present, as small muted text, and points at the generic
