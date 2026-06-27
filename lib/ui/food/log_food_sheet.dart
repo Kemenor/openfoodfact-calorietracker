@@ -177,6 +177,26 @@ class _LogSheetState extends State<_LogSheet> {
     ),
   );
 
+  // The amount field opens focused (`autofocus`); select its prefilled default
+  // on that first focus so the first digit typed overwrites it instead of
+  // appending. Once only, so tapping back in later places the caret normally.
+  final FocusNode _amountFocus = FocusNode();
+  bool _selectedDefault = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _amountFocus.addListener(() {
+      if (_amountFocus.hasFocus && !_selectedDefault) {
+        _selectedDefault = true;
+        _amountCtrl.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: _amountCtrl.text.length,
+        );
+      }
+    });
+  }
+
   double get _amount =>
       double.tryParse(_amountCtrl.text.replaceAll(',', '.')) ?? 0;
   double get _grams => _unit.toGrams(_amount, density: widget.density ?? 1.0);
@@ -187,6 +207,7 @@ class _LogSheetState extends State<_LogSheet> {
   @override
   void dispose() {
     _amountCtrl.dispose();
+    _amountFocus.dispose();
     super.dispose();
   }
 
@@ -241,6 +262,7 @@ class _LogSheetState extends State<_LogSheet> {
                 Expanded(
                   child: TextField(
                     controller: _amountCtrl,
+                    focusNode: _amountFocus,
                     autofocus: true,
                     keyboardType: const TextInputType.numberWithOptions(
                       decimal: true,
