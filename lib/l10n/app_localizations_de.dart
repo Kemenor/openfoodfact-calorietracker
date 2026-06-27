@@ -933,11 +933,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String get addSalt => 'Salz';
 
   @override
-  String get shareToOff =>
-      'Möchtest du dieses Produkt mit allen teilen? Trage es zu Open Food Facts bei.';
+  String get offContributeTitle => 'Zu Open Food Facts beitragen';
 
   @override
-  String get shareToOffLink => 'So fügst du ein Produkt hinzu';
+  String get offContributeBody =>
+      'Öffne diesen Barcode bei Open Food Facts, um das Produkt hinzuzufügen. Dafür braucht es ein kostenloses Konto, aber es geht schnell und hilft allen – die nächste Person, die ihn scannt, erhält einen Treffer.';
+
+  @override
+  String get offContributeAction => 'In Open Food Facts öffnen';
 
   @override
   String get addFilledFromLabel =>

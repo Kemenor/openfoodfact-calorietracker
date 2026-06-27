@@ -1698,17 +1698,23 @@ abstract class AppLocalizations {
   /// **'Salt'**
   String get addSalt;
 
-  /// No description provided for @shareToOff.
+  /// Title of the card prompting the user to add the scanned product to Open Food Facts
   ///
   /// In en, this message translates to:
-  /// **'Want to share this product with everyone? Contribute it to Open Food Facts.'**
-  String get shareToOff;
+  /// **'Contribute to Open Food Facts'**
+  String get offContributeTitle;
 
-  /// No description provided for @shareToOffLink.
+  /// Explanation under the Open Food Facts contribute title
   ///
   /// In en, this message translates to:
-  /// **'How to add a product'**
-  String get shareToOffLink;
+  /// **'Open this barcode on Open Food Facts to add the product. It needs a free account, but it\'s quick and helps everyone — the next person who scans it gets a match.'**
+  String get offContributeBody;
+
+  /// Tappable action label that opens the product's Open Food Facts page
+  ///
+  /// In en, this message translates to:
+  /// **'Open in Open Food Facts'**
+  String get offContributeAction;
 
   /// No description provided for @addFilledFromLabel.
   ///

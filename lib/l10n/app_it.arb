@@ -303,8 +303,9 @@
   "addSaturates": "di cui acidi grassi saturi",
   "addFibre": "Fibre",
   "addSalt": "Sale",
-  "shareToOff": "Vuoi condividere questo prodotto con tutti? Aggiungilo a Open Food Facts.",
-  "shareToOffLink": "Come aggiungere un prodotto",
+  "offContributeTitle": "Contribuisci a Open Food Facts",
+  "offContributeBody": "Apri questo codice a barre su Open Food Facts per aggiungere il prodotto. Serve un account gratuito, ma è veloce e utile a tutti — la prossima persona che lo scansiona troverà una corrispondenza.",
+  "offContributeAction": "Apri in Open Food Facts",
   "addFilledFromLabel": "Compilato dall'etichetta — controlla i valori.",
   "addCouldntRead": "Impossibile leggere la tabella. Inserisci i valori manualmente.",
 

@@ -303,8 +303,9 @@
   "addSaturates": "davon gesättigte Fettsäuren",
   "addFibre": "Ballaststoffe",
   "addSalt": "Salz",
-  "shareToOff": "Möchtest du dieses Produkt mit allen teilen? Trage es zu Open Food Facts bei.",
-  "shareToOffLink": "So fügst du ein Produkt hinzu",
+  "offContributeTitle": "Zu Open Food Facts beitragen",
+  "offContributeBody": "Öffne diesen Barcode bei Open Food Facts, um das Produkt hinzuzufügen. Dafür braucht es ein kostenloses Konto, aber es geht schnell und hilft allen – die nächste Person, die ihn scannt, erhält einen Treffer.",
+  "offContributeAction": "In Open Food Facts öffnen",
   "addFilledFromLabel": "Vom Etikett übernommen — bitte die Werte prüfen.",
   "addCouldntRead": "Tabelle konnte nicht gelesen werden. Gib die Werte manuell ein.",
 

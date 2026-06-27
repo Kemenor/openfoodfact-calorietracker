@@ -217,6 +217,10 @@ class _FoodFormScreenState extends ConsumerState<FoodFormScreen> {
               ),
             ),
           ),
+          if (_hasBarcode) ...[
+            const SizedBox(height: 12),
+            _OffContributeCard(onTap: _openOffProduct),
+          ],
           const SizedBox(height: 12),
           TextField(
             controller: _name,
@@ -297,68 +301,32 @@ class _FoodFormScreenState extends ConsumerState<FoodFormScreen> {
           _numField(_protein, l10n.addProtein, 'g'),
           const SizedBox(height: 12),
           _numField(_salt, l10n.addSalt, 'g'),
-          if (_hasBarcode) ...[
-            const SizedBox(height: 20),
-            InkWell(
-              onTap: () async {
-                final messenger = ScaffoldMessenger.of(context);
-                try {
-                  final ok = await launchUrl(
-                    Uri.parse(
-                      'https://world.openfoodfacts.org/how-to-add-a-product',
-                    ),
-                    mode: LaunchMode.externalApplication,
-                  );
-                  if (!ok) {
-                    messenger.showAutoSnackBar(
-                      SnackBar(content: Text(l10n.couldNotOpenLink)),
-                    );
-                  }
-                } catch (_) {
-                  messenger.showAutoSnackBar(
-                    SnackBar(content: Text(l10n.couldNotOpenLink)),
-                  );
-                }
-              },
-              borderRadius: BorderRadius.circular(8),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.volunteer_activism_outlined,
-                      size: 16,
-                      color: theme.colorScheme.outline,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text.rich(
-                        TextSpan(
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.outline,
-                          ),
-                          children: [
-                            TextSpan(text: '${l10n.shareToOff} '),
-                            TextSpan(
-                              text: l10n.shareToOffLink,
-                              style: TextStyle(
-                                color: theme.colorScheme.primary,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
         ],
       ),
     );
+  }
+
+  /// Open the scanned barcode's Open Food Facts product page. The URL is an
+  /// Android App Link, so it opens the OFF app directly when installed (OFF has
+  /// no custom scheme), otherwise the browser — where the user can add/edit it.
+  Future<void> _openOffProduct() async {
+    final code = _barcode.text.trim();
+    if (code.isEmpty) return;
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final uri = Uri.parse('https://world.openfoodfacts.org/product/$code');
+    try {
+      final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (!ok) {
+        messenger.showAutoSnackBar(
+          SnackBar(content: Text(l10n.couldNotOpenLink)),
+        );
+      }
+    } catch (_) {
+      messenger.showAutoSnackBar(
+        SnackBar(content: Text(l10n.couldNotOpenLink)),
+      );
+    }
   }
 
   Widget _numField(TextEditingController c, String label, String suffix) {
@@ -371,6 +339,75 @@ class _FoodFormScreenState extends ConsumerState<FoodFormScreen> {
         suffixText: suffix,
         border: const OutlineInputBorder(),
         isDense: true,
+      ),
+    );
+  }
+}
+
+/// A prominent, tappable card prompting the user to add the scanned barcode to
+/// Open Food Facts — shown just under the barcode field. Explains the account
+/// requirement and the community benefit, and opens the product page (which the
+/// OFF app handles when installed).
+class _OffContributeCard extends StatelessWidget {
+  final VoidCallback onTap;
+  const _OffContributeCard({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context);
+    return Card(
+      margin: EdgeInsets.zero,
+      elevation: 0,
+      color: scheme.surfaceContainerHighest,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(Icons.volunteer_activism_outlined, color: scheme.primary),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.offContributeTitle,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.offContributeBody,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(Icons.open_in_new, size: 16, color: scheme.primary),
+                        const SizedBox(width: 6),
+                        Text(
+                          l10n.offContributeAction,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: scheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
