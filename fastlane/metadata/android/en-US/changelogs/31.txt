@@ -1,0 +1,1 @@
+Fixes: barcode scanning is steadier — it confirms each code before accepting, adds a flash toggle for low light, and reads small or low-contrast codes better. Also fixed returning to Knabberfuchs after opening a barcode in Open Food Facts.

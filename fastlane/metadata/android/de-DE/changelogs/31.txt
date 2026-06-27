@@ -1,0 +1,1 @@
+Verbesserungen: Das Barcode-Scannen ist zuverlässiger — jeder Code wird vor dem Übernehmen bestätigt, ein Blitz-Schalter hilft bei wenig Licht, und kleine oder kontrastarme Codes werden besser erkannt. Ausserdem behoben: die Rückkehr zu Knabberfuchs nach dem Öffnen eines Barcodes in Open Food Facts.

@@ -1,0 +1,1 @@
+Miglioramenti: la scansione dei codici a barre è più affidabile — ogni codice viene confermato prima di accettarlo, un pulsante flash aiuta con poca luce e i codici piccoli o poco contrastati si leggono meglio. Corretto anche il ritorno a Knabberfuchs dopo aver aperto un codice a barre in Open Food Facts.
