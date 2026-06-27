@@ -316,6 +316,7 @@
   "scanExampleHint": "p. ex. 3017620422003",
   "scanLookUp": "Rechercher",
   "scanEnterManually": "Saisir manuellement",
+  "scanTorch": "Activer/désactiver le flash",
   "scanCameraOnlyDevice": "Le scan par caméra n'est disponible que sur un appareil.",
   "scanCameraFailed": "Impossible de démarrer la caméra.",
   "scanEnterManuallyButton": "Saisir le code-barres manuellement",

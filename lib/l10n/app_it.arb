@@ -316,6 +316,7 @@
   "scanExampleHint": "es. 3017620422003",
   "scanLookUp": "Cerca",
   "scanEnterManually": "Inserisci manualmente",
+  "scanTorch": "Attiva/disattiva flash",
   "scanCameraOnlyDevice": "La scansione con fotocamera è disponibile solo su un dispositivo.",
   "scanCameraFailed": "Impossibile avviare la fotocamera.",
   "scanEnterManuallyButton": "Inserisci il codice a barre manualmente",

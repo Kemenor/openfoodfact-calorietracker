@@ -974,6 +974,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get scanEnterManually => 'Inserisci manualmente';
 
   @override
+  String get scanTorch => 'Attiva/disattiva flash';
+
+  @override
   String get scanCameraOnlyDevice =>
       'La scansione con fotocamera è disponibile solo su un dispositivo.';
 

@@ -316,6 +316,7 @@
   "scanExampleHint": "z. B. 3017620422003",
   "scanLookUp": "Nachschlagen",
   "scanEnterManually": "Manuell eingeben",
+  "scanTorch": "Blitz umschalten",
   "scanCameraOnlyDevice": "Kamera-Scannen ist nur auf einem Gerät verfügbar.",
   "scanCameraFailed": "Kamera konnte nicht gestartet werden.",
   "scanEnterManuallyButton": "Barcode manuell eingeben",

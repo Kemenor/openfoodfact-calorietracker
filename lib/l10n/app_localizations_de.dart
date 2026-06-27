@@ -972,6 +972,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get scanEnterManually => 'Manuell eingeben';
 
   @override
+  String get scanTorch => 'Blitz umschalten';
+
+  @override
   String get scanCameraOnlyDevice =>
       'Kamera-Scannen ist nur auf einem Gerät verfügbar.';
 

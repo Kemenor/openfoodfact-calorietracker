@@ -975,6 +975,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get scanEnterManually => 'Saisir manuellement';
 
   @override
+  String get scanTorch => 'Activer/désactiver le flash';
+
+  @override
   String get scanCameraOnlyDevice =>
       'Le scan par caméra n\'est disponible que sur un appareil.';
 

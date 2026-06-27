@@ -39,6 +39,13 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
   MobileScannerController? _controller;
   bool _handled = false;
 
+  /// Consensus capture: count how often each value is decoded and only accept
+  /// one once it's been read [_consensusVotes] times. A single misdecoded frame
+  /// (a transient wrong value) never repeats, so it can't slip through; a code
+  /// actually in front of the camera reaches the threshold within ~100–200 ms.
+  final Map<String, int> _votes = {};
+  static const int _consensusVotes = 2;
+
   bool get _cameraSupported =>
       !kIsWeb && (Platform.isAndroid || Platform.isIOS);
 
@@ -48,7 +55,13 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
     if (_cameraSupported) {
       _controller = MobileScannerController(
         autoStart: false,
-        detectionSpeed: DetectionSpeed.noDuplicates,
+        // `normal` (not `noDuplicates`) so the same code is re-emitted across
+        // frames — the consensus check in _onDetect needs the repeats. A short
+        // timeout keeps repeats coming quickly so acceptance still feels instant.
+        detectionSpeed: DetectionSpeed.normal,
+        detectionTimeoutMs: 100,
+        // More pixels help small / low-contrast / curved grocery codes resolve.
+        cameraResolution: const Size(1920, 1080),
         formats: widget.formats,
       );
       WidgetsBinding.instance.addObserver(this);
@@ -90,9 +103,13 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
   void _onDetect(BarcodeCapture capture) {
     if (_handled) return;
     for (final b in capture.barcodes) {
-      if (b.rawValue != null && b.rawValue!.isNotEmpty) {
+      final code = b.rawValue;
+      if (code == null || code.isEmpty) continue;
+      final votes = (_votes[code] ?? 0) + 1;
+      _votes[code] = votes;
+      if (votes >= _consensusVotes) {
         _handled = true;
-        Navigator.of(context).pop(b.rawValue);
+        Navigator.of(context).pop(code);
         return;
       }
     }
@@ -141,6 +158,21 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
       appBar: AppBar(
         title: Text(widget.title ?? l10n.scanBarcode),
         actions: [
+          if (_cameraSupported && _controller != null)
+            ValueListenableBuilder<MobileScannerState>(
+              valueListenable: _controller!,
+              builder: (context, state, _) {
+                if (state.torchState == TorchState.unavailable) {
+                  return const SizedBox.shrink();
+                }
+                final on = state.torchState == TorchState.on;
+                return IconButton(
+                  tooltip: l10n.scanTorch,
+                  icon: Icon(on ? Icons.flash_on : Icons.flash_off),
+                  onPressed: () => _controller?.toggleTorch(),
+                );
+              },
+            ),
           if (widget.allowManual)
             IconButton(
               tooltip: l10n.scanEnterManually,

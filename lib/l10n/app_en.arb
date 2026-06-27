@@ -382,6 +382,8 @@
   "scanExampleHint": "e.g. 3017620422003",
   "scanLookUp": "Look up",
   "scanEnterManually": "Enter manually",
+  "scanTorch": "Toggle flash",
+  "@scanTorch": { "description": "Tooltip for the scanner's flashlight/torch toggle button" },
   "scanCameraOnlyDevice": "Camera scanning is only available on a device.",
   "scanCameraFailed": "Couldn't start the camera.",
   "scanEnterManuallyButton": "Enter barcode manually",

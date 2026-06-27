@@ -1770,6 +1770,12 @@ abstract class AppLocalizations {
   /// **'Enter manually'**
   String get scanEnterManually;
 
+  /// Tooltip for the scanner's flashlight/torch toggle button
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle flash'**
+  String get scanTorch;
+
   /// No description provided for @scanCameraOnlyDevice.
   ///
   /// In en, this message translates to:

@@ -969,6 +969,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scanEnterManually => 'Enter manually';
 
   @override
+  String get scanTorch => 'Toggle flash';
+
+  @override
   String get scanCameraOnlyDevice =>
       'Camera scanning is only available on a device.';
 
