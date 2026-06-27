@@ -109,17 +109,21 @@ class Entries extends Table {
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }
 
-/// Optional calorie target per weekday (0 = Monday … 6 = Sunday).
-/// Both bounds are optional: a minimum (for people who need to eat *enough*)
-/// and a maximum. Missing values fall back to the `defaultKcalMin` /
-/// `defaultKcalMax` settings.
+/// Optional per-weekday targets (0 = Monday … 6 = Sunday) for calories and each
+/// macro. Every bound is optional — a minimum (for people who need to eat
+/// *enough*, e.g. a protein floor) and a maximum. Missing values fall back to
+/// the matching `default<Metric>Min` / `default<Metric>Max` settings; macros are
+/// in grams, calories in kcal.
 class Targets extends Table {
   IntColumn get weekday => integer()();
   RealColumn get kcalMin => real().nullable()();
   RealColumn get kcalMax => real().nullable()();
-  RealColumn get protein => real().nullable()();
-  RealColumn get carb => real().nullable()();
-  RealColumn get fat => real().nullable()();
+  RealColumn get proteinMin => real().nullable()();
+  RealColumn get proteinMax => real().nullable()();
+  RealColumn get carbMin => real().nullable()();
+  RealColumn get carbMax => real().nullable()();
+  RealColumn get fatMin => real().nullable()();
+  RealColumn get fatMax => real().nullable()();
 
   @override
   Set<Column> get primaryKey => {weekday};

@@ -8,7 +8,9 @@ import 'db/database.dart';
 
 /// Backup schema version, carried in the manifest so future versions can
 /// migrate an older export on import. v2 adds entryGroups + entry.groupId and
-/// replaces the legacy target `kcal` field with `kcalMin`/`kcalMax`.
+/// replaces the legacy target `kcal` field with `kcalMin`/`kcalMax`. Per-macro
+/// target bounds (`proteinMin/Max`, `carbMin/Max`, `fatMin/Max`) were added
+/// later within v2 and restore null when absent, so the version is unchanged.
 const backupSchemaVersion = 2;
 
 int _ms(DateTime d) => d.millisecondsSinceEpoch;
@@ -112,9 +114,12 @@ Future<Map<String, dynamic>> buildBackupMap(
           'weekday': t.weekday,
           'kcalMin': t.kcalMin,
           'kcalMax': t.kcalMax,
-          'protein': t.protein,
-          'carb': t.carb,
-          'fat': t.fat,
+          'proteinMin': t.proteinMin,
+          'proteinMax': t.proteinMax,
+          'carbMin': t.carbMin,
+          'carbMax': t.carbMax,
+          'fatMin': t.fatMin,
+          'fatMax': t.fatMax,
         },
     ],
     'settings': {for (final s in settings) s.key: s.value},
@@ -273,9 +278,12 @@ Future<void> restoreBackupMap(AppDatabase db, Map<String, dynamic> map) async {
               weekday: Value((t['weekday'] as num).toInt()),
               kcalMin: Value(_d(t['kcalMin'])),
               kcalMax: Value(_d(t['kcalMax'])),
-              protein: Value(_d(t['protein'])),
-              carb: Value(_d(t['carb'])),
-              fat: Value(_d(t['fat'])),
+              proteinMin: Value(_d(t['proteinMin'])),
+              proteinMax: Value(_d(t['proteinMax'])),
+              carbMin: Value(_d(t['carbMin'])),
+              carbMax: Value(_d(t['carbMax'])),
+              fatMin: Value(_d(t['fatMin'])),
+              fatMax: Value(_d(t['fatMax'])),
             ),
           );
     }

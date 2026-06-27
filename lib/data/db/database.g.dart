@@ -2681,30 +2681,63 @@ class $TargetsTable extends Targets with TableInfo<$TargetsTable, Target> {
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _proteinMeta = const VerificationMeta(
-    'protein',
+  static const VerificationMeta _proteinMinMeta = const VerificationMeta(
+    'proteinMin',
   );
   @override
-  late final GeneratedColumn<double> protein = GeneratedColumn<double>(
-    'protein',
+  late final GeneratedColumn<double> proteinMin = GeneratedColumn<double>(
+    'protein_min',
     aliasedName,
     true,
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _carbMeta = const VerificationMeta('carb');
+  static const VerificationMeta _proteinMaxMeta = const VerificationMeta(
+    'proteinMax',
+  );
   @override
-  late final GeneratedColumn<double> carb = GeneratedColumn<double>(
-    'carb',
+  late final GeneratedColumn<double> proteinMax = GeneratedColumn<double>(
+    'protein_max',
     aliasedName,
     true,
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _fatMeta = const VerificationMeta('fat');
+  static const VerificationMeta _carbMinMeta = const VerificationMeta(
+    'carbMin',
+  );
   @override
-  late final GeneratedColumn<double> fat = GeneratedColumn<double>(
-    'fat',
+  late final GeneratedColumn<double> carbMin = GeneratedColumn<double>(
+    'carb_min',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _carbMaxMeta = const VerificationMeta(
+    'carbMax',
+  );
+  @override
+  late final GeneratedColumn<double> carbMax = GeneratedColumn<double>(
+    'carb_max',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fatMinMeta = const VerificationMeta('fatMin');
+  @override
+  late final GeneratedColumn<double> fatMin = GeneratedColumn<double>(
+    'fat_min',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fatMaxMeta = const VerificationMeta('fatMax');
+  @override
+  late final GeneratedColumn<double> fatMax = GeneratedColumn<double>(
+    'fat_max',
     aliasedName,
     true,
     type: DriftSqlType.double,
@@ -2715,9 +2748,12 @@ class $TargetsTable extends Targets with TableInfo<$TargetsTable, Target> {
     weekday,
     kcalMin,
     kcalMax,
-    protein,
-    carb,
-    fat,
+    proteinMin,
+    proteinMax,
+    carbMin,
+    carbMax,
+    fatMin,
+    fatMax,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2749,22 +2785,40 @@ class $TargetsTable extends Targets with TableInfo<$TargetsTable, Target> {
         kcalMax.isAcceptableOrUnknown(data['kcal_max']!, _kcalMaxMeta),
       );
     }
-    if (data.containsKey('protein')) {
+    if (data.containsKey('protein_min')) {
       context.handle(
-        _proteinMeta,
-        protein.isAcceptableOrUnknown(data['protein']!, _proteinMeta),
+        _proteinMinMeta,
+        proteinMin.isAcceptableOrUnknown(data['protein_min']!, _proteinMinMeta),
       );
     }
-    if (data.containsKey('carb')) {
+    if (data.containsKey('protein_max')) {
       context.handle(
-        _carbMeta,
-        carb.isAcceptableOrUnknown(data['carb']!, _carbMeta),
+        _proteinMaxMeta,
+        proteinMax.isAcceptableOrUnknown(data['protein_max']!, _proteinMaxMeta),
       );
     }
-    if (data.containsKey('fat')) {
+    if (data.containsKey('carb_min')) {
       context.handle(
-        _fatMeta,
-        fat.isAcceptableOrUnknown(data['fat']!, _fatMeta),
+        _carbMinMeta,
+        carbMin.isAcceptableOrUnknown(data['carb_min']!, _carbMinMeta),
+      );
+    }
+    if (data.containsKey('carb_max')) {
+      context.handle(
+        _carbMaxMeta,
+        carbMax.isAcceptableOrUnknown(data['carb_max']!, _carbMaxMeta),
+      );
+    }
+    if (data.containsKey('fat_min')) {
+      context.handle(
+        _fatMinMeta,
+        fatMin.isAcceptableOrUnknown(data['fat_min']!, _fatMinMeta),
+      );
+    }
+    if (data.containsKey('fat_max')) {
+      context.handle(
+        _fatMaxMeta,
+        fatMax.isAcceptableOrUnknown(data['fat_max']!, _fatMaxMeta),
       );
     }
     return context;
@@ -2788,17 +2842,29 @@ class $TargetsTable extends Targets with TableInfo<$TargetsTable, Target> {
         DriftSqlType.double,
         data['${effectivePrefix}kcal_max'],
       ),
-      protein: attachedDatabase.typeMapping.read(
+      proteinMin: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
-        data['${effectivePrefix}protein'],
+        data['${effectivePrefix}protein_min'],
       ),
-      carb: attachedDatabase.typeMapping.read(
+      proteinMax: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
-        data['${effectivePrefix}carb'],
+        data['${effectivePrefix}protein_max'],
       ),
-      fat: attachedDatabase.typeMapping.read(
+      carbMin: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
-        data['${effectivePrefix}fat'],
+        data['${effectivePrefix}carb_min'],
+      ),
+      carbMax: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}carb_max'],
+      ),
+      fatMin: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}fat_min'],
+      ),
+      fatMax: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}fat_max'],
       ),
     );
   }
@@ -2813,16 +2879,22 @@ class Target extends DataClass implements Insertable<Target> {
   final int weekday;
   final double? kcalMin;
   final double? kcalMax;
-  final double? protein;
-  final double? carb;
-  final double? fat;
+  final double? proteinMin;
+  final double? proteinMax;
+  final double? carbMin;
+  final double? carbMax;
+  final double? fatMin;
+  final double? fatMax;
   const Target({
     required this.weekday,
     this.kcalMin,
     this.kcalMax,
-    this.protein,
-    this.carb,
-    this.fat,
+    this.proteinMin,
+    this.proteinMax,
+    this.carbMin,
+    this.carbMax,
+    this.fatMin,
+    this.fatMax,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2834,14 +2906,23 @@ class Target extends DataClass implements Insertable<Target> {
     if (!nullToAbsent || kcalMax != null) {
       map['kcal_max'] = Variable<double>(kcalMax);
     }
-    if (!nullToAbsent || protein != null) {
-      map['protein'] = Variable<double>(protein);
+    if (!nullToAbsent || proteinMin != null) {
+      map['protein_min'] = Variable<double>(proteinMin);
     }
-    if (!nullToAbsent || carb != null) {
-      map['carb'] = Variable<double>(carb);
+    if (!nullToAbsent || proteinMax != null) {
+      map['protein_max'] = Variable<double>(proteinMax);
     }
-    if (!nullToAbsent || fat != null) {
-      map['fat'] = Variable<double>(fat);
+    if (!nullToAbsent || carbMin != null) {
+      map['carb_min'] = Variable<double>(carbMin);
+    }
+    if (!nullToAbsent || carbMax != null) {
+      map['carb_max'] = Variable<double>(carbMax);
+    }
+    if (!nullToAbsent || fatMin != null) {
+      map['fat_min'] = Variable<double>(fatMin);
+    }
+    if (!nullToAbsent || fatMax != null) {
+      map['fat_max'] = Variable<double>(fatMax);
     }
     return map;
   }
@@ -2855,11 +2936,24 @@ class Target extends DataClass implements Insertable<Target> {
       kcalMax: kcalMax == null && nullToAbsent
           ? const Value.absent()
           : Value(kcalMax),
-      protein: protein == null && nullToAbsent
+      proteinMin: proteinMin == null && nullToAbsent
           ? const Value.absent()
-          : Value(protein),
-      carb: carb == null && nullToAbsent ? const Value.absent() : Value(carb),
-      fat: fat == null && nullToAbsent ? const Value.absent() : Value(fat),
+          : Value(proteinMin),
+      proteinMax: proteinMax == null && nullToAbsent
+          ? const Value.absent()
+          : Value(proteinMax),
+      carbMin: carbMin == null && nullToAbsent
+          ? const Value.absent()
+          : Value(carbMin),
+      carbMax: carbMax == null && nullToAbsent
+          ? const Value.absent()
+          : Value(carbMax),
+      fatMin: fatMin == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fatMin),
+      fatMax: fatMax == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fatMax),
     );
   }
 
@@ -2872,9 +2966,12 @@ class Target extends DataClass implements Insertable<Target> {
       weekday: serializer.fromJson<int>(json['weekday']),
       kcalMin: serializer.fromJson<double?>(json['kcalMin']),
       kcalMax: serializer.fromJson<double?>(json['kcalMax']),
-      protein: serializer.fromJson<double?>(json['protein']),
-      carb: serializer.fromJson<double?>(json['carb']),
-      fat: serializer.fromJson<double?>(json['fat']),
+      proteinMin: serializer.fromJson<double?>(json['proteinMin']),
+      proteinMax: serializer.fromJson<double?>(json['proteinMax']),
+      carbMin: serializer.fromJson<double?>(json['carbMin']),
+      carbMax: serializer.fromJson<double?>(json['carbMax']),
+      fatMin: serializer.fromJson<double?>(json['fatMin']),
+      fatMax: serializer.fromJson<double?>(json['fatMax']),
     );
   }
   @override
@@ -2884,9 +2981,12 @@ class Target extends DataClass implements Insertable<Target> {
       'weekday': serializer.toJson<int>(weekday),
       'kcalMin': serializer.toJson<double?>(kcalMin),
       'kcalMax': serializer.toJson<double?>(kcalMax),
-      'protein': serializer.toJson<double?>(protein),
-      'carb': serializer.toJson<double?>(carb),
-      'fat': serializer.toJson<double?>(fat),
+      'proteinMin': serializer.toJson<double?>(proteinMin),
+      'proteinMax': serializer.toJson<double?>(proteinMax),
+      'carbMin': serializer.toJson<double?>(carbMin),
+      'carbMax': serializer.toJson<double?>(carbMax),
+      'fatMin': serializer.toJson<double?>(fatMin),
+      'fatMax': serializer.toJson<double?>(fatMax),
     };
   }
 
@@ -2894,25 +2994,38 @@ class Target extends DataClass implements Insertable<Target> {
     int? weekday,
     Value<double?> kcalMin = const Value.absent(),
     Value<double?> kcalMax = const Value.absent(),
-    Value<double?> protein = const Value.absent(),
-    Value<double?> carb = const Value.absent(),
-    Value<double?> fat = const Value.absent(),
+    Value<double?> proteinMin = const Value.absent(),
+    Value<double?> proteinMax = const Value.absent(),
+    Value<double?> carbMin = const Value.absent(),
+    Value<double?> carbMax = const Value.absent(),
+    Value<double?> fatMin = const Value.absent(),
+    Value<double?> fatMax = const Value.absent(),
   }) => Target(
     weekday: weekday ?? this.weekday,
     kcalMin: kcalMin.present ? kcalMin.value : this.kcalMin,
     kcalMax: kcalMax.present ? kcalMax.value : this.kcalMax,
-    protein: protein.present ? protein.value : this.protein,
-    carb: carb.present ? carb.value : this.carb,
-    fat: fat.present ? fat.value : this.fat,
+    proteinMin: proteinMin.present ? proteinMin.value : this.proteinMin,
+    proteinMax: proteinMax.present ? proteinMax.value : this.proteinMax,
+    carbMin: carbMin.present ? carbMin.value : this.carbMin,
+    carbMax: carbMax.present ? carbMax.value : this.carbMax,
+    fatMin: fatMin.present ? fatMin.value : this.fatMin,
+    fatMax: fatMax.present ? fatMax.value : this.fatMax,
   );
   Target copyWithCompanion(TargetsCompanion data) {
     return Target(
       weekday: data.weekday.present ? data.weekday.value : this.weekday,
       kcalMin: data.kcalMin.present ? data.kcalMin.value : this.kcalMin,
       kcalMax: data.kcalMax.present ? data.kcalMax.value : this.kcalMax,
-      protein: data.protein.present ? data.protein.value : this.protein,
-      carb: data.carb.present ? data.carb.value : this.carb,
-      fat: data.fat.present ? data.fat.value : this.fat,
+      proteinMin: data.proteinMin.present
+          ? data.proteinMin.value
+          : this.proteinMin,
+      proteinMax: data.proteinMax.present
+          ? data.proteinMax.value
+          : this.proteinMax,
+      carbMin: data.carbMin.present ? data.carbMin.value : this.carbMin,
+      carbMax: data.carbMax.present ? data.carbMax.value : this.carbMax,
+      fatMin: data.fatMin.present ? data.fatMin.value : this.fatMin,
+      fatMax: data.fatMax.present ? data.fatMax.value : this.fatMax,
     );
   }
 
@@ -2922,16 +3035,28 @@ class Target extends DataClass implements Insertable<Target> {
           ..write('weekday: $weekday, ')
           ..write('kcalMin: $kcalMin, ')
           ..write('kcalMax: $kcalMax, ')
-          ..write('protein: $protein, ')
-          ..write('carb: $carb, ')
-          ..write('fat: $fat')
+          ..write('proteinMin: $proteinMin, ')
+          ..write('proteinMax: $proteinMax, ')
+          ..write('carbMin: $carbMin, ')
+          ..write('carbMax: $carbMax, ')
+          ..write('fatMin: $fatMin, ')
+          ..write('fatMax: $fatMax')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(weekday, kcalMin, kcalMax, protein, carb, fat);
+  int get hashCode => Object.hash(
+    weekday,
+    kcalMin,
+    kcalMax,
+    proteinMin,
+    proteinMax,
+    carbMin,
+    carbMax,
+    fatMin,
+    fatMax,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2939,49 +3064,67 @@ class Target extends DataClass implements Insertable<Target> {
           other.weekday == this.weekday &&
           other.kcalMin == this.kcalMin &&
           other.kcalMax == this.kcalMax &&
-          other.protein == this.protein &&
-          other.carb == this.carb &&
-          other.fat == this.fat);
+          other.proteinMin == this.proteinMin &&
+          other.proteinMax == this.proteinMax &&
+          other.carbMin == this.carbMin &&
+          other.carbMax == this.carbMax &&
+          other.fatMin == this.fatMin &&
+          other.fatMax == this.fatMax);
 }
 
 class TargetsCompanion extends UpdateCompanion<Target> {
   final Value<int> weekday;
   final Value<double?> kcalMin;
   final Value<double?> kcalMax;
-  final Value<double?> protein;
-  final Value<double?> carb;
-  final Value<double?> fat;
+  final Value<double?> proteinMin;
+  final Value<double?> proteinMax;
+  final Value<double?> carbMin;
+  final Value<double?> carbMax;
+  final Value<double?> fatMin;
+  final Value<double?> fatMax;
   const TargetsCompanion({
     this.weekday = const Value.absent(),
     this.kcalMin = const Value.absent(),
     this.kcalMax = const Value.absent(),
-    this.protein = const Value.absent(),
-    this.carb = const Value.absent(),
-    this.fat = const Value.absent(),
+    this.proteinMin = const Value.absent(),
+    this.proteinMax = const Value.absent(),
+    this.carbMin = const Value.absent(),
+    this.carbMax = const Value.absent(),
+    this.fatMin = const Value.absent(),
+    this.fatMax = const Value.absent(),
   });
   TargetsCompanion.insert({
     this.weekday = const Value.absent(),
     this.kcalMin = const Value.absent(),
     this.kcalMax = const Value.absent(),
-    this.protein = const Value.absent(),
-    this.carb = const Value.absent(),
-    this.fat = const Value.absent(),
+    this.proteinMin = const Value.absent(),
+    this.proteinMax = const Value.absent(),
+    this.carbMin = const Value.absent(),
+    this.carbMax = const Value.absent(),
+    this.fatMin = const Value.absent(),
+    this.fatMax = const Value.absent(),
   });
   static Insertable<Target> custom({
     Expression<int>? weekday,
     Expression<double>? kcalMin,
     Expression<double>? kcalMax,
-    Expression<double>? protein,
-    Expression<double>? carb,
-    Expression<double>? fat,
+    Expression<double>? proteinMin,
+    Expression<double>? proteinMax,
+    Expression<double>? carbMin,
+    Expression<double>? carbMax,
+    Expression<double>? fatMin,
+    Expression<double>? fatMax,
   }) {
     return RawValuesInsertable({
       if (weekday != null) 'weekday': weekday,
       if (kcalMin != null) 'kcal_min': kcalMin,
       if (kcalMax != null) 'kcal_max': kcalMax,
-      if (protein != null) 'protein': protein,
-      if (carb != null) 'carb': carb,
-      if (fat != null) 'fat': fat,
+      if (proteinMin != null) 'protein_min': proteinMin,
+      if (proteinMax != null) 'protein_max': proteinMax,
+      if (carbMin != null) 'carb_min': carbMin,
+      if (carbMax != null) 'carb_max': carbMax,
+      if (fatMin != null) 'fat_min': fatMin,
+      if (fatMax != null) 'fat_max': fatMax,
     });
   }
 
@@ -2989,17 +3132,23 @@ class TargetsCompanion extends UpdateCompanion<Target> {
     Value<int>? weekday,
     Value<double?>? kcalMin,
     Value<double?>? kcalMax,
-    Value<double?>? protein,
-    Value<double?>? carb,
-    Value<double?>? fat,
+    Value<double?>? proteinMin,
+    Value<double?>? proteinMax,
+    Value<double?>? carbMin,
+    Value<double?>? carbMax,
+    Value<double?>? fatMin,
+    Value<double?>? fatMax,
   }) {
     return TargetsCompanion(
       weekday: weekday ?? this.weekday,
       kcalMin: kcalMin ?? this.kcalMin,
       kcalMax: kcalMax ?? this.kcalMax,
-      protein: protein ?? this.protein,
-      carb: carb ?? this.carb,
-      fat: fat ?? this.fat,
+      proteinMin: proteinMin ?? this.proteinMin,
+      proteinMax: proteinMax ?? this.proteinMax,
+      carbMin: carbMin ?? this.carbMin,
+      carbMax: carbMax ?? this.carbMax,
+      fatMin: fatMin ?? this.fatMin,
+      fatMax: fatMax ?? this.fatMax,
     );
   }
 
@@ -3015,14 +3164,23 @@ class TargetsCompanion extends UpdateCompanion<Target> {
     if (kcalMax.present) {
       map['kcal_max'] = Variable<double>(kcalMax.value);
     }
-    if (protein.present) {
-      map['protein'] = Variable<double>(protein.value);
+    if (proteinMin.present) {
+      map['protein_min'] = Variable<double>(proteinMin.value);
     }
-    if (carb.present) {
-      map['carb'] = Variable<double>(carb.value);
+    if (proteinMax.present) {
+      map['protein_max'] = Variable<double>(proteinMax.value);
     }
-    if (fat.present) {
-      map['fat'] = Variable<double>(fat.value);
+    if (carbMin.present) {
+      map['carb_min'] = Variable<double>(carbMin.value);
+    }
+    if (carbMax.present) {
+      map['carb_max'] = Variable<double>(carbMax.value);
+    }
+    if (fatMin.present) {
+      map['fat_min'] = Variable<double>(fatMin.value);
+    }
+    if (fatMax.present) {
+      map['fat_max'] = Variable<double>(fatMax.value);
     }
     return map;
   }
@@ -3033,9 +3191,12 @@ class TargetsCompanion extends UpdateCompanion<Target> {
           ..write('weekday: $weekday, ')
           ..write('kcalMin: $kcalMin, ')
           ..write('kcalMax: $kcalMax, ')
-          ..write('protein: $protein, ')
-          ..write('carb: $carb, ')
-          ..write('fat: $fat')
+          ..write('proteinMin: $proteinMin, ')
+          ..write('proteinMax: $proteinMax, ')
+          ..write('carbMin: $carbMin, ')
+          ..write('carbMax: $carbMax, ')
+          ..write('fatMin: $fatMin, ')
+          ..write('fatMax: $fatMax')
           ..write(')'))
         .toString();
   }
@@ -6644,18 +6805,24 @@ typedef $$TargetsTableCreateCompanionBuilder =
       Value<int> weekday,
       Value<double?> kcalMin,
       Value<double?> kcalMax,
-      Value<double?> protein,
-      Value<double?> carb,
-      Value<double?> fat,
+      Value<double?> proteinMin,
+      Value<double?> proteinMax,
+      Value<double?> carbMin,
+      Value<double?> carbMax,
+      Value<double?> fatMin,
+      Value<double?> fatMax,
     });
 typedef $$TargetsTableUpdateCompanionBuilder =
     TargetsCompanion Function({
       Value<int> weekday,
       Value<double?> kcalMin,
       Value<double?> kcalMax,
-      Value<double?> protein,
-      Value<double?> carb,
-      Value<double?> fat,
+      Value<double?> proteinMin,
+      Value<double?> proteinMax,
+      Value<double?> carbMin,
+      Value<double?> carbMax,
+      Value<double?> fatMin,
+      Value<double?> fatMax,
     });
 
 class $$TargetsTableFilterComposer
@@ -6682,18 +6849,33 @@ class $$TargetsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get protein => $composableBuilder(
-    column: $table.protein,
+  ColumnFilters<double> get proteinMin => $composableBuilder(
+    column: $table.proteinMin,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get carb => $composableBuilder(
-    column: $table.carb,
+  ColumnFilters<double> get proteinMax => $composableBuilder(
+    column: $table.proteinMax,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get fat => $composableBuilder(
-    column: $table.fat,
+  ColumnFilters<double> get carbMin => $composableBuilder(
+    column: $table.carbMin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get carbMax => $composableBuilder(
+    column: $table.carbMax,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get fatMin => $composableBuilder(
+    column: $table.fatMin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get fatMax => $composableBuilder(
+    column: $table.fatMax,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -6722,18 +6904,33 @@ class $$TargetsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get protein => $composableBuilder(
-    column: $table.protein,
+  ColumnOrderings<double> get proteinMin => $composableBuilder(
+    column: $table.proteinMin,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get carb => $composableBuilder(
-    column: $table.carb,
+  ColumnOrderings<double> get proteinMax => $composableBuilder(
+    column: $table.proteinMax,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get fat => $composableBuilder(
-    column: $table.fat,
+  ColumnOrderings<double> get carbMin => $composableBuilder(
+    column: $table.carbMin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get carbMax => $composableBuilder(
+    column: $table.carbMax,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get fatMin => $composableBuilder(
+    column: $table.fatMin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get fatMax => $composableBuilder(
+    column: $table.fatMax,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -6756,14 +6953,27 @@ class $$TargetsTableAnnotationComposer
   GeneratedColumn<double> get kcalMax =>
       $composableBuilder(column: $table.kcalMax, builder: (column) => column);
 
-  GeneratedColumn<double> get protein =>
-      $composableBuilder(column: $table.protein, builder: (column) => column);
+  GeneratedColumn<double> get proteinMin => $composableBuilder(
+    column: $table.proteinMin,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<double> get carb =>
-      $composableBuilder(column: $table.carb, builder: (column) => column);
+  GeneratedColumn<double> get proteinMax => $composableBuilder(
+    column: $table.proteinMax,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<double> get fat =>
-      $composableBuilder(column: $table.fat, builder: (column) => column);
+  GeneratedColumn<double> get carbMin =>
+      $composableBuilder(column: $table.carbMin, builder: (column) => column);
+
+  GeneratedColumn<double> get carbMax =>
+      $composableBuilder(column: $table.carbMax, builder: (column) => column);
+
+  GeneratedColumn<double> get fatMin =>
+      $composableBuilder(column: $table.fatMin, builder: (column) => column);
+
+  GeneratedColumn<double> get fatMax =>
+      $composableBuilder(column: $table.fatMax, builder: (column) => column);
 }
 
 class $$TargetsTableTableManager
@@ -6797,32 +7007,44 @@ class $$TargetsTableTableManager
                 Value<int> weekday = const Value.absent(),
                 Value<double?> kcalMin = const Value.absent(),
                 Value<double?> kcalMax = const Value.absent(),
-                Value<double?> protein = const Value.absent(),
-                Value<double?> carb = const Value.absent(),
-                Value<double?> fat = const Value.absent(),
+                Value<double?> proteinMin = const Value.absent(),
+                Value<double?> proteinMax = const Value.absent(),
+                Value<double?> carbMin = const Value.absent(),
+                Value<double?> carbMax = const Value.absent(),
+                Value<double?> fatMin = const Value.absent(),
+                Value<double?> fatMax = const Value.absent(),
               }) => TargetsCompanion(
                 weekday: weekday,
                 kcalMin: kcalMin,
                 kcalMax: kcalMax,
-                protein: protein,
-                carb: carb,
-                fat: fat,
+                proteinMin: proteinMin,
+                proteinMax: proteinMax,
+                carbMin: carbMin,
+                carbMax: carbMax,
+                fatMin: fatMin,
+                fatMax: fatMax,
               ),
           createCompanionCallback:
               ({
                 Value<int> weekday = const Value.absent(),
                 Value<double?> kcalMin = const Value.absent(),
                 Value<double?> kcalMax = const Value.absent(),
-                Value<double?> protein = const Value.absent(),
-                Value<double?> carb = const Value.absent(),
-                Value<double?> fat = const Value.absent(),
+                Value<double?> proteinMin = const Value.absent(),
+                Value<double?> proteinMax = const Value.absent(),
+                Value<double?> carbMin = const Value.absent(),
+                Value<double?> carbMax = const Value.absent(),
+                Value<double?> fatMin = const Value.absent(),
+                Value<double?> fatMax = const Value.absent(),
               }) => TargetsCompanion.insert(
                 weekday: weekday,
                 kcalMin: kcalMin,
                 kcalMax: kcalMax,
-                protein: protein,
-                carb: carb,
-                fat: fat,
+                proteinMin: proteinMin,
+                proteinMax: proteinMax,
+                carbMin: carbMin,
+                carbMax: carbMax,
+                fatMin: fatMin,
+                fatMax: fatMax,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

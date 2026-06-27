@@ -105,4 +105,93 @@ void main() {
       expect(t.isEmpty, isTrue);
     });
   });
+
+  group('resolveMetricTarget (macros)', () {
+    final targets = [
+      const Target(weekday: 0, proteinMin: 140), // protein floor on Monday
+      const Target(weekday: 2), // no overrides
+    ];
+
+    test('weekday macro override wins, unset bound takes default', () {
+      final t = resolveMetricTarget(
+        targets,
+        TargetMetric.protein,
+        const CalorieTarget(100, 180),
+        0,
+      );
+      expect(t.min, 140); // override
+      expect(t.max, 180); // default (no weekday max)
+    });
+
+    test('falls back to macro defaults when weekday has none', () {
+      final t = resolveMetricTarget(
+        targets,
+        TargetMetric.carb,
+        const CalorieTarget(null, 250),
+        2,
+      );
+      expect(t.min, isNull);
+      expect(t.max, 250);
+    });
+  });
+
+  group('targetBarFraction', () {
+    test('floor (min only) fills toward the min', () {
+      expect(targetBarFraction(80, const CalorieTarget(120, null)), closeTo(2 / 3, 1e-9));
+    });
+    test('over the floor clamps to full', () {
+      expect(targetBarFraction(150, const CalorieTarget(120, null)), 1.0);
+    });
+    test('max is the denominator when both bounds are set', () {
+      expect(targetBarFraction(50, const CalorieTarget(40, 100)), 0.5);
+    });
+    test('no bound → no bar', () {
+      expect(targetBarFraction(50, const CalorieTarget(null, null)), isNull);
+    });
+    test('zero/negative denominator → no bar', () {
+      expect(targetBarFraction(50, const CalorieTarget(0, null)), isNull);
+    });
+  });
+
+  group('DaySummary per-metric', () {
+    // Shared entries total 10 g protein, 0 carb/fat.
+    final entries = [
+      _entry(
+        id: 1,
+        meal: MealType.breakfast,
+        grams: 100,
+        kcal100: 200,
+        protein100: 10,
+      ),
+    ].map(EntryView.new).toList();
+
+    test('value / status / bar for a protein floor', () {
+      final s = DaySummary(
+        day: '2026-06-17',
+        entries: entries,
+        proteinTarget: const CalorieTarget(20, null),
+      );
+      expect(s.valueFor(TargetMetric.protein), closeTo(10, 1e-9));
+      expect(s.statusForMetric(TargetMetric.protein), TargetStatus.under);
+      expect(s.barFractionFor(TargetMetric.protein), 0.5); // 10 / 20
+    });
+
+    test('targetless macro has no status and no bar', () {
+      final s = DaySummary(day: '2026-06-17', entries: entries);
+      expect(s.statusForMetric(TargetMetric.fat), TargetStatus.none);
+      expect(s.barFractionFor(TargetMetric.fat), isNull);
+    });
+
+    test('kcal metric reads kcalMin/kcalMax', () {
+      final s = DaySummary(
+        day: '2026-06-17',
+        entries: entries,
+        kcalMin: 100,
+        kcalMax: 300,
+      );
+      final t = s.targetFor(TargetMetric.kcal);
+      expect(t.min, 100);
+      expect(t.max, 300);
+    });
+  });
 }

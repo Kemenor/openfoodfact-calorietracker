@@ -230,6 +230,22 @@ void main() {
     expect(t!.kcalMax, 2200);
   });
 
+  test('per-macro target columns round-trip', () async {
+    await db.setTarget(
+      1,
+      const TargetsCompanion(
+        proteinMin: Value(140),
+        carbMax: Value(250),
+        fatMax: Value(70),
+      ),
+    );
+    final t = await db.targetForWeekday(1);
+    expect(t!.proteinMin, 140);
+    expect(t.proteinMax, isNull);
+    expect(t.carbMax, 250);
+    expect(t.fatMax, 70);
+  });
+
   test('recipe with items round-trips and cascades on delete', () async {
     final id = await db
         .createRecipe(RecipesCompanion.insert(name: 'Porridge'), [

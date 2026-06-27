@@ -25,7 +25,7 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? driftDatabase(name: 'calorie_tracker'));
 
   @override
-  int get schemaVersion => 10;
+  int get schemaVersion => 11;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -96,6 +96,20 @@ class AppDatabase extends _$AppDatabase {
         // Drop the dead legacy `kcal` column (fully superseded by
         // kcalMin/kcalMax; any value was migrated into kcal_max at v2).
         await customStatement('ALTER TABLE targets DROP COLUMN kcal');
+      }
+      if (from < 11) {
+        // Per-macro min/max targets (protein/carb/fat), at parity with kcal.
+        // Replaces the never-surfaced single protein/carb/fat columns that have
+        // sat unused (always null) on the table since Phase 1.
+        await m.addColumn(targets, targets.proteinMin);
+        await m.addColumn(targets, targets.proteinMax);
+        await m.addColumn(targets, targets.carbMin);
+        await m.addColumn(targets, targets.carbMax);
+        await m.addColumn(targets, targets.fatMin);
+        await m.addColumn(targets, targets.fatMax);
+        await customStatement('ALTER TABLE targets DROP COLUMN protein');
+        await customStatement('ALTER TABLE targets DROP COLUMN carb');
+        await customStatement('ALTER TABLE targets DROP COLUMN fat');
       }
     },
     beforeOpen: (details) async {

@@ -297,6 +297,27 @@ final targetsProvider = StreamProvider<List<Target>>(
   (ref) => ref.watch(dbProvider).watchTargets(),
 );
 
+/// App-wide default macro target bounds (the `default<Macro>Min/Max` settings).
+/// kcal defaults stay in [defaultMinProvider] / [defaultMaxProvider].
+final macroDefaultsProvider =
+    StreamProvider<Map<TargetMetric, CalorieTarget>>((ref) {
+      return ref.watch(dbProvider).watchAllSettings().map((rows) {
+        final s = {for (final r in rows) r.key: r.value};
+        double? n(String k) => s[k] == null ? null : double.tryParse(s[k]!);
+        return {
+          TargetMetric.protein: CalorieTarget(
+            n('defaultProteinMin'),
+            n('defaultProteinMax'),
+          ),
+          TargetMetric.carb: CalorieTarget(
+            n('defaultCarbMin'),
+            n('defaultCarbMax'),
+          ),
+          TargetMetric.fat: CalorieTarget(n('defaultFatMin'), n('defaultFatMax')),
+        };
+      });
+    });
+
 /// The UI language override. `null` = follow the device locale; otherwise a
 /// `Locale` built from the stored language code ('en'/'de'/'fr'/'it').
 final localeProvider = StreamProvider<Locale?>(
@@ -353,11 +374,15 @@ final daySummaryProvider = StreamProvider<DaySummary>((ref) {
   final targets = ref.watch(targetsProvider).asData?.value ?? const [];
   final defaultMin = ref.watch(defaultMinProvider).asData?.value;
   final defaultMax = ref.watch(defaultMaxProvider).asData?.value;
-  final target = resolveTarget(
+  final macroDefaults =
+      ref.watch(macroDefaultsProvider).asData?.value ?? const {};
+  final wd = DayKey.weekdayIndex(day);
+  final target = resolveTarget(targets, defaultMin, defaultMax, wd);
+  CalorieTarget macro(TargetMetric m) => resolveMetricTarget(
     targets,
-    defaultMin,
-    defaultMax,
-    DayKey.weekdayIndex(day),
+    m,
+    macroDefaults[m] ?? const CalorieTarget(null, null),
+    wd,
   );
 
   return db
@@ -368,6 +393,9 @@ final daySummaryProvider = StreamProvider<DaySummary>((ref) {
           entries: entries.map(EntryView.new).toList(),
           kcalMin: target.min,
           kcalMax: target.max,
+          proteinTarget: macro(TargetMetric.protein),
+          carbTarget: macro(TargetMetric.carb),
+          fatTarget: macro(TargetMetric.fat),
         ),
       );
 });

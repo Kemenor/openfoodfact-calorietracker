@@ -41,12 +41,43 @@ class GroupView {
 /// Where the day's total sits relative to its (optional) calorie bounds.
 enum TargetStatus { none, under, inRange, over }
 
-/// A resolved calorie target: either bound may be null (optional).
+/// A resolved target as a min/max bound pair — used for calories *and* each
+/// macro (the name is historical; it is a generic optional bound). Either bound
+/// may be null.
 class CalorieTarget {
   final double? min;
   final double? max;
   const CalorieTarget(this.min, this.max);
   bool get isEmpty => min == null && max == null;
+}
+
+/// The four trackable metrics that can carry a target. Calories are in kcal;
+/// the macros are in grams.
+enum TargetMetric { kcal, protein, carb, fat }
+
+/// The day's total for [m], pulled from an already-summed [Nutrition].
+double metricValue(Nutrition n, TargetMetric m) => switch (m) {
+  TargetMetric.kcal => n.kcal,
+  TargetMetric.protein => n.protein,
+  TargetMetric.carb => n.carb,
+  TargetMetric.fat => n.fat,
+};
+
+/// A [Target] row's (min, max) for [m] — null row or null bound both read null.
+(double?, double?) targetRowBounds(Target? t, TargetMetric m) => switch (m) {
+  TargetMetric.kcal => (t?.kcalMin, t?.kcalMax),
+  TargetMetric.protein => (t?.proteinMin, t?.proteinMax),
+  TargetMetric.carb => (t?.carbMin, t?.carbMax),
+  TargetMetric.fat => (t?.fatMin, t?.fatMax),
+};
+
+/// Fill fraction 0..1 for a metric's progress bar, or null when the metric has
+/// no usable bound (→ draw no bar). The denominator is the max if set, else the
+/// min — a floor (e.g. a protein goal) the bar fills toward and reads full at.
+double? targetBarFraction(double value, CalorieTarget t) {
+  final denom = t.max ?? t.min;
+  if (denom == null || denom <= 0) return null;
+  return (value / denom).clamp(0.0, 1.0);
 }
 
 /// Everything the day screen needs: flat list, meal groups, totals, target.
@@ -55,12 +86,18 @@ class DaySummary {
   final List<EntryView> entries;
   final double? kcalMin;
   final double? kcalMax;
+  final CalorieTarget proteinTarget;
+  final CalorieTarget carbTarget;
+  final CalorieTarget fatTarget;
 
   DaySummary({
     required this.day,
     required this.entries,
     this.kcalMin,
     this.kcalMax,
+    this.proteinTarget = const CalorieTarget(null, null),
+    this.carbTarget = const CalorieTarget(null, null),
+    this.fatTarget = const CalorieTarget(null, null),
   });
 
   Nutrition get total => Nutrition.sum(entries.map((e) => e.nutrition));
@@ -75,6 +112,22 @@ class DaySummary {
 
   TargetStatus get status =>
       statusFor(total.kcal, CalorieTarget(kcalMin, kcalMax));
+
+  /// The resolved target for any metric (kcal pulled from kcalMin/kcalMax).
+  CalorieTarget targetFor(TargetMetric m) => switch (m) {
+    TargetMetric.kcal => CalorieTarget(kcalMin, kcalMax),
+    TargetMetric.protein => proteinTarget,
+    TargetMetric.carb => carbTarget,
+    TargetMetric.fat => fatTarget,
+  };
+
+  double valueFor(TargetMetric m) => metricValue(total, m);
+  TargetStatus statusForMetric(TargetMetric m) =>
+      statusFor(valueFor(m), targetFor(m));
+
+  /// Bar fill 0..1 for [m], or null when it has no target (→ no bar drawn).
+  double? barFractionFor(TargetMetric m) =>
+      targetBarFraction(valueFor(m), targetFor(m));
 }
 
 /// Where [kcal] sits relative to a [target] (single source of truth shared by
@@ -201,14 +254,29 @@ List<DayTrend> bucketTrends(List<DayTrend> daily) {
   }
 }
 
-/// Resolve the calorie bounds for a weekday: the weekday's own values if set,
-/// otherwise the app-wide defaults.
+/// Resolve a metric's bounds for a weekday: the weekday's own values if set,
+/// otherwise the app-wide [defaults] for that metric.
+CalorieTarget resolveMetricTarget(
+  List<Target> targets,
+  TargetMetric metric,
+  CalorieTarget defaults,
+  int weekdayIndex,
+) {
+  final t = targets.firstWhereOrNull((t) => t.weekday == weekdayIndex);
+  final (min, max) = targetRowBounds(t, metric);
+  return CalorieTarget(min ?? defaults.min, max ?? defaults.max);
+}
+
+/// Resolve the calorie bounds for a weekday (kcal convenience over
+/// [resolveMetricTarget]; kept for the day + trends callers).
 CalorieTarget resolveTarget(
   List<Target> targets,
   double? defaultMin,
   double? defaultMax,
   int weekdayIndex,
-) {
-  final t = targets.firstWhereOrNull((t) => t.weekday == weekdayIndex);
-  return CalorieTarget(t?.kcalMin ?? defaultMin, t?.kcalMax ?? defaultMax);
-}
+) => resolveMetricTarget(
+  targets,
+  TargetMetric.kcal,
+  CalorieTarget(defaultMin, defaultMax),
+  weekdayIndex,
+);
