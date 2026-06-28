@@ -282,7 +282,7 @@ class _SummaryCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final total = summary.total;
     final status = summary.status;
-    final color = statusColor(theme.colorScheme, status);
+    final color = statusColor(context, status);
     final kcalBar = summary.barFractionFor(TargetMetric.kcal);
     final statusText = switch (status) {
       TargetStatus.over => l10n.targetOver(kcalStr(-summary.remainingToMax!)),
@@ -338,9 +338,12 @@ class _SummaryCard extends StatelessWidget {
                 child: LinearProgressIndicator(
                   value: kcalBar,
                   minHeight: 8,
-                  color: status == TargetStatus.over
-                      ? theme.colorScheme.error
-                      : null,
+                  // Structural progress track = indigo (the bar shows progress;
+                  // status is carried by the value/text + macro bars).
+                  color: theme.colorScheme.secondary,
+                  backgroundColor: theme.colorScheme.secondary.withValues(
+                    alpha: 0.22,
+                  ),
                 ),
               ),
             ],
@@ -384,7 +387,7 @@ class _MacroRow extends StatelessWidget {
     final value = summary.valueFor(metric);
     final frac = summary.barFractionFor(metric);
     final status = summary.statusForMetric(metric);
-    final color = frac == null ? null : statusColor(theme.colorScheme, status);
+    final color = frac == null ? null : statusColor(context, status);
     return Expanded(
       child: Column(
         children: [
@@ -407,9 +410,12 @@ class _MacroRow extends StatelessWidget {
                       child: LinearProgressIndicator(
                         value: frac,
                         minHeight: 4,
-                        color: status == TargetStatus.over
-                            ? theme.colorScheme.error
-                            : null,
+                        // Macro bar fill = the status colour (emerald in-range,
+                        // amber off-target); track is the indigo structural tint.
+                        color: color,
+                        backgroundColor: theme.colorScheme.secondary.withValues(
+                          alpha: 0.22,
+                        ),
                       ),
                     ),
                   ),

@@ -274,8 +274,11 @@ Live: `quick_add_sheet.dart:188-294`, `log_food_sheet.dart:205-340`,
   - `bodySmall` / `bodyMedium` — helper / secondary text
 - **Muted text → `colorScheme.outline`** (source labels, help text)
   (`quick_add_sheet.dart:203-207`).
-- **Status color semantics** (`day_screen.dart:273-278`): over = `error`,
-  under = `tertiary`, in-range = `primary`, none = `onSurfaceVariant`.
+- **Status color semantics** (`core/status_color.dart`): **in-range =
+  `tertiary` (emerald), off-target — over AND under = amber**
+  (`FuchsbauStatusColors.amber`), none = `outline`. Fuchsbau ethos: *status is
+  information, never punishment; red is for destruction only* — no `error`/red
+  in status. Direction (over vs under) is carried by the bar fill + the value.
 - **Container color language:** destructive = `errorContainer`/`onErrorContainer`;
   positive = `primaryContainer`/`onPrimaryContainer`.
 
@@ -357,8 +360,10 @@ Live: `quick_add_sheet.dart:188-294`, `log_food_sheet.dart:205-340`,
   status-colored under-bar and a status-colored value; targetless macros stay
   plain text (mirrors the optional kcal bar, so a calorie-only card is
   unchanged).
-- **Bar + value color = `statusColor(status)`** (under=`tertiary`,
-  in-range=`primary`, over=`error`); an over bar forces `error`.
+- **Macro value + under-bar fill = `statusColor(context, status)`** (in-range
+  emerald, off-target amber, never red). The **kcal hero bar is the structural
+  indigo (`secondary`)** progress track — status is carried by the value/text +
+  the macro bars, not the kcal bar.
 - **Metric switching belongs on the chart, not the Day card.** Trends carries a
   `SegmentedButton<TargetMetric>` (kcal · P · C · F) that swaps the plotted
   series + target band; selection is in-memory (`selectedTrendMetricProvider`,

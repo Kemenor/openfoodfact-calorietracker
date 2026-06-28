@@ -49,9 +49,12 @@ Conform new/changed UI to these:
   new keys into en/de/fr/it.
 - **Spacing:** `16` insets; gap vocabulary 4/8/12/16/20; list bottom padding 96
   (88 for forms) so FABs don't overlap.
-- **Theme:** single source `lib/core/theme.dart`, M3 green seed `0xFF43A047`;
-  muted text = `colorScheme.outline`; status colors over=`error` / under=
-  `tertiary` / in-range=`primary`.
+- **Theme:** single source `lib/core/theme.dart`, which delegates to the shared
+  **fuchsbau** design-system package (tangerine triad: primary orange, secondary
+  indigo, tertiary emerald — *not* the old M3 green seed). muted text =
+  `colorScheme.outline`; status colors (`core/status_color.dart`) = in-range
+  emerald / off-target (over & under) amber / none outline — **no red in status**
+  (red is destruction-only). Per-app deviations recorded in `DESIGN_SYSTEM.md`.
 
 **When you introduce a genuinely new UI pattern, update `DESIGN_SYSTEM.md`** so it
 doesn't rot.

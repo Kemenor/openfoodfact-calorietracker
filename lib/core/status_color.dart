@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:fuchsbau/fuchsbau.dart';
 
 import '../domain/day_summary.dart';
 
-/// Canonical color for a calorie [TargetStatus]: over = error, under = tertiary,
-/// in-range = primary, none = muted. Single source shared by the day screen and
-/// the trends charts (see DESIGN_SYSTEM.md — status colors).
-Color statusColor(ColorScheme scheme, TargetStatus status) => switch (status) {
-  TargetStatus.over => scheme.error,
-  TargetStatus.under => scheme.tertiary,
-  TargetStatus.inRange => scheme.primary,
-  TargetStatus.none => scheme.onSurfaceVariant,
-};
+/// Canonical colour for a calorie/macro [TargetStatus] (single source for the
+/// day screen + trends charts; see DESIGN_SYSTEM.md).
+///
+/// Fuchsbau ethos — *status is information, never punishment; red is for
+/// destruction only*. So: **in-range → emerald** (positive/achieved),
+/// **off-target either way (over or under) → amber** (a calm nudge, not a
+/// scold), **none → muted**. Direction (over vs under) is conveyed by the bar
+/// fill + the numeric value, so no red is needed.
+Color statusColor(BuildContext context, TargetStatus status) {
+  final scheme = Theme.of(context).colorScheme;
+  final amber = FuchsbauStatusColors.of(context).amber;
+  return switch (status) {
+    TargetStatus.over => amber,
+    TargetStatus.under => amber,
+    TargetStatus.inRange => scheme.tertiary,
+    TargetStatus.none => scheme.outline,
+  };
+}

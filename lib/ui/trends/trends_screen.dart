@@ -384,7 +384,7 @@ class _Chart extends StatelessWidget {
               show: true,
               getDotPainter: (spot, pct, bar, index) => FlDotCirclePainter(
                 radius: dense ? 2.5 : 4.5,
-                color: statusColor(scheme, trends[spot.x.round()].status),
+                color: statusColor(context, trends[spot.x.round()].status),
                 strokeWidth: 0,
               ),
             ),
