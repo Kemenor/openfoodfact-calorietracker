@@ -9,6 +9,22 @@ This is a Flutter + Riverpod (Material 3) app. Entry: `lib/main.dart` →
 `ProviderScope` → `CalorieApp` (`lib/app.dart`) → `HomeShell`
 (`lib/ui/home_shell.dart`).
 
+## 0. Inherits the Fuchsbau design system
+
+The **colours, fonts, shape/spacing scales, and base component patterns come
+from the shared [fuchsbau](https://github.com/Kemenor/fuchsbau) package**
+(`fuchsbauTheme()` in `lib/core/theme.dart`) — the pinned tangerine triad (fox
+orange · indigo · emerald), Figtree + the accessibility font picker, soft
+rounding, the pill FAB. This doc records knabberfuchs-specifics and any
+**deviation** from Fuchsbau (the principle: *the triad is family, its
+application to components is app-level*).
+
+**Deviations from Fuchsbau:**
+- **Action FAB is emerald** (not the family-default primary/tangerine): the
+  capture (⚡) + Add-food FABs use a lightened `tertiary` so the primary CTA
+  reads as a distinct, positive "go" against the warm tangerine surface. Applied
+  in `lib/core/theme.dart` via `copyWith` on the fuchsbau theme.
+
 ---
 
 ## 1. Navigation

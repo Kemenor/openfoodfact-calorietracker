@@ -5,4 +5,17 @@ import 'package:fuchsbau/fuchsbau.dart';
 /// tangerine triad, replacing the old accidental-green M3 seed). knabberfuchs's
 /// own component tweaks layer on top here; record any deviation in
 /// `DESIGN_SYSTEM.md` with a pointer back to fuchsbau.
-ThemeData buildTheme(Brightness brightness) => fuchsbauTheme(brightness);
+ThemeData buildTheme(Brightness brightness) {
+  final base = fuchsbauTheme(brightness);
+  final scheme = base.colorScheme;
+  // knabberfuchs deviation (see DESIGN_SYSTEM.md): the action FAB is emerald —
+  // a positive, distinct CTA against the tangerine surface — lightened a touch
+  // from the saturated tertiary. The fuchsbau package keeps the family default
+  // (FAB = primary); this colour application is app-level, not family-level.
+  return base.copyWith(
+    floatingActionButtonTheme: base.floatingActionButtonTheme.copyWith(
+      backgroundColor: Color.lerp(scheme.tertiary, Colors.white, 0.12),
+      foregroundColor: scheme.onTertiary,
+    ),
+  );
+}
