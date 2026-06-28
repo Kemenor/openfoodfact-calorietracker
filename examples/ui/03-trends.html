@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knabberfuchs — Trends</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block" rel="stylesheet">
+<link rel="stylesheet" href="fuchsbau.css">
+</head>
+<body><div class="wrap">
+  <header class="pg"><h1>🦊 Knabberfuchs — Trends</h1>
+  <button class="toggle" onclick="document.body.classList.toggle('dark')">◐ Light / dark</button></header>
+  <p class="cap" style="margin-top:10px">Aggregate view · indigo selection · emerald target band &amp; in-range dots · amber off-target · no red.</p>
+
+  <div class="stage">
+
+    <!-- WEEK / KCAL -->
+    <div>
+      <p class="cap">Week · kcal <small>· average &amp; days in target</small></p>
+      <div class="phone">
+        <div class="appbar"><b>Trends</b></div>
+        <div class="body">
+
+          <div class="seg">
+            <span class="on">kcal</span><span>P</span><span>C</span><span>F</span>
+          </div>
+          <div class="seg">
+            <span class="on">Week</span><span>Month</span><span>Custom</span>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:center;gap:14px;color:var(--muted);font-weight:600;font-size:.9rem;margin-bottom:14px">
+            <span class="ms sm">chevron_left</span>
+            <span class="num">Jun 15 – Jun 21</span>
+            <span class="ms sm">chevron_right</span>
+          </div>
+
+          <div class="card hero">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:center">
+              <div>
+                <div class="kcal num">1,958</div>
+                <div class="target num" style="margin:6px 0 0">Average / day</div>
+              </div>
+              <div>
+                <div class="kcal num">3 / 7</div>
+                <div class="target num" style="margin:6px 0 0">Days in target</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <svg viewBox="0 0 300 170" width="100%" role="img" aria-label="Daily kcal for the week">
+              <!-- gridlines + y labels: 500..2500, plot area y 12..140, x 38..288 -->
+              <g font-family="Figtree" font-size="9" fill="var(--muted)" class="num">
+                <!-- 2500 -->
+                <line x1="38" y1="12"  x2="288" y2="12"  stroke="var(--line)" stroke-width="1"/>
+                <text x="34" y="15"  text-anchor="end">2500</text>
+                <!-- 2000 -->
+                <line x1="38" y1="44"  x2="288" y2="44"  stroke="var(--line)" stroke-width="1"/>
+                <text x="34" y="47"  text-anchor="end">2000</text>
+                <!-- 1500 -->
+                <line x1="38" y1="76"  x2="288" y2="76"  stroke="var(--line)" stroke-width="1"/>
+                <text x="34" y="79"  text-anchor="end">1500</text>
+                <!-- 1000 -->
+                <line x1="38" y1="108" x2="288" y2="108" stroke="var(--line)" stroke-width="1"/>
+                <text x="34" y="111" text-anchor="end">1000</text>
+                <!-- 500 -->
+                <line x1="38" y1="140" x2="288" y2="140" stroke="var(--line)" stroke-width="1"/>
+                <text x="34" y="143" text-anchor="end">500</text>
+              </g>
+
+              <!-- target band 1800–2200 : y(2200)=31.2  y(1800)=56.8 -->
+              <rect x="38" y="31.2" width="250" height="25.6" fill="var(--emerald)" fill-opacity=".12"/>
+
+              <!-- daily polyline: x = 38 + (i+0.5)*(250/7) -> ~56,92,127,163,199,234,270
+                   kcal -> y: y = 140 - (kcal-500)/2000*128
+                   Mon 1620 ->y 68.3  Tue 1980 ->y 45.3  Wed 2310(over)->y 24.2  Thu 2040 ->y 41.4
+                   Fri 1880 ->y 51.7  Sat 1540(under)->y 73.4  Sun 2340 -> but keep 7 pts; use values below -->
+              <polyline fill="none" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"
+                points="56,68.3 92,45.3 127,24.2 163,41.4 199,51.7 234,73.4 270,46.6"/>
+
+              <!-- dots: in-range emerald, over amber, under amber -->
+              <circle cx="56"  cy="68.3" r="4" fill="var(--amber)"/>   <!-- Mon 1620 under -->
+              <circle cx="92"  cy="45.3" r="4" fill="var(--emerald)"/> <!-- Tue 1980 -->
+              <circle cx="127" cy="24.2" r="4" fill="var(--amber)"/>   <!-- Wed 2310 over -->
+              <circle cx="163" cy="41.4" r="4" fill="var(--emerald)"/> <!-- Thu 2040 -->
+              <circle cx="199" cy="51.7" r="4" fill="var(--emerald)"/> <!-- Fri 1880 -->
+              <circle cx="234" cy="73.4" r="4" fill="var(--amber)"/>   <!-- Sat 1540 under -->
+              <circle cx="270" cy="46.6" r="4" fill="var(--amber)"/>   <!-- Sun 1960? mark off; keep amber for variety -->
+
+              <!-- x labels -->
+              <g font-family="Figtree" font-size="9" fill="var(--muted)" text-anchor="middle" class="num">
+                <text x="56"  y="158">Mon</text>
+                <text x="92"  y="158">Tue</text>
+                <text x="127" y="158">Wed</text>
+                <text x="163" y="158">Thu</text>
+                <text x="199" y="158">Fri</text>
+                <text x="234" y="158">Sat</text>
+                <text x="270" y="158">Sun</text>
+              </g>
+            </svg>
+          </div>
+
+        </div>
+        <div class="nav">
+          <div class="dest"><span class="pl"><span class="ms">today</span></span>Day</div>
+          <div class="dest"><span class="pl"><span class="ms">menu_book</span></span>Recipes</div>
+          <div class="dest on"><span class="pl"><span class="ms fill">trending_up</span></span>Trends</div>
+          <div class="dest"><span class="pl"><span class="ms">settings</span></span>Settings</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MONTH / PROTEIN -->
+    <div>
+      <p class="cap">Month · protein <small>· days at or above floor</small></p>
+      <div class="phone">
+        <div class="appbar"><b>Trends</b></div>
+        <div class="body">
+
+          <div class="seg">
+            <span>kcal</span><span class="on">P</span><span>C</span><span>F</span>
+          </div>
+          <div class="seg">
+            <span>Week</span><span class="on">Month</span><span>Custom</span>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:center;gap:14px;color:var(--muted);font-weight:600;font-size:.9rem;margin-bottom:14px">
+            <span class="ms sm">chevron_left</span>
+            <span class="num">June 2026</span>
+            <span class="ms sm">chevron_right</span>
+          </div>
+
+          <div class="card hero">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:center">
+              <div>
+                <div class="kcal num">112 g</div>
+                <div class="target num" style="margin:6px 0 0">Average / day</div>
+              </div>
+              <div>
+                <div class="kcal num">21 / 30</div>
+                <div class="target num" style="margin:6px 0 0">Days ≥ target</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <svg viewBox="0 0 300 170" width="100%" role="img" aria-label="Daily protein for the month">
+              <!-- plot area: x 30..290, y 12..140; protein 0..160g ; floor 100g
+                   y(g) = 140 - g/160*128 ; floor 100 -> y 60 -->
+              <g font-family="Figtree" font-size="9" fill="var(--muted)" class="num">
+                <line x1="30" y1="12"  x2="290" y2="12"  stroke="var(--line)" stroke-width="1"/>
+                <text x="26" y="15"  text-anchor="end">160</text>
+                <line x1="30" y1="44"  x2="290" y2="44"  stroke="var(--line)" stroke-width="1"/>
+                <text x="26" y="47"  text-anchor="end">120</text>
+                <line x1="30" y1="76"  x2="290" y2="76"  stroke="var(--line)" stroke-width="1"/>
+                <text x="26" y="79"  text-anchor="end">80</text>
+                <line x1="30" y1="108" x2="290" y2="108" stroke="var(--line)" stroke-width="1"/>
+                <text x="26" y="111" text-anchor="end">40</text>
+                <line x1="30" y1="140" x2="290" y2="140" stroke="var(--line)" stroke-width="1"/>
+                <text x="26" y="143" text-anchor="end">0</text>
+              </g>
+
+              <!-- floor band: from floor line (y60, 100g) down to baseline; thin emerald floor zone -->
+              <rect x="30" y="56" width="260" height="8" fill="var(--emerald)" fill-opacity=".12"/>
+              <line x1="30" y1="60" x2="290" y2="60" stroke="var(--emerald)" stroke-width="1.5" stroke-dasharray="3 3" opacity=".6"/>
+
+              <!-- 30-day line. x = 30 + i*(260/29) for i 0..29 ; y from g.
+                   data g: 118,104,96,128,112,90,134,122,108,86,116,124,130,98,112,
+                            120,140,106,94,128,118,132,88,114,122,110,136,100,126,113 -->
+              <polyline fill="none" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"
+                points="30,45.6 38.97,56.8 47.93,63.2 56.9,37.6 65.86,50.4 74.83,68 83.79,32.8 92.76,42.4 101.72,53.6 110.69,71.2 119.66,47.2 128.62,40.8 137.59,36 146.55,61.6 155.52,50.4 164.48,44 173.45,28 182.41,55.2 191.38,64.8 200.34,37.6 209.31,45.6 218.28,34.4 227.24,69.6 236.21,48.8 245.17,42.4 254.14,52 263.1,31.2 272.07,60 281.03,39.2 290,49.6"/>
+
+              <!-- dots: emerald if g>=100 else amber. r small for density -->
+              <g>
+                <circle cx="30"     cy="45.6" r="2.6" fill="var(--emerald)"/>
+                <circle cx="38.97"  cy="56.8" r="2.6" fill="var(--emerald)"/>
+                <circle cx="47.93"  cy="63.2" r="2.6" fill="var(--amber)"/>
+                <circle cx="56.9"   cy="37.6" r="2.6" fill="var(--emerald)"/>
+                <circle cx="65.86"  cy="50.4" r="2.6" fill="var(--emerald)"/>
+                <circle cx="74.83"  cy="68"   r="2.6" fill="var(--amber)"/>
+                <circle cx="83.79"  cy="32.8" r="2.6" fill="var(--emerald)"/>
+                <circle cx="92.76"  cy="42.4" r="2.6" fill="var(--emerald)"/>
+                <circle cx="101.72" cy="53.6" r="2.6" fill="var(--emerald)"/>
+                <circle cx="110.69" cy="71.2" r="2.6" fill="var(--amber)"/>
+                <circle cx="119.66" cy="47.2" r="2.6" fill="var(--emerald)"/>
+                <circle cx="128.62" cy="40.8" r="2.6" fill="var(--emerald)"/>
+                <circle cx="137.59" cy="36"   r="2.6" fill="var(--emerald)"/>
+                <circle cx="146.55" cy="61.6" r="2.6" fill="var(--amber)"/>
+                <circle cx="155.52" cy="50.4" r="2.6" fill="var(--emerald)"/>
+                <circle cx="164.48" cy="44"   r="2.6" fill="var(--emerald)"/>
+                <circle cx="173.45" cy="28"   r="2.6" fill="var(--emerald)"/>
+                <circle cx="182.41" cy="55.2" r="2.6" fill="var(--emerald)"/>
+                <circle cx="191.38" cy="64.8" r="2.6" fill="var(--amber)"/>
+                <circle cx="200.34" cy="37.6" r="2.6" fill="var(--emerald)"/>
+                <circle cx="209.31" cy="45.6" r="2.6" fill="var(--emerald)"/>
+                <circle cx="218.28" cy="34.4" r="2.6" fill="var(--emerald)"/>
+                <circle cx="227.24" cy="69.6" r="2.6" fill="var(--amber)"/>
+                <circle cx="236.21" cy="48.8" r="2.6" fill="var(--emerald)"/>
+                <circle cx="245.17" cy="42.4" r="2.6" fill="var(--emerald)"/>
+                <circle cx="254.14" cy="52"   r="2.6" fill="var(--emerald)"/>
+                <circle cx="263.1"  cy="31.2" r="2.6" fill="var(--emerald)"/>
+                <circle cx="272.07" cy="60"   r="2.6" fill="var(--emerald)"/>
+                <circle cx="281.03" cy="39.2" r="2.6" fill="var(--emerald)"/>
+                <circle cx="290"    cy="49.6" r="2.6" fill="var(--emerald)"/>
+              </g>
+
+              <!-- x labels: weeks -->
+              <g font-family="Figtree" font-size="9" fill="var(--muted)" text-anchor="middle" class="num">
+                <text x="30"  y="158">1</text>
+                <text x="92"  y="158">8</text>
+                <text x="155" y="158">15</text>
+                <text x="218" y="158">22</text>
+                <text x="290" y="158">30</text>
+              </g>
+            </svg>
+          </div>
+
+        </div>
+        <div class="nav">
+          <div class="dest"><span class="pl"><span class="ms">today</span></span>Day</div>
+          <div class="dest"><span class="pl"><span class="ms">menu_book</span></span>Recipes</div>
+          <div class="dest on"><span class="pl"><span class="ms fill">trending_up</span></span>Trends</div>
+          <div class="dest"><span class="pl"><span class="ms">settings</span></span>Settings</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div></body></html>

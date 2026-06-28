@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knabberfuchs — Recipe detail</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block" rel="stylesheet">
+<link rel="stylesheet" href="fuchsbau.css">
+</head>
+<body><div class="wrap">
+  <header class="pg"><h1>🦊 Knabberfuchs — Recipe detail</h1>
+  <button class="toggle" onclick="document.body.classList.toggle('dark')">◐ Light / dark</button></header>
+  <p class="cap" style="margin-top:10px">Pushed screen (no bottom nav) · emerald action FAB · per-serving hero · ingredients list. The log-portion bottom sheet scales the recipe into today.</p>
+
+  <div class="stage">
+
+    <!-- RECIPE DETAIL -->
+    <div>
+      <p class="cap">Recipe detail <small>· lentil curry</small></p>
+      <div class="phone">
+        <div class="appbar"><span class="ms nav-i l">chevron_left</span><b>Lentil curry</b><span class="ms nav-i r">more_vert</span></div>
+        <div class="body">
+
+          <div class="card hero">
+            <div style="font-weight:800;font-size:1.3rem;letter-spacing:-.02em">Lentil curry</div>
+            <div class="target num" style="margin:4px 0 12px">4 servings · 30 min</div>
+            <div class="heroTop">
+              <div class="kcal num">2,360<small>kcal</small></div>
+              <div class="target num" style="margin:0">whole recipe</div>
+            </div>
+          </div>
+
+          <div class="card hero">
+            <div class="heroTop">
+              <div class="kcal num">590<small>kcal</small></div>
+              <div class="target num" style="margin:0">per serving</div>
+            </div>
+            <div class="macros" style="margin-top:14px">
+              <div class="macro none"><div class="v num">28 g</div><div class="l">Protein</div></div>
+              <div class="macro none"><div class="v num">72 g</div><div class="l">Carbs</div></div>
+              <div class="macro none"><div class="v num">14 g</div><div class="l">Fat</div></div>
+            </div>
+          </div>
+
+          <div class="sect">Ingredients</div>
+          <div class="card pad0">
+            <div class="tile"><span class="ms">grain</span><div class="tx"><div class="t">Red lentils</div></div><div class="tr num">300 g<b>1,062</b></div></div>
+            <div class="tile"><span class="ms">water_drop</span><div class="tx"><div class="t">Coconut milk</div></div><div class="tr num">200 g<b>460</b></div></div>
+            <div class="tile"><span class="ms">nutrition</span><div class="tx"><div class="t">Onion</div></div><div class="tr num">150 g<b>60</b></div></div>
+            <div class="tile"><span class="ms">eco</span><div class="tx"><div class="t">Tomato</div></div><div class="tr num">200 g<b>36</b></div></div>
+            <div class="tile"><span class="ms">soup_kitchen</span><div class="tx"><div class="t">Curry paste</div></div><div class="tr num">50 g<b>90</b></div></div>
+            <div class="tile"><span class="ms">spa</span><div class="tx"><div class="t">Spinach</div></div><div class="tr num">100 g<b>23</b></div></div>
+          </div>
+
+        </div>
+        <div class="fabs" style="bottom:16px">
+          <button class="fab ext"><span class="ms">playlist_add</span> Log portion</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOG PORTION SHEET -->
+    <div>
+      <p class="cap">Log portion <small>· bottom sheet</small></p>
+      <div class="phone">
+        <div class="appbar"><span class="ms nav-i l">chevron_left</span><b>Lentil curry</b><span class="ms nav-i r">more_vert</span></div>
+        <div class="body">
+          <div class="card hero">
+            <div style="font-weight:800;font-size:1.3rem;letter-spacing:-.02em">Lentil curry</div>
+            <div class="target num" style="margin:4px 0 12px">4 servings · 30 min</div>
+            <div class="heroTop">
+              <div class="kcal num">2,360<small>kcal</small></div>
+              <div class="target num" style="margin:0">whole recipe</div>
+            </div>
+          </div>
+          <div class="card hero">
+            <div class="heroTop">
+              <div class="kcal num">590<small>kcal</small></div>
+              <div class="target num" style="margin:0">per serving</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scrim"></div>
+
+        <div class="sheet">
+          <div class="grab"></div>
+          <h3>Log a portion</h3>
+          <div class="target num" style="margin:-10px 0 16px">Lentil curry · 590 kcal / serving</div>
+
+          <div class="flab">Day</div>
+          <div class="chips" style="margin-bottom:16px">
+            <span class="chip on">Today</span>
+            <span class="chip">Yesterday</span>
+            <span class="chip">Pick a date…</span>
+          </div>
+
+          <div class="flab">Portions</div>
+          <div class="seg" style="margin-bottom:10px">
+            <span>−</span><span class="on num">1</span><span>+</span>
+          </div>
+          <div class="chips" style="margin-bottom:16px">
+            <span class="chip num">0.5</span>
+            <span class="chip on num">1</span>
+            <span class="chip num">1.5</span>
+            <span class="chip num">2</span>
+          </div>
+
+          <div class="target num" style="margin:0 2px 16px"><b style="color:var(--ink);font-size:1.05rem">≈ 590 kcal</b> · logs 6 ingredients, scaled</div>
+
+          <button class="btn emerald"><span class="ms">check</span> Log to today</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div></body></html>

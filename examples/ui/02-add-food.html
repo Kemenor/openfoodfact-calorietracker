@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knabberfuchs — Add food</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block" rel="stylesheet">
+<link rel="stylesheet" href="fuchsbau.css">
+</head>
+<body><div class="wrap">
+  <header class="pg"><h1>🦊 Knabberfuchs — Add food</h1>
+  <button class="toggle" onclick="document.body.classList.toggle('dark')">◐ Light / dark</button></header>
+  <p class="cap" style="margin-top:10px">Search-first add flow · Quick add up top · scan FAB (emerald) · log sheet with grams, units, serving quick-pick, meal &amp; live preview.</p>
+
+  <div class="stage">
+
+    <!-- SEARCH RESULTS -->
+    <div>
+      <p class="cap">Search results <small>· pushed screen</small></p>
+      <div class="phone">
+        <div class="appbar"><span class="ms nav-i l">chevron_left</span><b>Add food</b></div>
+        <div class="body">
+          <div class="field focus"><span class="ms">search</span><div class="val">greek yog</div></div>
+
+          <div class="tile"><span class="ms fill">bolt</span><div class="tx"><div class="t">Quick add “greek yog”</div><div class="s">Log a name + calories</div></div><span class="ms sm" style="color:var(--muted)">chevron_right</span></div>
+
+          <div class="sect">Results</div>
+          <div class="card pad0">
+            <div class="tile"><span class="ms">icecream</span><div class="tx"><div class="t">Greek yogurt</div><div class="s">Migros</div></div><div class="tr num"><b>59</b>/100 g</div></div>
+            <div class="tile"><span class="ms">icecream</span><div class="tx"><div class="t">Greek yogurt, 0%</div><div class="s">Coop</div></div><div class="tr num"><b>57</b>/100 g</div></div>
+            <div class="tile"><span class="ms">grocery</span><div class="tx"><div class="t">Greek-style yogurt</div><div class="s">Open Food Facts</div></div><div class="tr num"><b>97</b>/100 g</div></div>
+            <div class="tile"><span class="ms">set_meal</span><div class="tx"><div class="t">Skyr natural</div><div class="s">Open Food Facts</div></div><div class="tr num"><b>66</b>/100 g</div></div>
+            <div class="tile"><span class="ms">restaurant</span><div class="tx"><div class="t">Greek salad</div><div class="s">Swiss FCDB</div></div><div class="tr num"><b>92</b>/100 g</div></div>
+          </div>
+        </div>
+        <div class="fabs">
+          <button class="fab ext"><span class="ms">qr_code_scanner</span> Scan barcode</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOG SHEET -->
+    <div>
+      <p class="cap">Log sheet <small>· over the search list</small></p>
+      <div class="phone">
+        <div class="appbar"><span class="ms nav-i l">chevron_left</span><b>Add food</b></div>
+        <div class="body">
+          <div class="field"><span class="ms">search</span><div class="val">greek yog</div></div>
+          <div class="card pad0">
+            <div class="tile"><span class="ms">icecream</span><div class="tx"><div class="t">Greek yogurt</div><div class="s">Migros</div></div><div class="tr num"><b>59</b>/100 g</div></div>
+            <div class="tile"><span class="ms">icecream</span><div class="tx"><div class="t">Greek yogurt, 0%</div><div class="s">Coop</div></div><div class="tr num"><b>57</b>/100 g</div></div>
+            <div class="tile"><span class="ms">grocery</span><div class="tx"><div class="t">Greek-style yogurt</div><div class="s">Open Food Facts</div></div><div class="tr num"><b>97</b>/100 g</div></div>
+          </div>
+        </div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <div class="grab"></div>
+          <h3>Greek yogurt</h3>
+          <p style="margin:-10px 0 16px;color:var(--muted);font-size:.88rem">Migros · 59 kcal / 100 g</p>
+
+          <div class="flab">Amount</div>
+          <div class="field focus"><div class="val num" style="font-size:1.35rem;flex:1">150</div><span class="lab" style="flex:none">g</span></div>
+
+          <div class="seg">
+            <span class="on">g</span><span>ml</span><span>tsp</span><span>tbsp</span><span>cup</span>
+          </div>
+
+          <div class="flab">Quick pick</div>
+          <div class="chips" style="margin-bottom:14px">
+            <span class="chip on num">1 serving · 150 g</span>
+            <span class="chip num">½ · 75 g</span>
+            <span class="chip num">Whole · 500 g</span>
+          </div>
+
+          <div class="flab">Meal</div>
+          <div class="chips" style="margin-bottom:16px">
+            <span class="chip">Breakfast</span>
+            <span class="chip on">Lunch</span>
+            <span class="chip">Dinner</span>
+            <span class="chip">Snacks</span>
+          </div>
+
+          <p style="margin:0 0 14px"><b class="num" style="font-size:1.05rem">≈ 89 kcal</b> <span class="num" style="color:var(--muted)">· P 15 · C 6 · F 0</span></p>
+
+          <button class="btn emerald"><span class="ms">add</span> Add to lunch</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div></body></html>

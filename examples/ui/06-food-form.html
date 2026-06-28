@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knabberfuchs — Food form</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block" rel="stylesheet">
+<link rel="stylesheet" href="fuchsbau.css">
+</head>
+<body><div class="wrap">
+  <header class="pg"><h1>🦊 Knabberfuchs — Food form</h1>
+  <button class="toggle" onclick="document.body.classList.toggle('dark')">◐ Light / dark</button></header>
+  <p class="cap" style="margin-top:10px">Add / edit a custom food · contribute a scanned product · emerald save action · OFF contribute card on top when a barcode is present.</p>
+
+  <div class="stage">
+
+    <!-- PHONE 1 — Product details -->
+    <div>
+      <p class="cap">Product details <small>· scanned, not yet in OFF</small></p>
+      <div class="phone">
+        <div class="appbar"><span class="ms nav-i l">chevron_left</span>Add product<span class="ms nav-i r" style="color:var(--emerald);opacity:1">check</span></div>
+        <div class="body">
+
+          <!-- OFF contribute card -->
+          <div class="card" style="background:var(--card-tint)">
+            <div class="tile" style="align-items:flex-start;min-height:0;padding:0">
+              <span class="ms" style="color:var(--orange)">volunteer_activism</span>
+              <div class="tx">
+                <div class="t">Contribute to Open Food Facts</div>
+                <div class="s" style="margin-top:3px">This barcode isn’t in the open database yet. Add it so the next person’s scan just works — OFF handles its own login.</div>
+              </div>
+            </div>
+            <button class="btn text" style="margin-top:6px"><span class="ms sm">open_in_new</span> Open on Open Food Facts</button>
+          </div>
+
+          <div class="flab">Name</div>
+          <div class="field focus"><span class="val">Alpro Soya Drink</span></div>
+
+          <div class="flab">Brand</div>
+          <div class="field"><span class="val">Alpro</span></div>
+
+          <div class="flab">Barcode</div>
+          <div class="field"><span class="val num" style="flex:1">5411188 119098</span><span class="ms">qr_code_scanner</span></div>
+
+          <div class="flab">Serving size</div>
+          <div class="field"><span class="val num">250 ml</span></div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- PHONE 2 — Per 100 g nutrition -->
+    <div>
+      <p class="cap">Per 100 g nutrition <small>· OCR head-start</small></p>
+      <div class="phone">
+        <div class="appbar"><span class="ms nav-i l">chevron_left</span>Add product<span class="ms nav-i r" style="color:var(--emerald);opacity:1">check</span></div>
+        <div class="body">
+
+          <button class="btn text"><span class="ms sm">document_scanner</span> Scan the label</button>
+
+          <div class="sect">Per 100 g</div>
+
+          <div class="flab">Energy (kcal)</div>
+          <div class="field"><span class="val num">39</span></div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 12px">
+            <div>
+              <div class="flab">Protein (g)</div>
+              <div class="field"><span class="val num">3.3</span></div>
+            </div>
+            <div>
+              <div class="flab">Carbohydrate (g)</div>
+              <div class="field"><span class="val num">0</span></div>
+            </div>
+            <div>
+              <div class="flab">of which sugars (g)</div>
+              <div class="field"><span class="val num">0</span></div>
+            </div>
+            <div>
+              <div class="flab">Fat (g)</div>
+              <div class="field"><span class="val num">1.8</span></div>
+            </div>
+            <div>
+              <div class="flab">of which saturates (g)</div>
+              <div class="field"><span class="val num">0.3</span></div>
+            </div>
+            <div>
+              <div class="flab">Fibre (g)</div>
+              <div class="field"><span class="val num">0.4</span></div>
+            </div>
+            <div>
+              <div class="flab">Salt (g)</div>
+              <div class="field"><span class="val num">0.09</span></div>
+            </div>
+          </div>
+
+          <button class="btn emerald" style="margin-top:6px"><span class="ms">check</span> Save product</button>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div></body></html>

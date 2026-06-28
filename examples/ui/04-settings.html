@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knabberfuchs — Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=block" rel="stylesheet">
+<link rel="stylesheet" href="fuchsbau.css">
+</head>
+<body><div class="wrap">
+  <header class="pg"><h1>🦊 Knabberfuchs — Settings</h1>
+  <button class="toggle" onclick="document.body.classList.toggle('dark')">◐ Light / dark</button></header>
+  <p class="cap" style="margin-top:10px">Grouped option rows in pad0 cards · radio = indigo selection · switch = emerald · drill-in tiles end in a chevron.</p>
+
+  <div class="stage">
+
+    <!-- PHONE 1 — Appearance & logging -->
+    <div>
+      <p class="cap">Appearance &amp; logging <small>· radios + typeface picker</small></p>
+      <div class="phone">
+        <div class="appbar"><b>Settings</b></div>
+        <div class="body" style="overflow:auto;padding-bottom:88px">
+
+          <div class="sect">Appearance</div>
+          <div class="card pad0">
+            <div class="opt"><div class="tx"><div class="t">Theme</div></div></div>
+            <div class="seg" style="margin:0 0 12px"><span class="on">System</span><span>Light</span><span>Dark</span></div>
+            <div class="opt"><span class="radio"></span><div class="tx"><div class="t">System default</div></div></div>
+            <div class="opt"><span class="radio"></span><div class="tx"><div class="t">English</div></div></div>
+            <div class="opt"><span class="radio on"></span><div class="tx"><div class="t">Deutsch</div></div></div>
+            <div class="opt"><span class="radio"></span><div class="tx"><div class="t">Français</div></div></div>
+            <div class="opt"><span class="radio"></span><div class="tx"><div class="t">Italiano</div></div></div>
+          </div>
+
+          <div class="sect">Typeface</div>
+          <div class="card pad0">
+            <div class="opt"><span class="radio on"></span><div class="tx"><div class="t">Figtree</div><div class="s">Default</div></div></div>
+            <div class="opt"><span class="radio"></span><div class="tx"><div class="t">System</div></div></div>
+            <div class="opt"><span class="radio"></span><div class="tx"><div class="t">Atkinson Hyperlegible</div><div class="s">Low-vision legibility</div></div></div>
+            <div class="opt"><span class="radio"></span><div class="tx"><div class="t">OpenDyslexic</div><div class="s">Dyslexia</div></div></div>
+          </div>
+
+          <div class="sect">Logging</div>
+          <div class="card pad0">
+            <div class="opt"><div class="tx"><div class="t">Track by day</div><div class="s">Skip the meal picker</div></div><span class="sw on"></span></div>
+            <div class="tile"><span class="ms">flag</span><div class="tx"><div class="t">Calorie &amp; macro targets</div><div class="s">Per-weekday goals</div></div><span class="ms tr">chevron_right</span></div>
+          </div>
+
+        </div>
+        <div class="nav">
+          <div class="dest"><span class="pl"><span class="ms">today</span></span>Day</div>
+          <div class="dest"><span class="pl"><span class="ms">menu_book</span></span>Recipes</div>
+          <div class="dest"><span class="pl"><span class="ms">trending_up</span></span>Trends</div>
+          <div class="dest on"><span class="pl"><span class="ms fill">settings</span></span>Settings</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHONE 2 — AI, sync, data -->
+    <div>
+      <p class="cap">AI, sync &amp; data <small>· keys, Health Connect, backup</small></p>
+      <div class="phone">
+        <div class="appbar"><b>Settings</b></div>
+        <div class="body" style="overflow:auto;padding-bottom:88px">
+
+          <div class="sect">AI recognition</div>
+          <div class="card pad0">
+            <div style="padding:12px 0 4px">
+              <div class="flab">Gemini API key</div>
+              <div class="field" style="margin-bottom:8px"><span class="val" style="flex:1;letter-spacing:2px">••••••••</span><span class="ms">visibility</span></div>
+              <button class="btn text" style="padding:6px 0">Get a free API key <span class="ms sm">open_in_new</span></button>
+            </div>
+            <div class="opt"><div class="tx"><div class="t">On-device only</div></div><span class="sw"></span></div>
+          </div>
+
+          <div class="sect">Health Connect</div>
+          <div class="card pad0">
+            <div class="opt"><div class="tx"><div class="t">Sync to Health Connect</div><div class="s">Write calories &amp; macros</div></div><span class="sw"></span></div>
+          </div>
+
+          <div class="sect">Backup</div>
+          <div class="card pad0">
+            <div class="tile"><span class="ms">upload</span><div class="tx"><div class="t">Export backup (ZIP)</div></div><span class="ms tr">chevron_right</span></div>
+            <div class="tile"><span class="ms">download</span><div class="tx"><div class="t">Import backup</div></div><span class="ms tr">chevron_right</span></div>
+          </div>
+
+          <div class="sect">Data</div>
+          <div class="card pad0">
+            <div class="tile"><span class="ms">public</span><div class="tx"><div class="t">Offline regions</div><div class="s">106 countries</div></div><span class="ms tr">chevron_right</span></div>
+            <div class="tile"><span class="ms">info</span><div class="tx"><div class="t">About</div></div><span class="ms tr">chevron_right</span></div>
+          </div>
+
+        </div>
+        <div class="nav">
+          <div class="dest"><span class="pl"><span class="ms">today</span></span>Day</div>
+          <div class="dest"><span class="pl"><span class="ms">menu_book</span></span>Recipes</div>
+          <div class="dest"><span class="pl"><span class="ms">trending_up</span></span>Trends</div>
+          <div class="dest on"><span class="pl"><span class="ms fill">settings</span></span>Settings</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div></body></html>
