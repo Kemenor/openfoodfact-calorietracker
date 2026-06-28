@@ -1,0 +1,1 @@
+Maintenance : confidentialité renforcée (aucune coordonnée personnelle dans les requêtes réseau) et petites corrections du nouveau design.

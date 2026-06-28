@@ -445,9 +445,11 @@ packages:
   fuchsbau:
     dependency: "direct main"
     description:
-      path: "../fuchsbau"
-      relative: true
-    source: path
+      path: "."
+      ref: "602f94e15aac3a39194f44b12eb62323ddb46a48"
+      resolved-ref: "602f94e15aac3a39194f44b12eb62323ddb46a48"
+      url: "https://github.com/Kemenor/fuchsbau.git"
+    source: git
     version: "0.2.0"
   fuchsia_remote_debug_protocol:
     dependency: transitive

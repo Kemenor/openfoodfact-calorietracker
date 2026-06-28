@@ -1,9 +1,10 @@
 name: Android · Play
 
-# Build the signed Android App Bundle and stage it on the Play "alpha" closed-
-# testing track on a version tag (v*) — the Android counterpart to ios.yml (which
-# ships the iOS build to TestFlight, the iOS closed-testing equivalent). Reuses
-# the local
+# Build the signed Android App Bundle and stage it on BOTH closed-testing tracks
+# ("alpha" + the custom "Google Group - Alpha") on a version tag (v*) — the
+# Android counterpart to ios.yml (which ships the iOS build to TestFlight, the
+# iOS closed-testing equivalent). A manual workflow_dispatch stages on a single
+# chosen track instead. Reuses the local
 # release tooling: the upload keystore for signing + tool/play_upload_aab.py
 # (service account) for the upload, exactly as documented in CLAUDE.md.
 #
@@ -24,10 +25,10 @@ on:
   workflow_dispatch:
     inputs:
       track:
-        description: "Play track to stage the release on"
+        description: "Play track to stage the release on (manual run only)"
         default: "alpha"
         type: choice
-        options: [alpha, internal, beta, production]
+        options: ["alpha", "Google Group - Alpha", internal, beta, production]
 
 jobs:
   play:
@@ -82,6 +83,14 @@ jobs:
         run: flutter build appbundle --release
 
       - name: Upload to Play
+        env:
+          DISPATCH_TRACK: ${{ github.event.inputs.track }}
         run: |
           python3 -m pip install --quiet google-api-python-client google-auth
-          python3 tool/play_upload_aab.py "${{ github.event.inputs.track || 'alpha' }}"
+          if [ -n "$DISPATCH_TRACK" ]; then
+            # Manual run: stage on the chosen track only.
+            python3 tool/play_upload_aab.py "$DISPATCH_TRACK"
+          else
+            # Tag push (v*): stage on BOTH closed-testing tracks.
+            python3 tool/play_upload_aab.py "alpha" "Google Group - Alpha"
+          fi

@@ -1,0 +1,1 @@
+Manutenzione: privacy rafforzata (nessun recapito personale nelle richieste di rete) e piccole correzioni al nuovo design.

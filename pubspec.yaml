@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.1.0+32
+version: 1.1.1+33
 
 environment:
   sdk: ^3.12.2
@@ -34,12 +34,13 @@ dependencies:
     sdk: flutter
 
   # Shared fuchs-family design system (theme, triad palette, fonts). Pinned by
-  # ref for reproducible CI / release builds; dependency_overrides points it at
-  # the local sibling checkout for live co-development (see bottom of file).
+  # ref for reproducible CI / release builds (HTTPS so CI can fetch the public
+  # repo without SSH keys). For live local co-development, a gitignored
+  # pubspec_overrides.yaml points it at the ../fuchsbau sibling checkout.
   fuchsbau:
     git:
-      url: git@github.com:Kemenor/fuchsbau.git
-      ref: ce22689017fd16d9ed2d5fc5d0f62dc65d7c3c0a
+      url: https://github.com/Kemenor/fuchsbau.git
+      ref: 602f94e15aac3a39194f44b12eb62323ddb46a48
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -87,13 +88,6 @@ dev_dependencies:
   drift_dev: ^2.34.0
   build_runner: ^2.15.0
   flutter_launcher_icons: ^0.14.4
-
-# Co-develop fuchsbau locally: builds use the sibling checkout instead of the
-# pinned git ref above. CI / release builds have no override, so they use the
-# pinned ref for reproducibility. Keep the ref in sync at integration points.
-dependency_overrides:
-  fuchsbau:
-    path: ../fuchsbau
 
 # App icon (Knabberfuchs). Regenerate with: dart run flutter_launcher_icons
 flutter_launcher_icons:

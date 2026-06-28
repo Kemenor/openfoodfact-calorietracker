@@ -84,3 +84,6 @@ fastlane/Preview.html
 # Screenshot generation (transient driver output + staging)
 /screenshots/
 /delivery/
+
+# Local-only dependency overrides (fuchsbau co-dev) — never commit.
+pubspec_overrides.yaml

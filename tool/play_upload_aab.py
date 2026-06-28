@@ -22,7 +22,10 @@ KEY = 'fastlane/play-store-key.json'
 PKG = 'ch.knabberfuchs.app'
 AAB = 'build/app/outputs/bundle/release/app-release.aab'
 META = 'fastlane/metadata/android'
-TRACK = sys.argv[1] if len(sys.argv) > 1 else 'internal'
+# One or more tracks (the AAB is uploaded once, then assigned to each). Track
+# names with spaces (e.g. a custom closed track "Google Group - Alpha") must be
+# quoted as a single argv entry by the caller.
+TRACKS = sys.argv[1:] if len(sys.argv) > 1 else ['internal']
 SCOPES = ['https://www.googleapis.com/auth/androidpublisher']
 
 
@@ -58,14 +61,16 @@ def main():
         vc = resp['versionCode']
         print('uploaded versionCode %s' % vc)
 
-        svc.edits().tracks().update(
-            packageName=PKG, editId=edit_id, track=TRACK,
-            body={'track': TRACK,
-                  'releases': [{'versionCodes': [str(vc)],
-                                'status': 'completed',
-                                'releaseNotes': release_notes(vc)}]}
-        ).execute()
-        print('assigned to track "%s"' % TRACK)
+        notes = release_notes(vc)
+        for track in TRACKS:
+            svc.edits().tracks().update(
+                packageName=PKG, editId=edit_id, track=track,
+                body={'track': track,
+                      'releases': [{'versionCodes': [str(vc)],
+                                    'status': 'completed',
+                                    'releaseNotes': notes}]}
+            ).execute()
+            print('assigned to track "%s"' % track)
 
         try:
             svc.edits().commit(packageName=PKG, editId=edit_id,
@@ -76,7 +81,8 @@ def main():
                 svc.edits().commit(packageName=PKG, editId=edit_id).execute()
             else:
                 raise
-        print('committed — release is staged on the "%s" track' % TRACK)
+        print('committed — release staged on: %s' % ', '.join(
+            '"%s"' % t for t in TRACKS))
     except HttpError as e:
         try:
             svc.edits().delete(packageName=PKG, editId=edit_id).execute()
