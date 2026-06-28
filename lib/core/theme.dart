@@ -9,12 +9,12 @@ ThemeData buildTheme(Brightness brightness) {
   final base = fuchsbauTheme(brightness);
   final scheme = base.colorScheme;
   // knabberfuchs deviation (see DESIGN_SYSTEM.md): the action FAB is emerald —
-  // a positive, distinct CTA against the tangerine surface — lightened a touch
-  // from the saturated tertiary. The fuchsbau package keeps the family default
+  // a positive, distinct CTA against the tangerine surface — the deep,
+  // saturated tertiary. The fuchsbau package keeps the family default
   // (FAB = primary); this colour application is app-level, not family-level.
   return base.copyWith(
     floatingActionButtonTheme: base.floatingActionButtonTheme.copyWith(
-      backgroundColor: Color.lerp(scheme.tertiary, Colors.white, 0.12),
+      backgroundColor: scheme.tertiary,
       foregroundColor: scheme.onTertiary,
     ),
   );
