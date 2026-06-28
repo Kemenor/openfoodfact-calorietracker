@@ -13,7 +13,7 @@
   --ink:#231b16; --muted:#8a7b70;
   --orange:#ea7a24; --indigo:#8559d0; --emerald:#1fa85d;
   --amber:#e0a33b; --taupe:#a8988c;
-  --field:#fbf1ea;         /* input fill */
+  --field:#ffffff;         /* input fill — white, crisp against surface & cards */
   --fab:0 8px 18px -8px rgba(31,168,93,.55);
   --float:0 12px 30px -24px rgba(0,0,0,.45);
 }
@@ -99,7 +99,7 @@ header.pg h1{font-size:1.25rem;margin:0;letter-spacing:-.02em}
 .flab{font-size:.78rem;color:var(--muted);font-weight:600;margin:0 2px 5px}
 
 /* segmented control */
-.seg{display:flex;background:var(--field);border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;margin-bottom:14px}
+.seg{display:flex;background:color-mix(in srgb,var(--orange) 7%,var(--card));border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;margin-bottom:14px}
 .seg>span{flex:1;text-align:center;padding:7px 6px;border-radius:999px;font-weight:700;font-size:.85rem;color:var(--muted);cursor:pointer}
 .seg>span.on{background:color-mix(in srgb,var(--indigo) 20%,transparent);color:var(--indigo)}
 
