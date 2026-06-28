@@ -53,7 +53,7 @@ class AddFoodScreen extends ConsumerWidget {
     final hit = await ref.read(foodRepositoryProvider).lookupBarcode(barcode);
     if (!context.mounted) return;
     if (hit.food != null) {
-      final reminder = offlinePackReminder(context, ref, hit.source);
+      final reminder = offlinePackReminder(context, ref, hit);
       await _pick(context, ref, hit.food!);
       reminder?.call(); // after the log sheet closes, so it isn't hidden
     } else {

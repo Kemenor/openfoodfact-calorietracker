@@ -37,11 +37,17 @@ class OffApi {
            searchBucket ??
            TokenBucket(capacity: 10, window: const Duration(minutes: 1));
 
-  /// Look up a single product by barcode. Returns null if unknown / no energy.
-  Future<FoodsCompanion?> productByBarcode(String barcode) async {
+  /// Look up a single product by barcode. Returns the mapped food plus its
+  /// primary OFF country tag (e.g. `en:switzerland`, used to deep-link the
+  /// offline-pack nudge to the right region). Null if unknown / no energy.
+  Future<({FoodsCompanion food, String? countryTag})?> productByBarcode(
+    String barcode,
+  ) async {
     await productBucket.acquire();
+    // countries_tags rides along only on the single-product read; search keeps
+    // the leaner field set since it never feeds the offline nudge.
     final uri = Uri.https(_host, '/api/v2/product/$barcode.json', {
-      'fields': _fields,
+      'fields': '$_fields,countries_tags',
     });
     try {
       final res = await _client
@@ -51,10 +57,24 @@ class OffApi {
       final body = jsonDecode(res.body);
       if (body is! Map<String, dynamic>) return null;
       if (body['status'] == 0 || body['product'] == null) return null;
-      return _mapProduct(body['product'] as Map<String, dynamic>, barcode);
+      final product = body['product'] as Map<String, dynamic>;
+      final food = _mapProduct(product, barcode);
+      if (food == null) return null;
+      return (food: food, countryTag: _primaryCountryTag(product));
     } catch (_) {
       return null; // network failure, timeout, or non-JSON body
     }
+  }
+
+  /// First of OFF's `countries_tags` (the country a product is primarily sold
+  /// in), or null when the field is absent.
+  static String? _primaryCountryTag(Map<String, dynamic> p) {
+    final tags = p['countries_tags'];
+    if (tags is List && tags.isNotEmpty) {
+      final first = tags.first?.toString().trim();
+      if (first != null && first.isNotEmpty) return first;
+    }
+    return null;
   }
 
   /// Full-text search. Caller must debounce — this is the 10/min endpoint.

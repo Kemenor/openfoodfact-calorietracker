@@ -19,15 +19,17 @@ bool _remindedThisSession = false;
 VoidCallback? offlinePackReminder(
   BuildContext context,
   WidgetRef ref,
-  BarcodeSource source,
+  BarcodeHit hit,
 ) {
-  if (source != BarcodeSource.online || _remindedThisSession) return null;
+  if (hit.source != BarcodeSource.online || _remindedThisSession) return null;
   final installed = ref.read(installedPacksProvider).asData?.value ?? const [];
   if (installed.isNotEmpty) return null;
 
   final messenger = ScaffoldMessenger.of(context);
   final navigator = Navigator.of(context, rootNavigator: true);
   final l10n = AppLocalizations.of(context);
+  // Deep-link the nudge to the scanned product's country, when OFF reported one.
+  final countryTag = hit.countryTag;
   return () {
     if (_remindedThisSession) return;
     _remindedThisSession = true;
@@ -38,7 +40,10 @@ VoidCallback? offlinePackReminder(
         action: SnackBarAction(
           label: l10n.offlineReminderAction,
           onPressed: () => navigator.push(
-            MaterialPageRoute(builder: (_) => const OfflineRegionsScreen()),
+            MaterialPageRoute(
+              builder: (_) =>
+                  OfflineRegionsScreen(initialCountryTag: countryTag),
+            ),
           ),
         ),
       ),

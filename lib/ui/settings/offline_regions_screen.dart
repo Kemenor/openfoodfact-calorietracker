@@ -11,7 +11,11 @@ import '../../providers.dart';
 String _mb(int bytes) => '${(bytes / 1024 / 1024).toStringAsFixed(1)} MB';
 
 class OfflineRegionsScreen extends ConsumerStatefulWidget {
-  const OfflineRegionsScreen({super.key});
+  const OfflineRegionsScreen({super.key, this.initialCountryTag});
+
+  /// When set (e.g. from the post-scan offline nudge), the screen opens
+  /// pre-filtered to the region whose OFF `country_tag` matches this value.
+  final String? initialCountryTag;
 
   @override
   ConsumerState<OfflineRegionsScreen> createState() =>
@@ -22,6 +26,10 @@ class _OfflineRegionsScreenState extends ConsumerState<OfflineRegionsScreen> {
   final Map<String, double> _progress = {};
   final _searchCtrl = TextEditingController();
   String _query = '';
+
+  /// Pre-fill from [OfflineRegionsScreen.initialCountryTag] runs once, after the
+  /// manifest is available; afterwards the user owns the search box.
+  bool _appliedInitial = false;
 
   @override
   void dispose() {
@@ -99,6 +107,18 @@ class _OfflineRegionsScreenState extends ConsumerState<OfflineRegionsScreen> {
           ),
         ),
         data: (manifest) {
+          // Deep-link from the scan nudge: pre-fill the search box with the
+          // matching region's name, once, so the list opens already filtered.
+          if (!_appliedInitial && widget.initialCountryTag != null) {
+            _appliedInitial = true;
+            for (final r in manifest.regions) {
+              if (r.countryTag == widget.initialCountryTag) {
+                _query = r.name;
+                _searchCtrl.text = r.name;
+                break;
+              }
+            }
+          }
           final q = _query.trim().toLowerCase();
           final regions =
               manifest.regions

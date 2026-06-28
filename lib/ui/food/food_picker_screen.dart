@@ -38,7 +38,7 @@ class FoodPickerScreen extends ConsumerWidget {
     final hit = await ref.read(foodRepositoryProvider).lookupBarcode(barcode);
     if (!context.mounted) return;
     if (hit.food != null) {
-      final reminder = offlinePackReminder(context, ref, hit.source);
+      final reminder = offlinePackReminder(context, ref, hit);
       Navigator.of(context).pop(hit.food);
       reminder?.call(); // shows on the screen we return to
     } else {

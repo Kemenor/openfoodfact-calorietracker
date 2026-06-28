@@ -12,7 +12,11 @@ enum BarcodeSource { cache, pack, online, none }
 class BarcodeHit {
   final Food? food;
   final BarcodeSource source;
-  const BarcodeHit(this.food, this.source);
+
+  /// OFF `countries_tags[0]` for an online hit (e.g. `en:switzerland`); lets the
+  /// offline-pack nudge deep-link to the product's region. Null otherwise.
+  final String? countryTag;
+  const BarcodeHit(this.food, this.source, {this.countryTag});
 }
 
 /// Food lookup across the layered sources:
@@ -135,8 +139,12 @@ class FoodRepository {
     }
     final remote = await off.productByBarcode(barcode);
     if (remote == null) return const BarcodeHit(null, BarcodeSource.none);
-    final id = await db.upsertFood(remote);
-    return BarcodeHit(await db.foodById(id), BarcodeSource.online);
+    final id = await db.upsertFood(remote.food);
+    return BarcodeHit(
+      await db.foodById(id),
+      BarcodeSource.online,
+      countryTag: remote.countryTag,
+    );
   }
 
   /// Create (or update) a user food. With a [barcode] it's keyed by that
