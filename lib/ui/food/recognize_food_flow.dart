@@ -61,6 +61,10 @@ Future<bool> startRecognizeFoodFlow(
     if (!context.mounted) return false;
     final preferredModel = await db.getSetting(geminiModelSetting);
     if (!context.mounted) return false;
+    // Optional hint: let the user add a short description to disambiguate the
+    // photo before sending. Dismissing the sheet cancels the whole flow.
+    final hint = await _askGeminiHint(context, bytes);
+    if (hint == null || !context.mounted) return false;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -77,6 +81,7 @@ Future<bool> startRecognizeFoodFlow(
             bytes,
             geminiKey.trim(),
             preferredModel: preferredModel,
+            description: hint,
           );
     } catch (_) {}
     if (context.mounted) navigator.pop();
@@ -159,6 +164,94 @@ Future<bool> startRecognizeFoodFlow(
     sourceLabel: name != null ? l10n.recognizeByOnDevice : null,
   );
   return added == true;
+}
+
+/// Optional pre-send hint sheet (Gemini path): shows the chosen photo + a free-
+/// text field so the user can disambiguate an ambiguous meal before Gemini sees
+/// it. Returns the (possibly empty) hint when "Estimate" is tapped, or null if
+/// the sheet is dismissed (which cancels the whole flow).
+Future<String?> _askGeminiHint(BuildContext context, Uint8List image) {
+  return showModalBottomSheet<String>(
+    context: context,
+    isScrollControlled: true,
+    showDragHandle: true,
+    builder: (_) => _GeminiHintSheet(image: image),
+  );
+}
+
+class _GeminiHintSheet extends StatefulWidget {
+  final Uint8List image;
+  const _GeminiHintSheet({required this.image});
+
+  @override
+  State<_GeminiHintSheet> createState() => _GeminiHintSheetState();
+}
+
+class _GeminiHintSheetState extends State<_GeminiHintSheet> {
+  final _ctrl = TextEditingController();
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          16,
+          0,
+          16,
+          MediaQuery.of(context).viewInsets.bottom + 16,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.geminiHintTitle, style: theme.textTheme.titleLarge),
+            const SizedBox(height: 12),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.memory(
+                widget.image,
+                height: 150,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _ctrl,
+              minLines: 1,
+              maxLines: 3,
+              textInputAction: TextInputAction.done,
+              textCapitalization: TextCapitalization.sentences,
+              onSubmitted: (v) => Navigator.pop(context, v),
+              decoration: InputDecoration(
+                labelText: l10n.geminiHintLabel,
+                hintText: l10n.geminiHintExample,
+                border: const OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: () => Navigator.pop(context, _ctrl.text),
+                icon: const Icon(Symbols.auto_awesome_rounded),
+                label: Text(l10n.geminiHintEstimate),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 /// Loading dialog shown while polling Gemini. Cycles through reassuring status

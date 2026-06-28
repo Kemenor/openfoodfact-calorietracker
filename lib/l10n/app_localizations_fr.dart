@@ -644,6 +644,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get recognizeByGemini => 'Estimé par Gemini';
 
   @override
+  String get geminiHintTitle => 'Décrire le repas (facultatif)';
+
+  @override
+  String get geminiHintLabel => 'Ajouter un indice';
+
+  @override
+  String get geminiHintExample => 'ex. lasagnes maison, grande portion';
+
+  @override
+  String get geminiHintEstimate => 'Estimer';
+
+  @override
   String get recognizeByOnDevice => 'Estimé sur l\'appareil';
 
   @override

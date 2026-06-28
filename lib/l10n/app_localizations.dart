@@ -1194,6 +1194,30 @@ abstract class AppLocalizations {
   /// **'Estimated by Gemini'**
   String get recognizeByGemini;
 
+  /// No description provided for @geminiHintTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the meal (optional)'**
+  String get geminiHintTitle;
+
+  /// No description provided for @geminiHintLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a hint'**
+  String get geminiHintLabel;
+
+  /// No description provided for @geminiHintExample.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. homemade lasagne, large portion'**
+  String get geminiHintExample;
+
+  /// No description provided for @geminiHintEstimate.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimate'**
+  String get geminiHintEstimate;
+
   /// No description provided for @recognizeByOnDevice.
   ///
   /// In en, this message translates to:

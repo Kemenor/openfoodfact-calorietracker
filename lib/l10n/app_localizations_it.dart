@@ -643,6 +643,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get recognizeByGemini => 'Stimato da Gemini';
 
   @override
+  String get geminiHintTitle => 'Descrivi il pasto (facoltativo)';
+
+  @override
+  String get geminiHintLabel => 'Aggiungi un suggerimento';
+
+  @override
+  String get geminiHintExample => 'es. lasagne fatte in casa, porzione grande';
+
+  @override
+  String get geminiHintEstimate => 'Stima';
+
+  @override
   String get recognizeByOnDevice => 'Stimato sul dispositivo';
 
   @override

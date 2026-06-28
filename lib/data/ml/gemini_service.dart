@@ -60,14 +60,24 @@ class GeminiService {
     Uint8List bytes,
     String apiKey, {
     String? preferredModel,
+    String? description,
   }) async {
     final b64 = base64Encode(_downscaleJpeg(bytes));
     final models = <String>{preferredModel ?? fallbackModel, fallbackModel};
+    // An optional user hint disambiguates an ambiguous photo (the user knows
+    // it's a calzone, or homemade with extra cheese). Still anchored on the
+    // photo; the hint just refines identification + portion.
+    final hint = description?.trim() ?? '';
+    final promptText = hint.isEmpty
+        ? _prompt
+        : '$_prompt The user adds this hint about the meal — use it to refine '
+              'the identification and portion, but still rely on the photo: '
+              '"$hint".';
     final body = jsonEncode({
       'contents': [
         {
           'parts': [
-            {'text': _prompt},
+            {'text': promptText},
             {
               'inline_data': {'mime_type': 'image/jpeg', 'data': b64},
             },
