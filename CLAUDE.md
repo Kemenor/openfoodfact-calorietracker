@@ -52,8 +52,8 @@ Conform new/changed UI to these:
 - **Theme:** single source `lib/core/theme.dart`, which delegates to the shared
   **fuchsbau** design-system package (tangerine triad: primary orange, secondary
   indigo, tertiary emerald — *not* the old M3 green seed). muted text =
-  `colorScheme.outline`; status colors (`core/status_color.dart`) = in-range
-  emerald / off-target (over & under) amber / none outline — **no red in status**
+  `colorScheme.outline`; status colors (`core/status_color.dart`) = under indigo
+  (focus) / in-range emerald / over amber / none outline — **no red in status**
   (red is destruction-only). Per-app deviations recorded in `DESIGN_SYSTEM.md`.
 
 **When you introduce a genuinely new UI pattern, update `DESIGN_SYSTEM.md`** so it

@@ -274,11 +274,11 @@ Live: `quick_add_sheet.dart:188-294`, `log_food_sheet.dart:205-340`,
   - `bodySmall` / `bodyMedium` — helper / secondary text
 - **Muted text → `colorScheme.outline`** (source labels, help text)
   (`quick_add_sheet.dart:203-207`).
-- **Status color semantics** (`core/status_color.dart`): **in-range =
-  `tertiary` (emerald), off-target — over AND under = amber**
-  (`FuchsbauStatusColors.amber`), none = `outline`. Fuchsbau ethos: *status is
-  information, never punishment; red is for destruction only* — no `error`/red
-  in status. Direction (over vs under) is carried by the bar fill + the value.
+- **Status color semantics** (`core/status_color.dart`), mapped onto the triad:
+  **under = `secondary` (indigo, focus — working toward it), in-range =
+  `tertiary` (emerald, achieved), over = amber** (`FuchsbauStatusColors.amber`,
+  the one calm nudge), none = `outline`. Fuchsbau ethos: *status is information,
+  never punishment; red is for destruction only* — no `error`/red in status.
 - **Container color language:** destructive = `errorContainer`/`onErrorContainer`;
   positive = `primaryContainer`/`onPrimaryContainer`.
 
