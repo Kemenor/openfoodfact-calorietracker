@@ -1,19 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fuchsbau/fuchsbau.dart';
 
-/// App theme — a fresh green seed for a food/health feel, Material 3.
-ThemeData buildTheme(Brightness brightness) {
-  final scheme = ColorScheme.fromSeed(
-    seedColor: const Color(0xFF43A047),
-    brightness: brightness,
-  );
-  return ThemeData(
-    colorScheme: scheme,
-    useMaterial3: true,
-    scaffoldBackgroundColor: scheme.surface,
-    appBarTheme: AppBarTheme(
-      backgroundColor: scheme.surface,
-      surfaceTintColor: Colors.transparent,
-      centerTitle: true,
-    ),
-  );
-}
+/// App theme — delegates to the shared **fuchsbau** design system (the pinned
+/// tangerine triad, replacing the old accidental-green M3 seed). knabberfuchs's
+/// own component tweaks layer on top here; record any deviation in
+/// `DESIGN_SYSTEM.md` with a pointer back to fuchsbau.
+ThemeData buildTheme(Brightness brightness) => fuchsbauTheme(brightness);
