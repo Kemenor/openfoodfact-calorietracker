@@ -18,6 +18,28 @@ String _wrap(Map<String, dynamic> inner) => jsonEncode({
 });
 
 void main() {
+  group('buildGeminiPrompt', () {
+    test('no hint → base prompt unchanged', () {
+      expect(buildGeminiPrompt(null), buildGeminiPrompt(''));
+      expect(buildGeminiPrompt(null), isNot(contains('hint about the meal')));
+      expect(buildGeminiPrompt(null), contains('nutrition assistant'));
+    });
+
+    test('blank/whitespace hint is ignored', () {
+      expect(buildGeminiPrompt('   '), buildGeminiPrompt(null));
+    });
+
+    test('a real hint is appended (trimmed, quoted) and refines, not replaces', () {
+      final p = buildGeminiPrompt('  homemade lasagne, large portion  ');
+      // Still anchored on the base instruction.
+      expect(p, startsWith(buildGeminiPrompt(null)));
+      // The trimmed hint is embedded.
+      expect(p, contains('"homemade lasagne, large portion"'));
+      // Framed as a refinement that still defers to the photo.
+      expect(p, contains('still rely on the photo'));
+    });
+  });
+
   test('parses a valid food estimate (portion totals)', () {
     final r = parseGeminiResponse(
       _wrap({

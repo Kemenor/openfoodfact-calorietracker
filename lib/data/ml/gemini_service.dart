@@ -5,6 +5,28 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
 
+/// The base recognition instruction sent to Gemini with the photo.
+const _basePrompt =
+    'You are a nutrition assistant. Identify the food in this photo and '
+    'estimate the nutrition for ONE realistic serving as shown. Estimate the '
+    'edible weight in grams realistically — most plated dishes are 200-500 g, '
+    'drinks 200-400 ml, snacks 30-150 g; only exceed this if the photo '
+    'clearly shows an unusually large portion. Return the dish name and the '
+    'TOTALS for that serving (not per 100 g): calories in kcal, and protein, '
+    'carbohydrate and fat in grams. If the image is not food, set is_food to '
+    'false.';
+
+/// The prompt to send for a photo, optionally refined by a user [description].
+/// A blank/whitespace hint yields the base prompt unchanged; a real hint is
+/// appended as guidance that still defers to the photo. Pure → unit-testable.
+String buildGeminiPrompt(String? description) {
+  final hint = description?.trim() ?? '';
+  if (hint.isEmpty) return _basePrompt;
+  return '$_basePrompt The user adds this hint about the meal — use it to '
+      'refine the identification and portion, but still rely on the photo: '
+      '"$hint".';
+}
+
 /// One food estimate from Gemini — totals for the portion shown (not per 100 g).
 class GeminiFoodResult {
   final String name;
@@ -36,16 +58,6 @@ class GeminiService {
   static const _base =
       'https://generativelanguage.googleapis.com/v1beta/models';
 
-  static const _prompt =
-      'You are a nutrition assistant. Identify the food in this photo and '
-      'estimate the nutrition for ONE realistic serving as shown. Estimate the '
-      'edible weight in grams realistically — most plated dishes are 200-500 g, '
-      'drinks 200-400 ml, snacks 30-150 g; only exceed this if the photo '
-      'clearly shows an unusually large portion. Return the dish name and the '
-      'TOTALS for that serving (not per 100 g): calories in kcal, and protein, '
-      'carbohydrate and fat in grams. If the image is not food, set is_food to '
-      'false.';
-
   /// Optional injected client (for tests). When null, each request gets a
   /// FRESH client that is closed afterwards — reusing one long-lived client
   /// let a stale pooled connection from a slow first request silently break
@@ -67,12 +79,7 @@ class GeminiService {
     // An optional user hint disambiguates an ambiguous photo (the user knows
     // it's a calzone, or homemade with extra cheese). Still anchored on the
     // photo; the hint just refines identification + portion.
-    final hint = description?.trim() ?? '';
-    final promptText = hint.isEmpty
-        ? _prompt
-        : '$_prompt The user adds this hint about the meal — use it to refine '
-              'the identification and portion, but still rely on the photo: '
-              '"$hint".';
+    final promptText = buildGeminiPrompt(description);
     final body = jsonEncode({
       'contents': [
         {
