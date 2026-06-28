@@ -70,9 +70,12 @@ class _ScaleSheetState extends ConsumerState<_ScaleSheet> {
                   ),
                 ),
                 const Spacer(),
-                Text(
-                  '${kcalStr(currentKcal)} → ${kcalStr(newKcal)} kcal',
-                  style: theme.textTheme.titleMedium,
+                Flexible(
+                  child: Text(
+                    '${kcalStr(currentKcal)} → ${kcalStr(newKcal)} kcal',
+                    style: theme.textTheme.titleMedium,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),

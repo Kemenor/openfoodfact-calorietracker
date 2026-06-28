@@ -222,6 +222,7 @@ class _GeminiHintSheetState extends State<_GeminiHintSheet> {
                 height: 150,
                 width: double.infinity,
                 fit: BoxFit.cover,
+                semanticLabel: l10n.a11ySelectedPhoto,
               ),
             ),
             const SizedBox(height: 16),
@@ -301,7 +302,7 @@ class _GeminiLoadingDialogState extends State<_GeminiLoadingDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const CircularProgressIndicator(),
+            CircularProgressIndicator(semanticsLabel: l10n.a11yAnalysing),
             const SizedBox(height: 22),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
@@ -360,6 +361,7 @@ class _GuessSheet extends StatelessWidget {
                 height: 140,
                 width: double.infinity,
                 fit: BoxFit.cover,
+                semanticLabel: l10n.a11ySelectedPhoto,
               ),
             ),
             const SizedBox(height: 12),

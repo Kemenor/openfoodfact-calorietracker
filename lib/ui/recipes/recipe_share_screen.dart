@@ -62,12 +62,16 @@ class _RecipeShareScreenState extends State<RecipeShareScreen> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: QrImageView(
-                    data: payload,
-                    version: QrVersions.auto,
-                    size: 260,
-                    // ignore: deprecated_member_use
-                    backgroundColor: Colors.white,
+                  child: Semantics(
+                    image: true,
+                    label: l10n.a11yQrCode(share.name),
+                    child: QrImageView(
+                      data: payload,
+                      version: QrVersions.auto,
+                      size: 260,
+                      // ignore: deprecated_member_use
+                      backgroundColor: Colors.white,
+                    ),
                   ),
                 ),
               ),

@@ -37,7 +37,9 @@ Future<void> startOcrMealFlow(BuildContext context, WidgetRef ref) async {
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (_) => const Center(child: CircularProgressIndicator()),
+    builder: (_) => Center(
+      child: CircularProgressIndicator(semanticsLabel: l10n.a11yAnalysing),
+    ),
   );
   final ocr = ref.read(ocrServiceProvider);
   final all = <OcrIngredient>[];

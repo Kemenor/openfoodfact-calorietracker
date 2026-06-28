@@ -655,6 +655,47 @@ class AppLocalizationsIt extends AppLocalizations {
   String get geminiHintEstimate => 'Stima';
 
   @override
+  String get a11yPreviousPeriod => 'Periodo precedente';
+
+  @override
+  String get a11yNextPeriod => 'Periodo successivo';
+
+  @override
+  String get a11yClearSearch => 'Cancella ricerca';
+
+  @override
+  String get a11yShowApiKey => 'Mostra chiave';
+
+  @override
+  String get a11yHideApiKey => 'Nascondi chiave';
+
+  @override
+  String get a11yRemoveIngredient => 'Rimuovi ingrediente';
+
+  @override
+  String get a11yDecrease => 'Diminuisci';
+
+  @override
+  String get a11yIncrease => 'Aumenta';
+
+  @override
+  String get a11yAnalysing => 'Analisi…';
+
+  @override
+  String get a11yChangeDate => 'Cambia data';
+
+  @override
+  String get a11ySelectedPhoto => 'Foto del pasto selezionata';
+
+  @override
+  String get a11yTrendsChart => 'Grafico dell\'andamento per il periodo scelto';
+
+  @override
+  String a11yQrCode(String name) {
+    return 'Codice QR per la ricetta $name';
+  }
+
+  @override
   String get recognizeByOnDevice => 'Stimato sul dispositivo';
 
   @override

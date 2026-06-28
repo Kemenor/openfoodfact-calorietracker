@@ -1218,6 +1218,84 @@ abstract class AppLocalizations {
   /// **'Estimate'**
   String get geminiHintEstimate;
 
+  /// No description provided for @a11yPreviousPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous period'**
+  String get a11yPreviousPeriod;
+
+  /// No description provided for @a11yNextPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Next period'**
+  String get a11yNextPeriod;
+
+  /// No description provided for @a11yClearSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get a11yClearSearch;
+
+  /// No description provided for @a11yShowApiKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Show key'**
+  String get a11yShowApiKey;
+
+  /// No description provided for @a11yHideApiKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide key'**
+  String get a11yHideApiKey;
+
+  /// No description provided for @a11yRemoveIngredient.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove ingredient'**
+  String get a11yRemoveIngredient;
+
+  /// No description provided for @a11yDecrease.
+  ///
+  /// In en, this message translates to:
+  /// **'Decrease'**
+  String get a11yDecrease;
+
+  /// No description provided for @a11yIncrease.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase'**
+  String get a11yIncrease;
+
+  /// No description provided for @a11yAnalysing.
+  ///
+  /// In en, this message translates to:
+  /// **'Analysing…'**
+  String get a11yAnalysing;
+
+  /// No description provided for @a11yChangeDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Change date'**
+  String get a11yChangeDate;
+
+  /// No description provided for @a11ySelectedPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected meal photo'**
+  String get a11ySelectedPhoto;
+
+  /// No description provided for @a11yTrendsChart.
+  ///
+  /// In en, this message translates to:
+  /// **'Trend chart for the selected period'**
+  String get a11yTrendsChart;
+
+  /// No description provided for @a11yQrCode.
+  ///
+  /// In en, this message translates to:
+  /// **'QR code for recipe {name}'**
+  String a11yQrCode(String name);
+
   /// No description provided for @recognizeByOnDevice.
   ///
   /// In en, this message translates to:

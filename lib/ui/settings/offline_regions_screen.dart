@@ -131,6 +131,7 @@ class _OfflineRegionsScreenState extends ConsumerState<OfflineRegionsScreen> {
                     suffixIcon: _query.isEmpty
                         ? null
                         : IconButton(
+                            tooltip: l10n.a11yClearSearch,
                             icon: const Icon(Symbols.clear_rounded),
                             onPressed: () {
                               _searchCtrl.clear();

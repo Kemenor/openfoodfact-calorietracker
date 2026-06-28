@@ -154,6 +154,7 @@ class _RangeHeader extends ConsumerWidget {
       children: [
         IconButton(
           icon: const Icon(Symbols.chevron_left_rounded),
+          tooltip: AppLocalizations.of(context).a11yPreviousPeriod,
           onPressed: notifier.older,
         ),
         Expanded(
@@ -165,6 +166,7 @@ class _RangeHeader extends ConsumerWidget {
         ),
         IconButton(
           icon: const Icon(Symbols.chevron_right_rounded),
+          tooltip: AppLocalizations.of(context).a11yNextPeriod,
           onPressed: window.isCurrent ? null : notifier.newer,
         ),
       ],
@@ -276,18 +278,20 @@ class _SummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    Widget stat(String value, String label) => Column(
-      children: [
-        Text(value, style: theme.textTheme.titleLarge),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.outline,
+    Widget stat(String value, String label) => MergeSemantics(
+      child: Column(
+        children: [
+          Text(value, style: theme.textTheme.titleLarge),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.outline,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
-      ],
+        ],
+      ),
     );
     return Card(
       child: Padding(
@@ -368,7 +372,9 @@ class _Chart extends StatelessWidget {
         edge(i, trends[i].target.max, topY),
     ];
 
-    return LineChart(
+    return Semantics(
+      label: l10n.a11yTrendsChart,
+      child: LineChart(
       LineChartData(
         minX: -0.4,
         maxX: trends.length - 1 + 0.4,
@@ -507,6 +513,7 @@ class _Chart extends StatelessWidget {
             ],
           ),
         ),
+      ),
       ),
     );
   }

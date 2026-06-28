@@ -72,13 +72,20 @@ class _DayScreenState extends ConsumerState<DayScreen>
       appBar: AppBar(
         title: GestureDetector(
           onTap: () => _pickDate(context, day),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(dayLabel(context, day)),
-              const SizedBox(width: 4),
-              const Icon(Symbols.arrow_drop_down_rounded, size: 22),
-            ],
+          child: Semantics(
+            button: true,
+            label: dayLabel(context, day),
+            hint: AppLocalizations.of(context).a11yChangeDate,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(dayLabel(context, day)),
+                const SizedBox(width: 4),
+                const ExcludeSemantics(
+                  child: Icon(Symbols.arrow_drop_down_rounded, size: 22),
+                ),
+              ],
+            ),
           ),
         ),
         leading: IconButton(
@@ -284,7 +291,6 @@ class _SummaryCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final total = summary.total;
     final status = summary.status;
-    final color = statusColor(context, status);
     final kcalBar = summary.barFractionFor(TargetMetric.kcal);
     final statusText = switch (status) {
       TargetStatus.over => l10n.targetOver(kcalStr(-summary.remainingToMax!)),
@@ -315,21 +321,31 @@ class _SummaryCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
-                Text(
-                  kcalStr(total.kcal),
-                  style: theme.textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      kcalStr(total.kcal),
+                      style: theme.textTheme.displaySmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 4),
                 Text(l10n.unitKcal, style: theme.textTheme.titleMedium),
                 const Spacer(),
                 if (summary.hasTarget)
-                  Text(
-                    statusText,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: color,
-                      fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: Text(
+                      statusText,
+                      textAlign: TextAlign.end,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: statusTextColor(context, status),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
               ],
@@ -391,6 +407,7 @@ class _MacroRow extends StatelessWidget {
     final frac = summary.barFractionFor(metric);
     final status = summary.statusForMetric(metric);
     final color = frac == null ? null : statusColor(context, status);
+    final textColor = frac == null ? null : statusTextColor(context, status);
     return Expanded(
       child: Column(
         children: [
@@ -398,7 +415,7 @@ class _MacroRow extends StatelessWidget {
             '${macroStr(value)} g',
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
-              color: color,
+              color: textColor,
             ),
           ),
           const SizedBox(height: 4),
@@ -460,7 +477,7 @@ class _GroupSection extends ConsumerWidget {
           child: Row(
             children: [
               IconButton(
-                visualDensity: VisualDensity.compact,
+                constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
                 tooltip: isCollapsed ? l10n.mealExpand : l10n.mealCollapse,
                 icon: Icon(
                   isCollapsed ? Symbols.expand_more_rounded : Symbols.expand_less_rounded,
@@ -473,7 +490,10 @@ class _GroupSection extends ConsumerWidget {
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () => _editMeal(context, ref),
-                  child: Row(
+                  child: Semantics(
+                    button: true,
+                    hint: AppLocalizations.of(context).editMealTitle,
+                    child: Row(
                     children: [
                       Flexible(
                         child: Text(
@@ -491,6 +511,7 @@ class _GroupSection extends ConsumerWidget {
                         style: theme.textTheme.bodySmall,
                       ),
                     ],
+                  ),
                   ),
                 ),
               ),
@@ -532,7 +553,10 @@ class _GroupSection extends ConsumerWidget {
               ),
               if (isActive)
                 IconButton(
-                  visualDensity: VisualDensity.compact,
+                  constraints: const BoxConstraints(
+                    minWidth: 48,
+                    minHeight: 48,
+                  ),
                   tooltip: l10n.mealFinish,
                   icon: Icon(
                     Symbols.check_rounded,
@@ -543,7 +567,10 @@ class _GroupSection extends ConsumerWidget {
                 )
               else
                 IconButton(
-                  visualDensity: VisualDensity.compact,
+                  constraints: const BoxConstraints(
+                    minWidth: 48,
+                    minHeight: 48,
+                  ),
                   tooltip: l10n.mealAddTo,
                   icon: const Icon(Symbols.add_rounded, size: 22),
                   onPressed: reopenAndAdd,
@@ -727,7 +754,10 @@ class _EditMealSheetState extends ConsumerState<_EditMealSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(l10n.editMealTitle, style: theme.textTheme.titleLarge),
+            Semantics(
+              header: true,
+              child: Text(l10n.editMealTitle, style: theme.textTheme.titleLarge),
+            ),
             const SizedBox(height: 16),
             TextField(
               controller: _nameCtrl,

@@ -389,6 +389,7 @@ class _LogPortionSheetState extends ConsumerState<_LogPortionSheet> {
             Row(
               children: [
                 IconButton.filledTonal(
+                  tooltip: l10n.a11yDecrease,
                   onPressed: _portions > 0.5
                       ? () => setState(() => _portions -= 0.5)
                       : null,
@@ -403,6 +404,7 @@ class _LogPortionSheetState extends ConsumerState<_LogPortionSheet> {
                   ),
                 ),
                 IconButton.filledTonal(
+                  tooltip: l10n.a11yIncrease,
                   onPressed: () => setState(() => _portions += 0.5),
                   icon: const Icon(Symbols.add_rounded),
                 ),

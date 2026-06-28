@@ -446,8 +446,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "602f94e15aac3a39194f44b12eb62323ddb46a48"
-      resolved-ref: "602f94e15aac3a39194f44b12eb62323ddb46a48"
+      ref: "61e3476697a66c1c56d7925acd1c4f1ffee4211b"
+      resolved-ref: "61e3476697a66c1c56d7925acd1c4f1ffee4211b"
       url: "https://github.com/Kemenor/fuchsbau.git"
     source: git
     version: "0.2.0"

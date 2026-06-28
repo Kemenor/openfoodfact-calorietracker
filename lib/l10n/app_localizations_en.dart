@@ -652,6 +652,47 @@ class AppLocalizationsEn extends AppLocalizations {
   String get geminiHintEstimate => 'Estimate';
 
   @override
+  String get a11yPreviousPeriod => 'Previous period';
+
+  @override
+  String get a11yNextPeriod => 'Next period';
+
+  @override
+  String get a11yClearSearch => 'Clear search';
+
+  @override
+  String get a11yShowApiKey => 'Show key';
+
+  @override
+  String get a11yHideApiKey => 'Hide key';
+
+  @override
+  String get a11yRemoveIngredient => 'Remove ingredient';
+
+  @override
+  String get a11yDecrease => 'Decrease';
+
+  @override
+  String get a11yIncrease => 'Increase';
+
+  @override
+  String get a11yAnalysing => 'Analysing…';
+
+  @override
+  String get a11yChangeDate => 'Change date';
+
+  @override
+  String get a11ySelectedPhoto => 'Selected meal photo';
+
+  @override
+  String get a11yTrendsChart => 'Trend chart for the selected period';
+
+  @override
+  String a11yQrCode(String name) {
+    return 'QR code for recipe $name';
+  }
+
+  @override
   String get recognizeByOnDevice => 'Estimated on-device';
 
   @override

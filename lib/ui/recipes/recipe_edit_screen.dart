@@ -226,7 +226,8 @@ class _RecipeEditScreenState extends ConsumerState<RecipeEditScreen> {
               ),
               onTap: () => _editIngredient(i),
               trailing: IconButton(
-                visualDensity: VisualDensity.compact,
+                tooltip: AppLocalizations.of(context).a11yRemoveIngredient,
+                constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
                 icon: const Icon(Symbols.close_rounded, size: 20),
                 onPressed: () => setState(() => _items.removeAt(i)),
               ),

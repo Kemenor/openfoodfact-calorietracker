@@ -261,9 +261,14 @@ class _FoodFormScreenState extends ConsumerState<FoodFormScreen> {
           const SizedBox(height: 16),
           Row(
             children: [
-              Text(
-                _isLiquid ? l10n.addNutritionPer100Ml : l10n.addNutritionPer100,
-                style: theme.textTheme.titleSmall,
+              Flexible(
+                child: Text(
+                  _isLiquid
+                      ? l10n.addNutritionPer100Ml
+                      : l10n.addNutritionPer100,
+                  style: theme.textTheme.titleSmall,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               const Spacer(),
               _ocrBusy

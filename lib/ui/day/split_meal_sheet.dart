@@ -113,6 +113,7 @@ class _SplitSheetState extends ConsumerState<_SplitSheet> {
                 const Spacer(),
                 IconButton.filledTonal(
                   onPressed: _n > 2 ? () => _setCount(_n - 1) : null,
+                  tooltip: l10n.a11yDecrease,
                   icon: const Icon(Symbols.remove_rounded),
                 ),
                 Padding(
@@ -121,6 +122,7 @@ class _SplitSheetState extends ConsumerState<_SplitSheet> {
                 ),
                 IconButton.filledTonal(
                   onPressed: _n < 10 ? () => _setCount(_n + 1) : null,
+                  tooltip: l10n.a11yIncrease,
                   icon: const Icon(Symbols.add_rounded),
                 ),
               ],

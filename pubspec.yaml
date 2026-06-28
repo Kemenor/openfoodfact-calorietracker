@@ -40,7 +40,7 @@ dependencies:
   fuchsbau:
     git:
       url: https://github.com/Kemenor/fuchsbau.git
-      ref: 602f94e15aac3a39194f44b12eb62323ddb46a48
+      ref: 61e3476697a66c1c56d7925acd1c4f1ffee4211b
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

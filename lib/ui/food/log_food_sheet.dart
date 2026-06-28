@@ -280,17 +280,22 @@ class _LogSheetState extends State<_LogSheet> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      kcalStr(kcal),
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          kcalStr(kcal),
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                    ),
-                    Text(l10n.unitKcal, style: theme.textTheme.bodySmall),
-                  ],
+                      Text(l10n.unitKcal, style: theme.textTheme.bodySmall),
+                    ],
+                  ),
                 ),
               ],
             ),

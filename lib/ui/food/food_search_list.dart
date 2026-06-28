@@ -150,6 +150,7 @@ class _FoodSearchListState extends ConsumerState<FoodSearchList> {
                     )
                   : (_query.isNotEmpty
                         ? IconButton(
+                            tooltip: l10n.a11yClearSearch,
                             icon: const Icon(Symbols.clear_rounded),
                             onPressed: () {
                               _controller.clear();

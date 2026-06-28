@@ -58,10 +58,14 @@ class HomeShell extends ConsumerWidget {
 
     return Scaffold(
       body: IndexedStack(index: index, children: pages),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: index,
-        onDestinationSelected: (i) => ref.read(homeTabProvider.notifier).set(i),
-        destinations: destinations,
+      bottomNavigationBar: MediaQuery.withClampedTextScaling(
+        maxScaleFactor: 1.3,
+        child: NavigationBar(
+          selectedIndex: index,
+          onDestinationSelected: (i) =>
+              ref.read(homeTabProvider.notifier).set(i),
+          destinations: destinations,
+        ),
       ),
     );
   }

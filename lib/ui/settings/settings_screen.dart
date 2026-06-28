@@ -586,6 +586,9 @@ class _AiKeyTileState extends ConsumerState<_AiKeyTile> {
               border: const OutlineInputBorder(),
               isDense: true,
               suffixIcon: IconButton(
+                tooltip: _obscure
+                    ? l10n.a11yShowApiKey
+                    : l10n.a11yHideApiKey,
                 icon: Icon(
                   _obscure ? Symbols.visibility_rounded : Symbols.visibility_off_rounded,
                   size: 20,
@@ -725,12 +728,15 @@ class _SectionHeader extends StatelessWidget {
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-      child: Text(
-        title.toUpperCase(),
-        style: theme.textTheme.labelSmall?.copyWith(
-          color: theme.colorScheme.outline,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.6,
+      child: Semantics(
+        header: true,
+        child: Text(
+          title.toUpperCase(),
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: theme.colorScheme.outline,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.6,
+          ),
         ),
       ),
     );

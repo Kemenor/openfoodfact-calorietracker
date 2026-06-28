@@ -157,6 +157,7 @@ class _MetricTargets extends StatelessWidget {
           ),
         ),
         _TargetRow(
+          metric: title,
           label: l10n.settingsTargetDefault,
           keyPrefix: '$keyPrefix-default',
           initialMin: defaultMin,
@@ -172,6 +173,7 @@ class _MetricTargets extends StatelessWidget {
           children: [
             for (var wd = 0; wd < 7; wd++)
               _TargetRow(
+                metric: title,
                 // Localized weekday name (Mon=0…Sun=6); 2024-01-01 was a Monday.
                 label: DateFormat.EEEE(
                   lang,
@@ -193,6 +195,7 @@ class _MetricTargets extends StatelessWidget {
 
 /// A label + a Min and a Max numeric field (calories or grams).
 class _TargetRow extends StatelessWidget {
+  final String metric;
   final String label;
   final String keyPrefix;
   final double? initialMin;
@@ -203,6 +206,7 @@ class _TargetRow extends StatelessWidget {
   final ValueChanged<double?> onMax;
 
   const _TargetRow({
+    required this.metric,
     required this.label,
     required this.keyPrefix,
     required this.initialMin,
@@ -227,6 +231,7 @@ class _TargetRow extends StatelessWidget {
               key: ValueKey('$keyPrefix-min'),
               initial: initialMin,
               hint: hintMin ?? l10n.settingsTargetMin,
+              semanticLabel: '$metric, $label, ${l10n.settingsTargetMin}',
               onChanged: onMin,
             ),
           ),
@@ -240,6 +245,7 @@ class _TargetRow extends StatelessWidget {
               key: ValueKey('$keyPrefix-max'),
               initial: initialMax,
               hint: hintMax ?? l10n.settingsTargetMax,
+              semanticLabel: '$metric, $label, ${l10n.settingsTargetMax}',
               onChanged: onMax,
             ),
           ),
@@ -253,12 +259,14 @@ class _TargetRow extends StatelessWidget {
 class _TargetField extends StatefulWidget {
   final double? initial;
   final String? hint;
+  final String? semanticLabel;
   final ValueChanged<double?> onChanged;
   const _TargetField({
     super.key,
     required this.initial,
     required this.onChanged,
     this.hint,
+    this.semanticLabel,
   });
 
   @override
@@ -278,16 +286,20 @@ class _TargetFieldState extends State<_TargetField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: _c,
-      textAlign: TextAlign.end,
-      keyboardType: TextInputType.number,
-      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-      decoration: InputDecoration(isDense: true, hintText: widget.hint ?? '—'),
-      onChanged: (v) {
-        final parsed = v.trim().isEmpty ? null : double.tryParse(v.trim());
-        widget.onChanged(parsed);
-      },
+    return Semantics(
+      textField: true,
+      label: widget.semanticLabel,
+      child: TextField(
+        controller: _c,
+        textAlign: TextAlign.end,
+        keyboardType: TextInputType.number,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        decoration: InputDecoration(isDense: true, hintText: widget.hint ?? '—'),
+        onChanged: (v) {
+          final parsed = v.trim().isEmpty ? null : double.tryParse(v.trim());
+          widget.onChanged(parsed);
+        },
+      ),
     );
   }
 }
