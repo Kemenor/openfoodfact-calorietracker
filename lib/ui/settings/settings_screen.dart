@@ -42,24 +42,17 @@ class SettingsScreen extends ConsumerWidget {
               ref.watch(showTrendsProvider).asData?.value ?? true;
           return ListView(
             children: [
-              _SectionHeader(l10n.settingsTheme),
-              const _SettingsCard(children: [_ThemePicker()]),
-              _SectionHeader(l10n.settingsSectionLanguage),
-              const _SettingsCard(children: [_LanguagePicker()]),
-              _SectionHeader(l10n.settingsTypeface),
-              const _SettingsCard(children: [_TypefacePicker()]),
-              _SectionHeader(l10n.settingsDisplay),
+              _SectionHeader(l10n.settingsAppearance),
+              const _SettingsCard(
+                children: [
+                  _ThemePicker(),
+                  _LanguagePicker(),
+                  _TypefacePicker(),
+                ],
+              ),
+              _SectionHeader(l10n.settingsTracking),
               _SettingsCard(
                 children: [
-                  SwitchListTile(
-                    contentPadding: _cardRowPadding,
-                    secondary: const Icon(Symbols.insights_rounded),
-                    title: Text(l10n.settingsShowTrends),
-                    subtitle: Text(l10n.settingsShowTrendsSub),
-                    value: showTrends,
-                    onChanged: (v) =>
-                        db.setSetting('showTrends', v ? 'true' : 'false'),
-                  ),
                   ListTile(
                     contentPadding: _cardRowPadding,
                     leading: const Icon(Symbols.flag_rounded),
@@ -70,11 +63,6 @@ class SettingsScreen extends ConsumerWidget {
                       MaterialPageRoute(builder: (_) => const TargetsScreen()),
                     ),
                   ),
-                ],
-              ),
-              _SectionHeader(l10n.settingsLogging),
-              _SettingsCard(
-                children: [
                   ExpansionTile(
                     tilePadding: _cardRowPadding,
                     leading: const Icon(Symbols.schedule_rounded),
@@ -90,6 +78,15 @@ class SettingsScreen extends ConsumerWidget {
                       const _MealTimeRow(meal: MealType.lunch),
                       const _MealTimeRow(meal: MealType.dinner),
                     ],
+                  ),
+                  SwitchListTile(
+                    contentPadding: _cardRowPadding,
+                    secondary: const Icon(Symbols.insights_rounded),
+                    title: Text(l10n.settingsShowTrends),
+                    subtitle: Text(l10n.settingsShowTrendsSub),
+                    value: showTrends,
+                    onChanged: (v) =>
+                        db.setSetting('showTrends', v ? 'true' : 'false'),
                   ),
                 ],
               ),

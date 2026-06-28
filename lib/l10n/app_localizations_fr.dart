@@ -27,6 +27,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsDisplay => 'Affichage';
 
   @override
+  String get settingsAppearance => 'Apparence';
+
+  @override
+  String get settingsTracking => 'Suivi';
+
+  @override
   String get settingsShowTrends => 'Afficher l\'onglet Tendances';
 
   @override

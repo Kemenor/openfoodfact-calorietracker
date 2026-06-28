@@ -27,6 +27,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsDisplay => 'Display';
 
   @override
+  String get settingsAppearance => 'Appearance';
+
+  @override
+  String get settingsTracking => 'Tracking';
+
+  @override
   String get settingsShowTrends => 'Show Trends tab';
 
   @override

@@ -14,6 +14,8 @@
   "@navTrends": { "description": "Bottom navigation: the trends/charts tab" },
 
   "settingsDisplay": "Display",
+  "settingsAppearance": "Appearance",
+  "settingsTracking": "Tracking",
   "settingsShowTrends": "Show Trends tab",
   "settingsShowTrendsSub": "Add a tab with weekly and monthly calorie charts",
 

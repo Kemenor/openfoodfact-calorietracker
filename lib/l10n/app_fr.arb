@@ -9,6 +9,8 @@
   "navTrends": "Tendances",
 
   "settingsDisplay": "Affichage",
+  "settingsAppearance": "Apparence",
+  "settingsTracking": "Suivi",
   "settingsShowTrends": "Afficher l'onglet Tendances",
   "settingsShowTrendsSub": "Ajouter un onglet avec des graphiques de calories hebdomadaires et mensuels",
 

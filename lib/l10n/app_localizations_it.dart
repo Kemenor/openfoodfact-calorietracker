@@ -27,6 +27,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settingsDisplay => 'Visualizzazione';
 
   @override
+  String get settingsAppearance => 'Aspetto';
+
+  @override
+  String get settingsTracking => 'Monitoraggio';
+
+  @override
   String get settingsShowTrends => 'Mostra scheda Andamento';
 
   @override

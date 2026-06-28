@@ -27,6 +27,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsDisplay => 'Anzeige';
 
   @override
+  String get settingsAppearance => 'Darstellung';
+
+  @override
+  String get settingsTracking => 'Tracking';
+
+  @override
   String get settingsShowTrends => 'Verlauf-Tab anzeigen';
 
   @override

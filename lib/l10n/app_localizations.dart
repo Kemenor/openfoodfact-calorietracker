@@ -138,6 +138,18 @@ abstract class AppLocalizations {
   /// **'Display'**
   String get settingsDisplay;
 
+  /// No description provided for @settingsAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get settingsAppearance;
+
+  /// No description provided for @settingsTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracking'**
+  String get settingsTracking;
+
   /// No description provided for @settingsShowTrends.
   ///
   /// In en, this message translates to:
